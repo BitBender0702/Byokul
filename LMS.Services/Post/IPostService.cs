@@ -30,14 +30,15 @@ namespace LMS.Services
         Task<bool> PinUnpinSavedPost(Guid postId, bool isPinned, string userId);
         //Task<bool> PinUnpinSharedPost(Guid attachmentId, bool isPinned);
         Task<bool> PinUnpinLikedPost(Guid postId, bool isPinned, string userId);
-        Task DeletePost(Guid id);
+        Task<bool> DeletePost(Guid id);
         Task UpdateCommentThrottling(Guid postId, int noOfComments);
         Task SaveStreamAsPost(Guid postId);
         Task SaveLiveVideoTime(Guid postId, float videoTotalTime, float videoLiveTime);
         Task<List<VideoUploadResponseViewModel>> SaveUploadVideos(IEnumerable<IFormFile> uploadVideos, IEnumerable<IFormFile> uploadVideosThumbnail, Guid postId, string createdById,bool isJobRunning);
         Task<bool> EnableLiveStream(Guid postId);
         Task<IEnumerable<GlobalSearchViewModel>> PostsGlobalSearch(string searchString, int pageNumber, int pageSize);
-
-
+        Task<List<PostDetailsViewModel>> GetSavedSliderReels(string userId, Guid lastPostId, ScrollTypesEnum scrollType);
+        Task<List<PostDetailsViewModel>> GetSharedSliderReels(string userId, Guid lastPostId, ScrollTypesEnum scrollType);
+        Task<List<PostDetailsViewModel>> GetLikedSliderReels(string userId, Guid lastPostId, ScrollTypesEnum scrollType);
     }
 }

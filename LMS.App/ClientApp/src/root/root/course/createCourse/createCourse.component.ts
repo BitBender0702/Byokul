@@ -163,6 +163,7 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
       studentIds:this.fb.control(''),
       teacherIds:this.fb.control(''),
       price:this.fb.control(''),
+      // createdById:this.fb.control(''),
   });
 
   this.createCourseForm1 = this.fb.group({
@@ -231,6 +232,7 @@ getSchoolsForDropdown(){
   this._courseService.getAllSchools().subscribe((response) => {
     this.schools = response;
     this.createCourseForm1.controls['schoolId'].setValue(this.schools[0].schoolId, {onlySelf: true});
+    // this.createCourseForm1.controls['createdById'].setValue(this.selectedSchool.createdById, {onlySelf: true});
   });  
 }
 
@@ -239,6 +241,7 @@ getSelectedSchool(schoolId:string){
     this.selectedSchool = response;
     this.createCourseForm1.controls['schoolId'].setValue(this.selectedSchool.schoolId, {onlySelf: true});
     this.createCourseForm1.controls['schoolName'].setValue(this.selectedSchool.schoolName, {onlySelf: true});
+    // this.createCourseForm1.controls['createdById'].setValue(this.selectedSchool.createdById, {onlySelf: true});
   });  
 }
 

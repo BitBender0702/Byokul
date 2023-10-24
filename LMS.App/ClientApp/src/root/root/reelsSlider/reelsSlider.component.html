@@ -357,7 +357,8 @@
                             [routerLink]="['/profile/class', item.parentName]"
                             class="routeLink d-flex align-items-center"
                           >
-                            <img [src]="item.parentImageUrl" class="me-2" />
+                            <img *ngIf="item.parentImageUrl != null && item.parentImageUrl != 'null'" [src]="item.parentImageUrl" class="me-2" />
+                            <img *ngIf="item.parentImageUrl == null || item.parentImageUrl == 'null'"  src="../../../../assets/images/classLogo.png" class="me-2"/>
                             {{ item.parentName }}
                           </a>
                           <a
@@ -370,7 +371,9 @@
                             "
                             class="routeLink d-flex align-items-center"
                           >
-                            <img [src]="item.parentImageUrl" class="me-2" />
+                            <img *ngIf="item.parentImageUrl != null && item.parentImageUrl != 'null'" [src]="item.parentImageUrl" class="me-2" />
+                            <img *ngIf="item.parentImageUrl == null || item.parentImageUrl == 'null'"  src="../../../../assets/images/classLogo.png" class="me-2"/>
+
                             {{ item.parentName }}
                           </a>
                           <a

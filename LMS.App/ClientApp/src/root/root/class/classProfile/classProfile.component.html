@@ -639,7 +639,8 @@
                                 </button>
                               </div>
                               <div class="feed-name font_14 text_sec1 hideName">
-                                <img [lazyLoad]="class.avatar" />
+                                <img *ngIf="class.avatar != null && class.avatar != 'null'" [lazyLoad]="class.avatar" />
+                                <img *ngIf="class.avatar == null || class.avatar == 'null'"  src="../../../../assets/images/classLogo.png" />
                                 {{ class.className }}
                               </div>
                               <div
@@ -678,7 +679,8 @@
                   >
                     <div class="d-flex align-items-center gap-2">
                       <div class="school-gridprofile-icon">
-                        <img [lazyLoad]="class.avatar" />
+                        <img *ngIf="class.avatar != 'null' && class.avatar != null"[lazyLoad]="class.avatar"/>
+                        <img *ngIf="class.avatar == null || class.avatar == 'null'" src="../../../../assets/images/classLogo.png"/>
                       </div>
                       <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
                         {{ class.className }}
@@ -1364,7 +1366,8 @@
                                 class="d-flex align-items-center position-relative"
                               >
                                 <div class="school-gridprofile-icon">
-                                  <img [lazyLoad]="class.avatar" />
+                                  <img *ngIf="class.avatar != 'null' && class.avatar != null" [lazyLoad]="class.avatar"/>
+                                  <img *ngIf="class.avatar == null || class.avatar == 'null'" src="../../../../assets/images/classLogo.png"/>
                                 </div>
                                 <h2
                                   class="d-inline-block font_16 fw_600 text_sec1 mb-0"
@@ -1549,7 +1552,8 @@
                         >
                           <div class="d-flex align-items-center gap-3">
                             <div class="school-gridprofile-icon">
-                              <img [lazyLoad]="class.avatar" />
+                              <img *ngIf="class.avatar != 'null' && class.avatar != null" [lazyLoad]="class.avatar"/>
+                              <img *ngIf="class.avatar == null || class.avatar == 'null'" src="../../../../assets/images/classLogo.png"/>
                             </div>
                             <h2
                               class="d-inline-block font_16 fw_600 text_sec1 mb-0"
@@ -3142,7 +3146,7 @@
             {{ "No" | translate }}
           </button>
           <button
-            (click)="convertToCourse(class.className, class.school.schoolName)"
+            (click)="convertToCourse(class.className, class.school.schoolName,class.classId)"
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
             data-bs-dismiss="modal"

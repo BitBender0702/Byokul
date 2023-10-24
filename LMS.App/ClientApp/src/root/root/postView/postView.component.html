@@ -151,7 +151,7 @@
                               />
                               <img
                                 *ngIf="
-                                  post.parentImageUrl != null &&
+                                  post.parentImageUrl != null && post.parentImageUrl != 'null' &&
                                   post.postAuthorType == 2
                                 "
                                 [src]="post.parentImageUrl"
@@ -164,8 +164,22 @@
                                 class="me-2 cursor_pointer"
                               />
                               <img
+                              *ngIf="
+                                (post.parentImageUrl == null || post.parentImageUrl == 'null')  &&
+                                post.postAuthorType == 2
+                              "
+                              src="../../../../assets/images/classLogo.png"
+                              (click)="hideCommentModal()"
+                              [routerLink]="[
+                                '/profile/class',
+                                post.schoolName,
+                                post.parentName
+                              ]"
+                              class="me-2 cursor_pointer"
+                            />
+                              <img
                                 *ngIf="
-                                  post.parentImageUrl != null &&
+                                  post.parentImageUrl != null && post.parentImageUrl != 'null' &&
                                   post.postAuthorType == 3
                                 "
                                 [src]="post.parentImageUrl"
@@ -178,13 +192,27 @@
                                 class="me-2 cursor_pointer"
                               />
                               <img
+                              *ngIf="
+                                (post.parentImageUrl == null || post.parentImageUrl == 'null') &&
+                                post.postAuthorType == 3
+                              "
+                              src="../../../../assets/images/classLogo.png"
+                              (click)="hideCommentModal()"
+                              [routerLink]="[
+                                '/profile/course',
+                                post.schoolName,
+                                post.parentName
+                              ]"
+                              class="me-2 cursor_pointer"
+                            />
+                              <img
                                 (click)="hideCommentModal()"
                                 [routerLink]="[
                                   '/user/userProfile',
                                   post.createdBy
                                 ]"
                                 *ngIf="
-                                  post.parentImageUrl == null && gender == '1'
+                                  post.parentImageUrl == null && gender == '1' && post.postAuthorType == 4
                                 "
                                 src="../../../assets/images/maleProfile.jfif"
                                 class="me-2 cursor_pointer"
@@ -197,7 +225,7 @@
                                 ]"
                                 *ngIf="
                                   post.parentImageUrl == null &&
-                                  (gender == '2' || gender == '3')
+                                  (gender == '2' || gender == '3') && post.postAuthorType == 4
                                 "
                                 src="../../../assets/images/femaleProfile.jfif"
                                 class="me-2 cursor_pointer"
@@ -333,8 +361,36 @@
                                   post.parentName
                                 ]"
                                 *ngIf="
-                                  post.parentImageUrl != null &&
+                                  post.parentImageUrl != null && post.parentImageUrl != 'null' &&
                                   post.postAuthorType == 2
+                                "
+                                [src]="post.parentImageUrl"
+                                class="me-2 cursor_pointer"
+                              />
+                              <img
+                              (click)="hideCommentModal()"
+                              [routerLink]="[
+                                '/profile/class',
+                                post.schoolName,
+                                post.parentName
+                              ]"
+                              *ngIf="
+                                (post.parentImageUrl == null || post.parentImageUrl == 'null') &&
+                                post.postAuthorType == 2
+                              "
+                              src="../../../../assets/images/classLogo.png"
+                              class="me-2 cursor_pointer"
+                            />
+                              <img
+                                (click)="hideCommentModal()"
+                                [routerLink]="[
+                                  '/profile/course',
+                                  post.schoolName,
+                                  post.parentName
+                                ]"
+                                *ngIf="
+                                  post.parentImageUrl != null && post.parentImageUrl != 'null' &&
+                                  post.postAuthorType == 3
                                 "
                                 [src]="post.parentImageUrl"
                                 class="me-2 cursor_pointer"
@@ -347,10 +403,10 @@
                                   post.parentName
                                 ]"
                                 *ngIf="
-                                  post.parentImageUrl != null &&
+                                  (post.parentImageUrl == null || post.parentImageUrl == 'null') &&
                                   post.postAuthorType == 3
                                 "
-                                [src]="post.parentImageUrl"
+                                src="../../../../assets/images/classLogo.png"
                                 class="me-2 cursor_pointer"
                               />
                               <img
@@ -360,7 +416,7 @@
                                   post.createdBy
                                 ]"
                                 *ngIf="
-                                  post.parentImageUrl == null && gender == '1'
+                                  post.parentImageUrl == null && gender == '1' && post.postAuthorType == 4
                                 "
                                 src="../../../assets/images/maleProfile.jfif"
                                 class="me-2 cursor_pointer"
@@ -373,7 +429,7 @@
                                 ]"
                                 *ngIf="
                                   post.parentImageUrl == null &&
-                                  (gender == '2' || gender == '3')
+                                  (gender == '2' || gender == '3') && post.postAuthorType == 4
                                 "
                                 src="../../../assets/images/femaleProfile.jfif"
                                 class="me-2 cursor_pointer"
@@ -945,7 +1001,151 @@
                         </h5>
                       </div>
                       <div class="reel-username font_16 white_text">
-                        <img [src]="post.parentImageUrl" class="me-2" />
+                        <img
+                          *ngIf="
+                            post.parentImageUrl != null &&
+                            post.postAuthorType == 4
+                          "
+                          [src]="post.parentImageUrl"
+                          (click)="hideCommentModal()"
+                          [routerLink]="['/user/userProfile', post.createdBy]"
+                          class="me-2 cursor_pointer"
+                        />
+                        <img
+                          *ngIf="
+                            post.parentImageUrl != null &&
+                            post.postAuthorType == 1
+                          "
+                          [src]="post.parentImageUrl"
+                          (click)="hideCommentModal()"
+                          [routerLink]="['/profile/school', post.parentName]"
+                          class="me-2 cursor_pointer"
+                        />
+                        <img
+                          *ngIf="
+                            post.parentImageUrl != null && post.parentImageUrl != 'null' &&
+                            post.postAuthorType == 2
+                          "
+                          [src]="post.parentImageUrl"
+                          (click)="hideCommentModal()"
+                          [routerLink]="[
+                            '/profile/class',
+                            post.schoolName,
+                            post.parentName
+                          ]"
+                          class="me-2 cursor_pointer"
+                        />
+                        <img
+                        *ngIf="
+                          (post.parentImageUrl == null || post.parentImageUrl == 'null') &&
+                          post.postAuthorType == 2
+                        "
+                        src="../../../../assets/images/classLogo.png"
+                        (click)="hideCommentModal()"
+                        [routerLink]="[
+                          '/profile/class',
+                          post.schoolName,
+                          post.parentName
+                        ]"
+                        class="me-2 cursor_pointer"
+                      />
+                        <img
+                          *ngIf="
+                            post.parentImageUrl != null && post.parentImageUrl != 'null' &&
+                            post.postAuthorType == 3
+                          "
+                          [src]="post.parentImageUrl"
+                          (click)="hideCommentModal()"
+                          [routerLink]="[
+                            '/profile/course',
+                            post.schoolName,
+                            post.parentName
+                          ]"
+                          class="me-2 cursor_pointer"
+                        />
+                        <img
+                        *ngIf="
+                          (post.parentImageUrl == null || post.parentImageUrl == 'null') &&
+                          post.postAuthorType == 3
+                        "
+                        src="../../../../assets/images/classLogo.png"
+                        (click)="hideCommentModal()"
+                        [routerLink]="[
+                          '/profile/course',
+                          post.schoolName,
+                          post.parentName
+                        ]"
+                        class="me-2 cursor_pointer"
+                      />
+                        <img
+                          (click)="hideCommentModal()"
+                          [routerLink]="['/user/userProfile', post.createdBy]"
+                          *ngIf="post.parentImageUrl == null && gender == '1' && post.parentImageUrl == null"
+                          src="../../../assets/images/maleProfile.jfif"
+                          class="me-2 cursor_pointer"
+                        />
+                        <img
+                          (click)="hideCommentModal()"
+                          [routerLink]="['/user/userProfile', post.createdBy]"
+                          *ngIf="
+                            post.parentImageUrl == null &&
+                            (gender == '2' || gender == '3') && post.parentImageUrl == null
+                          "
+                          src="../../../assets/images/femaleProfile.jfif"
+                          class="me-2 cursor_pointer"
+                        />
+                        <span
+                          *ngIf="post.postAuthorType == 4"
+                          class="cursor_pointer"
+                          (click)="hideCommentModal()"
+                          [routerLink]="['/user/userProfile', post.createdBy]"
+                          >{{ post.parentName }}
+                          <img
+                            *ngIf="post.isParentVerified"
+                            src="../../../../assets/images/green-verified.svg"
+                            style="height: 20px"
+                        /></span>
+
+                        <span
+                          *ngIf="post.postAuthorType == 1"
+                          class="cursor_pointer"
+                          (click)="hideCommentModal()"
+                          [routerLink]="['/profile/school', post.parentName]"
+                          >{{ post.parentName }}
+                          <img
+                            *ngIf="post.isParentVerified"
+                            src="../../../../assets/images/verified-badge.svg"
+                            style="height: 20px"
+                        /></span>
+
+                        <span
+                          *ngIf="post.postAuthorType == 2"
+                          class="cursor_pointer"
+                          (click)="hideCommentModal()"
+                          [routerLink]="[
+                            '/profile/class',
+                            post.schoolName,
+                            post.parentName
+                          ]"
+                          >{{ post.parentName }}</span
+                        >
+
+                        <span
+                          *ngIf="post.postAuthorType == 3"
+                          class="cursor_pointer"
+                          (click)="hideCommentModal()"
+                          [routerLink]="[
+                            '/profile/course',
+                            post.schoolName,
+                            post.parentName
+                          ]"
+                          >{{ post.parentName }}</span
+                        >
+
+
+
+                        <!-- test -->
+                        <!-- <img [src]="post.parentImageUrl" class="me-2" />
                         <span
                           (click)="hideCommentModal()"
                           [routerLink]="['/user/userProfile', post.createdBy]"
@@ -965,7 +1165,7 @@
                             src="../../../../assets/images/green-verified.svg"
                             style="height: 20px"
                           />
-                        </span>
+                        </span> -->
                       </div>
                     </slide>
 
@@ -1026,7 +1226,7 @@
                         />
                         <img
                           *ngIf="
-                            post.parentImageUrl != null &&
+                            post.parentImageUrl != null && post.parentImageUrl != 'null' &&
                             post.postAuthorType == 2
                           "
                           [src]="post.parentImageUrl"
@@ -1039,8 +1239,22 @@
                           class="me-2 cursor_pointer"
                         />
                         <img
+                        *ngIf="
+                          (post.parentImageUrl == null || post.parentImageUrl == 'null') &&
+                          post.postAuthorType == 2
+                        "
+                        src="../../../../assets/images/classLogo.png"
+                        (click)="hideCommentModal()"
+                        [routerLink]="[
+                          '/profile/class',
+                          post.schoolName,
+                          post.parentName
+                        ]"
+                        class="me-2 cursor_pointer"
+                      />
+                        <img
                           *ngIf="
-                            post.parentImageUrl != null &&
+                            post.parentImageUrl != null && post.parentImageUrl != 'null' &&
                             post.postAuthorType == 3
                           "
                           [src]="post.parentImageUrl"
@@ -1053,9 +1267,23 @@
                           class="me-2 cursor_pointer"
                         />
                         <img
+                        *ngIf="
+                          (post.parentImageUrl == null || post.parentImageUrl == 'null') &&
+                          post.postAuthorType == 3
+                        "
+                        src="../../../../assets/images/classLogo.png"
+                        (click)="hideCommentModal()"
+                        [routerLink]="[
+                          '/profile/course',
+                          post.schoolName,
+                          post.parentName
+                        ]"
+                        class="me-2 cursor_pointer"
+                      />
+                        <img
                           (click)="hideCommentModal()"
                           [routerLink]="['/user/userProfile', post.createdBy]"
-                          *ngIf="post.parentImageUrl == null && gender == '1'"
+                          *ngIf="post.parentImageUrl == null && gender == '1' && post.postAuthorType == 4"
                           src="../../../assets/images/maleProfile.jfif"
                           class="me-2 cursor_pointer"
                         />
@@ -1064,7 +1292,7 @@
                           [routerLink]="['/user/userProfile', post.createdBy]"
                           *ngIf="
                             post.parentImageUrl == null &&
-                            (gender == '2' || gender == '3')
+                            (gender == '2' || gender == '3') && post.postAuthorType == 4
                           "
                           src="../../../assets/images/femaleProfile.jfif"
                           class="me-2 cursor_pointer"
@@ -1092,7 +1320,6 @@
                             src="../../../../assets/images/verified-badge.svg"
                             style="height: 20px"
                         /></span>
-
                         <span
                           *ngIf="post.postAuthorType == 2"
                           class="cursor_pointer"

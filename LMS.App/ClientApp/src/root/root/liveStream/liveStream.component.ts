@@ -135,6 +135,7 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
     this._postService.getPostById(this.postId).subscribe((response) => {
       debugger
       this.post = response;
+      // this.post.streamUrl = encodeURIComponent(this.post.streamUrl);
       var isUserViewExist = this.post.views.filter((x:any) => x.userId == this.userId);
       if(isUserViewExist.length > 0){
         this.liveUsersCount = this.post.views.length - 1;
@@ -161,6 +162,12 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
         var params = new URLSearchParams(this.post.streamJoinUrl.split('?')[1]);
       }
       this.meetingId = params.get('meetingID')?.replace("meetings", "") ?? '';
+      // var fullName = params.get('fullName') ?? '';
+      // var fullName2 = encodeURIComponent(fullName);
+      // // this.post.streamUrl = this.post.streamUrl.replace('{fullName}', fullName);
+      // this.post.streamUrl = this.post.streamUrl.replace(fullName, fullName2);
+      // this.cd.detectChanges();
+
       this.streamPassword = params.get('password') ?? '';
       this.postCreatedDate = new Date(this.post.createdOn);
       this.createGroupName();

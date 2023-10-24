@@ -1,0 +1,56 @@
+<section class="f-poppins about-container">
+    <div class="main_content-max-width">
+      <main class="static-main min-height w-100 h-auto">
+        <div class="static-content">
+          <div *ngIf="language == 'en'">
+            <div class="text-center">
+              <h3 class="font_24 text_dark fw-bold">About us</h3>
+              <div class="d-md-block d-none"></div>
+            </div>
+            <hr class="about_hr" />
+            <p>
+              ByOkul's mission is to improve people's lives through learning. We
+              enable anyone, everywhere to create and share educational content
+              (instructors) and access it for learning purposes (students). We
+              believe our platform model is the best way to deliver valuable
+              educational content to our users.
+            </p>
+          </div>
+  
+          <div *ngIf="language == 'tr'">
+            <div class="text-center">
+              <h3 class="font_24 text_dark fw-bold">About us</h3>
+              <div class="d-md-block d-none"></div>
+            </div>
+            <p>
+              ByOkul'un misyonu, &ouml;ğrenme yoluyla insanların hayatlarını
+              iyileştirmektir. Her yerde herkesin eğitim i&ccedil;erikleri
+              oluşturup paylaşmasına (eğitmenler) ve bu eğitim i&ccedil;eriklerine
+              &ouml;ğrenme amacıyla erişmesine (&ouml;ğrenciler) olanak
+              sağlıyoruz. Platform modelimizin, kullanıcılarımıza değerli eğitim
+              i&ccedil;erikleri sunmak i&ccedil;in en iyi y&ouml;ntem olduğunu
+              d&uuml;ş&uuml;n&uuml;yoruz.
+            </p>
+          </div>
+        </div>
+      </main>
+      <footer class="footer">
+        <div class="footer__content">
+          <a [routerLink]="['/user/userFeed']" class="main-logo"
+            ><img src="../../../assets/images/logo.svg"
+          /></a>
+          <nav>
+            <a [routerLink]="['/privacyPolicy']">{{
+              "PrivacyPolicy" | translate
+            }}</a>
+            <a [routerLink]="['/termsOfServices']">{{
+              "TermsOfService" | translate
+            }}</a>
+            <a [routerLink]="['/aboutUs']">{{ "AboutUs" | translate }}</a>
+            <a [routerLink]="['/faq']">{{ "FAQ" | translate }}</a>
+          </nav>
+        </div>
+      </footer>
+    </div>
+  </section>
+  

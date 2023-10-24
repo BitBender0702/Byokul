@@ -500,7 +500,7 @@
   "CertificateNameRequired": "Certificate name is required",
   "ProviderNameRequired": "Provider name is required",
   "IssuedDateRequired": "Issued date is required",
-  "CertificateImageRequired": "CertificateImageRequired",
+  "CertificateImageRequired": "Certificate image required",
   "Certificate": "Certificate",
   "CertificateName": "Certificate Name",
   "ProviderName": "Provider Name",
@@ -639,8 +639,8 @@
   "ClassCreatedSuccessfully": "Class created successfully",
   "CourseCreatedSuccessfully": "Course created successfully",
   "SelectThumbnailOrVideoToStream": "Please select a thumbnail or video to stream",
-  "Buy": "Buy"
-
+  "Buy": "Buy",
+  "CropImage": "Crop Image"
 
 
 

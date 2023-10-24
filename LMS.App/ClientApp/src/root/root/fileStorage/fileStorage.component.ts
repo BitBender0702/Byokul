@@ -104,6 +104,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   schoolId: string = "";
   availableSpace: number = 0;
   showModal: boolean = true;
+  showSearchButtonForMobile:boolean=false;
   hamburgerCountSubscription!: Subscription;
   hamburgerCount:number = 0;
 
@@ -874,6 +875,11 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     // }
     // this._signalRService.sendNotification();
   }
+
+  openSearchBox(){
+    this.showSearchButtonForMobile=true;
+  }
+
   initializeCommentLikeUnlike() {
     this.commentLikeUnlike = {
       commentId: "",

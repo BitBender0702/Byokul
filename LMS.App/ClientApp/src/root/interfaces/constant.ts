@@ -36,6 +36,10 @@ export class Constant {
     public static Reel = "reel";
     public static  ChatDoesNotExist = "Chat doesn't exist";
     public static  ChatExists = "Chat exists";
+    public static Saved = "saved";
+    public static Liked = "liked";
+    public static Shared = "shared";
+
 
 
 

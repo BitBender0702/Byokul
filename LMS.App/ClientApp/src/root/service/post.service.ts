@@ -27,8 +27,9 @@ export class PostService{
     }
     
     getSchool(schoolId:any):Observable<any>{
+        var token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + token);
         return this.http.get(`${this.apiUrl}/school/getBasicSchoolInfo` + '?schoolId=' + schoolId,{headers: this.headers});
-
     }
 
     getClass(classId:string):Observable<any>{
@@ -101,18 +102,43 @@ export class PostService{
     }
 
     getSavedPostsByUser(userId:string,pageNumber:number,type:number):Observable<any>{
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         let queryParams = new HttpParams().append("userId",userId).append("pageNumber",pageNumber).append("type",type);
         return this.http.post(`${this.apiUrl}/posts/getSavedPostsByUser`,null, {params:queryParams,headers: this.headers});
     }
 
     getSharedPostsByUser(userId:string,pageNumber:number,type:number):Observable<any>{
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         let queryParams = new HttpParams().append("userId",userId).append("pageNumber",pageNumber).append("type",type);
         return this.http.post(`${this.apiUrl}/posts/getSharedPostsByUser`,null, {params:queryParams,headers: this.headers});
     }
 
     getLikedPostsByUser(userId:string,pageNumber:number,type:number):Observable<any>{
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         let queryParams = new HttpParams().append("userId",userId).append("pageNumber",pageNumber).append("type",type);
         return this.http.post(`${this.apiUrl}/posts/getLikedPostsByUser`,null, {params:queryParams,headers: this.headers});
+    }
+
+    GetSavedSliderReelsByUserId(userId:string,postId:string,scrollType:number){
+        debugger
+        let queryParams = new HttpParams().append("userId",userId).append("postId",postId).append("scrollType",scrollType);
+        return this.http.get(`${this.apiUrl}/posts/getSavedSliderReelsByUserId`, {params:queryParams,headers: this.headers}
+        );
+    }
+    GetSharedSliderReelsByUserId(userId:string,postId:string,scrollType:number){
+        debugger
+        let queryParams = new HttpParams().append("userId",userId).append("postId",postId).append("scrollType",scrollType);
+        return this.http.get(`${this.apiUrl}/posts/getSharedSliderReelsByUserId`, {params:queryParams,headers: this.headers}
+        );
+    }
+    GetLikedSliderReelsByUserId(userId:string,postId:string,scrollType:number){
+        debugger
+        let queryParams = new HttpParams().append("userId",userId).append("postId",postId).append("scrollType",scrollType);
+        return this.http.get(`${this.apiUrl}/posts/getLikedSliderReelsByUserId`, {params:queryParams,headers: this.headers}
+        );
     }
 
     pinUnpinSavedPost(attachmentId:any,isPinned:boolean): Observable<any> {

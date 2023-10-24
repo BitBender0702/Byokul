@@ -602,7 +602,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
       // this.isDataLoaded = true;
       this.isGlobalReelsExist = true;
       this.checkGlobalFeedExist();
-      // this.addGlobalFeedListenerToNextButton();
+      this.addGlobalFeedListenerToNextButton();
     });
 
     this.isGlobalFeedLoading = true;

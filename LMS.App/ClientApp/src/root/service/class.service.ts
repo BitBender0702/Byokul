@@ -100,8 +100,8 @@ export class ClassService{
         return this.http.get(`${this.apiUrl}/class/isClassNameExist` + '?className=' + className,{headers: this.headers});
     }
 
-    convertToCourse(className:any): Observable<any> {
-        return this.http.post(`${this.apiUrl}/class/convertToCourse` + '?className=' + className,'',{headers: this.headers});
+    convertToCourse(classId:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/class/convertToCourse` + '?classId=' + classId,'',{headers: this.headers});
     }
 
     classView(classView:any):Observable<any>{

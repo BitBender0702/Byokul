@@ -2165,6 +2165,9 @@ namespace LMS.Data.Migrations
                     b.Property<bool>("IsBan")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsResetTokenUsed")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsVarified")
                         .HasColumnType("bit");
 

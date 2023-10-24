@@ -18,7 +18,7 @@ namespace LMS.Services
         Task<ClassUpdateViewModel> UpdateClass(ClassUpdateViewModel classUpdateViewModel);
         Task DeleteClassById(Guid classId, string deletedById);
         Task RestoreClassById(Guid classId, string deletedById);
-        Task<ClassDetailsViewModel> GetClassByName(string className, string loginUserId);
+        Task<ClassDetailsViewModel> GetClassByName(string className, string loginUserId,bool fromCourse);
         Task<ClassDetailsViewModel> GetClassById(Guid classId, string loginUserId);
         Task<IEnumerable<ClassViewModel>> GetAllClasses();
         Task SaveClassLanguages(IEnumerable<string> languageIds, Guid classId);
@@ -30,7 +30,9 @@ namespace LMS.Services
         Task<ClassViewModel> GetBasicClassInfo(Guid classId);
         //Task<ClassViewModel> GetClassByName(string className, string schoolName);
         Task<bool> IsClassNameExist(string className);
-        Task<ClassViewModel> ConvertToCourse(string className);
+        //Task<ClassViewModel> ConvertToCourse(string className);
+        Task<ClassViewModel> ConvertToCourse(Guid classId);
+
         Task<List<ClassLikeViewModel>> GetLikesOnClass(Guid classId);
         Task<List<ClassViewsViewModel>> GetViewsOnClass(Guid classid);
         Task<List<ClassLikeViewModel>> LikeUnlikeClass(LikeUnlikeClassCourse model);

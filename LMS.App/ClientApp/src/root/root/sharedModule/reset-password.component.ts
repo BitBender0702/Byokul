@@ -99,7 +99,7 @@ export class ResetPasswordComponent extends MultilingualComponent implements OnI
                     this.resetPasswordForm.setErrors({ tokenExpire: true });
                     this.loadingIcon = false;
                   } else if(response.token == "Object reference not set to an instance of an object."){
-                    this.resetPasswordForm.setErrors({ objectRefrence: true });
+                    this.resetPasswordForm.setErrors({ resetPasswordLinkExpired: true });
                     this.loadingIcon = false;
                   } else if(response.token == "New Password and confirm password did not match"){
                     this.resetPasswordForm.setErrors({passwordMismatch: true});

@@ -666,7 +666,9 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   getNextSavedPosts() {
     this._postService.getSavedPostsByUser(this.userId, this.savedPostsPageNumber, 1).subscribe((response) => {
       debugger;
-      this.savedPostsList = [...this.savedPostsList, ...response];
+      if(response.length > 0){
+        this.savedPostsList = [...this.savedPostsList, ...response];
+      }
       this.postLoadingIcon = false;
       this.scrollSavedPostResponseCount = response.length;
       this.savedPostScrolled = false;
@@ -675,7 +677,9 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
   getNextSharedPosts() {
     this._postService.getSharedPostsByUser(this.userId, this.sharedPostsPageNumber, 1).subscribe((response) => {
-      this.sharedPostsList = [...this.sharedPostsList, ...response];
+      if(response.length > 0){
+        this.sharedPostsList = [...this.sharedPostsList, ...response];
+      }
       this.postLoadingIcon = false;
       this.scrollSharedPostResponseCount = response.length;
       this.sharedPostsScrolled = false;
@@ -684,7 +688,9 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
   getNextLikedPosts() {
     this._postService.getLikedPostsByUser(this.userId, this.likedPostsPageNumber, 1).subscribe((response) => {
-      this.likedPostsList = [...this.likedPostsList, ...response];
+      if(response.length > 0){
+        this.likedPostsList = [...this.likedPostsList, ...response];
+      }
       this.postLoadingIcon = false;
       this.scrollLikedPostResponseCount = response.length;
       this.likedPostsScrolled = false;
@@ -693,7 +699,9 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
   getNextSavedClassCourse() {
     this._schoolService.getSavedClassCourse(this.userId, this.saveClassCoursePageNumber).subscribe((response) => {
-      this.savedClassCourseList = [...this.savedClassCourseList, ...response];
+      if(response.length > 0){
+        this.savedClassCourseList = [...this.savedClassCourseList, ...response];
+      }
       this.postLoadingIcon = false;
       this.scrollSavedClassCourseResponseCount = response.length;
       this.savedClassCourseScrolled = false;
@@ -1223,16 +1231,39 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     const isMobileOrTab = window.innerWidth < screenWidthThreshold;
     // if (isMobileOrTab) {
     // this.router.navigateByUrl(`user/reelsView/${this.user.id}/user/${postAttachmentId}`);
-    this.router.navigate(
-      [`user/reelsView/${this.user.id}/user/${postAttachmentId}/${postId}`],
-      { state: { post: { postId: postId } } });
-
+  
     //   } else {
     //   const initialState = {
     //     postAttachmentId: postAttachmentId
     //   };
     //   this.bsModalService.show(ReelsViewComponent,{initialState});
     // }
+
+
+    if(this.isPostTab){
+      debugger;
+      this.router.navigate(
+        [`user/reelsView/${this.user.id}/user/${postAttachmentId}/${postId}`],
+        { state: { post: { postId: postId } } });
+  
+    }
+    else if(this.isSavedPostTab){
+      this.router.navigate(
+        [`user/reelsView/${this.user.id}/saved/${postAttachmentId}/${postId}`],
+        { state: { post: { postId: postId } } });
+    }
+    else if(this.isLikedPostTab){
+      this.router.navigate(
+        [`user/reelsView/${this.user.id}/liked/${postAttachmentId}/${postId}`],
+        { state: { post: { postId: postId } } });
+    }
+    else if(this.isSharedPostTab){
+      this.router.navigate(
+        [`user/reelsView/${this.user.id}/shared/${postAttachmentId}/${postId}`],
+        { state: { post: { postId: postId } } });
+    }
+
+
   }
 
   userChat() {
@@ -1498,6 +1529,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     this.savedPostsPageNumber = 1;
     this.reelsPageNumber = 1;
     this._postService.getSavedPostsByUser(userId, this.savedPostsPageNumber, 1).subscribe((response) => {
+      debugger
       this.savedPostsList = response;
       const allAttachments = this.savedPostsList.flatMap((x: { postAttachments: any; }) => x.postAttachments);
       this.filteredSavedPostAttachments = allAttachments.filter((x: { fileType: number; }) => x.fileType == 3);
@@ -1563,7 +1595,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
     }
 
-    this._postService.savePost(postId, this.userId).subscribe((result) => {
+    this._postService.savePost(postId, this.loginUserId).subscribe((result) => {
     });
   }
 
@@ -1851,11 +1883,13 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
 
   removeLogo() {
+    debugger;
     if (this.user.avatar != null) {
       this.userAvatar = '';
     }
     this.uploadImage = '';
     this.fileToUpload.set('avatarImage', '');
+    this.selectedImage = '';
   }
 
   openShareClassCourseModal(schoolName: string, name: string, type: number) {

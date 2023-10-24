@@ -1,0 +1,54 @@
+<section class="f-poppins about-container">
+    <div class="main_content-max-width">
+      <main class="static-main min-height w-100 h-auto">
+        <div class="static-content">
+          <div *ngIf="language == 'en'">
+            <div class="text-center">
+              <h3 class="font_24 text_dark fw-bold">Contact us</h3>
+              <div class="d-md-block d-none"></div>
+            </div>
+            <hr class="about_hr" />
+            <p>
+              BYOKUL SANAL VE DIJITAL PLATFORM LIMITED SIRKETI<br />
+              GURSELPASA MAH. ABIDIN DINO BLV. ALI GEZEN APT NO:13 A
+              SEYHAN/ADANA<br />
+              E-MAIL : support@byokul.com
+            </p>
+          </div>
+  
+          <div *ngIf="language == 'tr'">
+            <div class="text-center">
+              <h3 class="font_24 text_dark fw-bold">Contact us</h3>
+              <div class="d-md-block d-none"></div>
+            </div>
+            <hr class="about_hr" />
+  
+            <p>
+              BYOKUL SANAL VE DIJITAL PLATFORM LIMITED SIRKETI<br />
+              GURSELPASA MAH. ABIDIN DINO BLV. ALI GEZEN APT NO:13 A
+              SEYHAN/ADANA<br />
+              E-MAIL : support@byokul.com
+            </p>
+          </div>
+        </div>
+      </main>
+      <footer class="footer">
+        <div class="footer__content">
+          <a [routerLink]="['/user/userFeed']" class="main-logo"
+            ><img src="../../../assets/images/logo.svg"
+          /></a>
+          <nav>
+            <a [routerLink]="['/privacyPolicy']">{{
+              "PrivacyPolicy" | translate
+            }}</a>
+            <a [routerLink]="['/termsOfServices']">{{
+              "TermsOfService" | translate
+            }}</a>
+            <a [routerLink]="['/aboutUs']">{{ "AboutUs" | translate }}</a>
+            <a [routerLink]="['/faq']">{{ "FAQ" | translate }}</a>
+          </nav>
+        </div>
+      </footer>
+    </div>
+  </section>
+  
