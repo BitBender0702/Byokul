@@ -1,7 +1,20 @@
+.mobile-action-button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+@media screen and (min-width: 1281px) {
+  .mobile-action-button {
+    display: none;
+  }
+}
+
 .buttonTab {
     display: flex;
-    justify-content: center; 
-    align-items: center; 
+    justify-content: center;
+    align-items: center;
   }
 
   .cursor_pointer {

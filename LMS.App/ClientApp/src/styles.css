@@ -1929,9 +1929,9 @@ body .liv-postbtn .post-attch-btn.active,
 .followers_box ul li:hover {
   background: #f2f4f7;
 }
-.followers_box ul li .followe_report {
+/* .followers_box ul li .followe_report {
   display: none;
-}
+} */
 .followers_box ul li:hover .followe_report {
   display: inline-block;
 }
