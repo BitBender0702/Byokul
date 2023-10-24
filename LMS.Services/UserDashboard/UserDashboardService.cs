@@ -9,6 +9,7 @@ using LMS.Data.Entity;
 using LMS.Data.Entity.Chat;
 using LMS.DataAccess.Repository;
 using Microsoft.EntityFrameworkCore;
+using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,9 @@ namespace LMS.Services.UserDashboard
         private IGenericRepository<User> _userRepository;
         private IGenericRepository<ChatHead> _ChatHeadRepository;
         private IGenericRepository<Notification> _NotificationRepository;
-        public UserDashboardService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<User> userRepository, IGenericRepository<ChatHead> ChatHeadRepository, IGenericRepository<Notification> NotificationRepository)
+        private IGenericRepository<SchoolTeacher> _schoolTeacherRepository;
+
+        public UserDashboardService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<User> userRepository, IGenericRepository<ChatHead> ChatHeadRepository, IGenericRepository<Notification> NotificationRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -45,6 +48,7 @@ namespace LMS.Services.UserDashboard
             _userRepository = userRepository;
             _ChatHeadRepository = ChatHeadRepository;
             _NotificationRepository = NotificationRepository;
+            _schoolTeacherRepository = schoolTeacherRepository;
         }
         public async Task<UserDashboardViewModel> UserDashboard(string userId)
         {
@@ -59,15 +63,27 @@ namespace LMS.Services.UserDashboard
             var OwnedSchools = _mapper.Map<List<SchoolViewModel>>(schools);
             model.OwnedSchools = OwnedSchools;
 
+            var teacherSchoolIds = await _schoolTeacherRepository.GetAll().Include(x => x.Teacher).Where(x => x.Teacher.UserId == userId).Select(x => x.SchoolId).ToListAsync();
+            var schoolIds = model.OwnedSchools.Select(x => x.SchoolId).ToList();
+
+            //schoolIds.AddRange((IEnumerable<Guid>)teacherSchoolIds);
+
+            schoolIds = schoolIds
+                .Concat(teacherSchoolIds.Where(id => id.HasValue).Select(id => id.Value))
+                .Distinct()
+                .ToList();
+
+            var classes = _classRepository.GetAll().Include(x => x.School).AsEnumerable().Where(x => schoolIds.Any(schoolId => schoolId == x.SchoolId) && !x.IsCourse && !x.IsDeleted).ToList();
+
             // owned classes
-            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.CreatedById == userId && !x.IsCourse && !x.IsDeleted).ToListAsync();
+            //var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.CreatedById == userId && !x.IsCourse && !x.IsDeleted).ToListAsync();
             var OwnedClasses = _mapper.Map<List<ClassViewModel>>(classes);
-            model.OwnedClasses = OwnedClasses;            
-
+            model.OwnedClasses = OwnedClasses;
             // owned courses
-            var courses = await _courseRepository.GetAll().Where(x => x.CreatedById == userId && !x.IsDeleted).ToListAsync();
+            //var courses = await _courseRepository.GetAll().Where(x => x.CreatedById == userId && !x.IsDeleted).ToListAsync();
+            var courses =  _courseRepository.GetAll().Include(x => x.School).AsEnumerable().Where(x => schoolIds.Any(schoolId => schoolId == x.SchoolId) && !x.IsDeleted).ToList();
 
-            var classAsCourse = await _classRepository.GetAll().Include(x => x.School).Where(x => x.IsCourse && x.CreatedById == userId).ToListAsync();
+            var classAsCourse = _classRepository.GetAll().Include(x => x.School).AsEnumerable().Where(x => schoolIds.Any(schoolId => schoolId == x.SchoolId) && x.IsCourse).ToList();
 
             foreach (var classInfo in classAsCourse)
             {
@@ -84,12 +100,12 @@ namespace LMS.Services.UserDashboard
             model.OwnedCourses = OwnedCourses;
 
             // followed schools
-            var schoolFollowers =  await _schoolFollowerRepository.GetAll()
+            var schoolFollowers = await _schoolFollowerRepository.GetAll()
                 .Include(x => x.User)
                 .Include(x => x.School)
                 .Where(x => x.UserId == userId && !x.School.IsDeleted).ToListAsync();
 
-            
+
             var followedSchool = _mapper.Map<IEnumerable<SchoolViewModel>>(schoolFollowers.Select(x => x.School).ToList());
             model.FollowedSchools = followedSchool;
 
@@ -108,12 +124,12 @@ namespace LMS.Services.UserDashboard
                 .Include(x => x.Course)
                 .Where(x => x.Student.UserId == userId && !x.Course.IsDeleted).ToListAsync();
 
-             var followedCourses = _mapper.Map<IEnumerable<CourseViewModel>>(courseStudents.Select(x => x.Course).ToList());
+            var followedCourses = _mapper.Map<IEnumerable<CourseViewModel>>(courseStudents.Select(x => x.Course).ToList());
             model.FollowedCourses = followedCourses;
 
             //unread messages
-            
-            var unreadMessages = await _ChatHeadRepository.GetAll().Where(x=> x.ReceiverId == userId).Select(x => x.UnreadMessageCount).ToListAsync();
+
+            var unreadMessages = await _ChatHeadRepository.GetAll().Where(x => x.ReceiverId == userId).Select(x => x.UnreadMessageCount).ToListAsync();
             int messageCount = 0;
             foreach (var item in unreadMessages)
             {
