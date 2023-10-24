@@ -3701,6 +3701,14 @@ p-autocomplete li:before {
   color: black;
 }
 
+@media screen and (max-width: 576px) {
+  .p-toast-top-right {
+    right: initial;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
 .p-toast-top-right {
   z-index: 99999 !important;
 }
