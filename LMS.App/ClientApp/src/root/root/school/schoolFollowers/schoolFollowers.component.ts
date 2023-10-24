@@ -48,7 +48,7 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
     hamburgerCountSubscription!: Subscription;
     hamburgerCount:number = 0;
     changeLanguageSubscription!: Subscription;
-
+    showSearchButtonForMobile:boolean=false;
     isFollowersTab:boolean=true;
 
     @ViewChild('closeReportModal') closeReportModal!: ElementRef;
@@ -300,6 +300,10 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
       this.scrolled = false;
       this.isFollowersTab = true;
     });
+  }
+
+  openSearch(){
+    this.showSearchButtonForMobile=true;
   }
 
 

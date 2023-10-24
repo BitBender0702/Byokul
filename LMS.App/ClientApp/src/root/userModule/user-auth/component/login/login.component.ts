@@ -52,6 +52,12 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
     isChangePassword!: boolean;
     isPasswordVisible:boolean=false;
     confirmEmailSubscription!:Subscription;
+    registrationSubscription!:Subscription;
+    forgotPasswordSubscription!: Subscription;
+    resetPasswordSubscription!:Subscription;
+    changePasswordSubscription!: Subscription;
+    setPasswordSubscription!: Subscription;
+    confirmedEmail: string = "";
     @ViewChild('passwordInput') passwordInput!: ElementRef<HTMLInputElement>;
   
 
@@ -62,6 +68,10 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
       private http: HttpClient,authService:AuthService,private route: ActivatedRoute,private cd: ChangeDetectorRef) { 
       super(injector);
       this._authService = authService;
+      this.route.queryParams.subscribe(params => {
+        debugger
+        this.confirmedEmail = params['confirmedEmail'];
+      });
     }
   
     ngOnInit(): void {   
@@ -88,6 +98,15 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
          console.log(error);   
       }
 
+
+      if(this.confirmedEmail == "true"){
+        setTimeout(() => {
+        const translatedMessage = this.translateService.instant('EmailConfirmedSuccessfully');
+        const translatedSummary = this.translateService.instant('Success');
+        this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage});      
+        this.cd.detectChanges();
+        },100)
+      }
       if (!this.confirmEmailSubscription) {
         this.confirmEmailSubscription = confirmEmailResponse.subscribe(response => {
            debugger
@@ -95,10 +114,10 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
            if(response != ''){
              this.isConfirmEmail = true;
              this.loginForm.controls.email.setValue(response);    
-             const translatedMessage = this.translateService.instant('EmailConfirmedSuccessfully');
-             const translatedSummary = this.translateService.instant('Success');
-             this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,
-             });        
+            //  const translatedMessage = this.translateService.instant('EmailConfirmedSuccessfully');
+            //  const translatedSummary = this.translateService.instant('Success');
+            //  this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,
+            //  });        
            }
            else{
              this.isConfirmEmail = false;
@@ -110,17 +129,23 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
              // }
    
          });
-       }
+      }
 
-      registrationResponse.subscribe(response => {
+       if (!this.registrationSubscription) {
+        this.registrationSubscription = registrationResponse.subscribe(response => {
         this.isRegister = response;
-      });
+       });
+      }
 
+      if (!this.forgotPasswordSubscription) {
+        this.forgotPasswordSubscription =
       forgotPassResponse.subscribe(response => {
         this.isForgotPassSent = response;
       });
+    }
 
-      resetPassResponse.subscribe(response => {
+    if (!this.resetPasswordSubscription) {
+      this.resetPasswordSubscription = resetPassResponse.subscribe(response => {
         debugger
         this.cd.detectChanges();
         this.isResetpassword = response;
@@ -131,8 +156,10 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
           });        
         }
       });
+    }
 
-      changePassResponse.subscribe(response => {
+    if (!this.changePasswordSubscription) {
+      this.changePasswordSubscription = changePassResponse.subscribe(response => {
         this.cd.detectChanges();
         this.isChangePassword = response;
         if(this.isChangePassword){
@@ -142,8 +169,10 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
           });        
         }
       });
+    }
 
-      setPassResponse.subscribe(response => {
+      if (!this.setPasswordSubscription) {
+        this.setPasswordSubscription = setPassResponse.subscribe(response => {
         this.cd.detectChanges();
         this.isSetPassword = response;
         if(this.isSetPassword){
@@ -154,10 +183,27 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
         }
       });
     }
+  }
 
     ngOnDestroy(): void {
+      debugger
       if (this.confirmEmailSubscription) {
         this.confirmEmailSubscription.unsubscribe();
+      }
+      if (this.registrationSubscription) {
+        this.registrationSubscription.unsubscribe();
+      }
+      if (this.forgotPasswordSubscription) {
+        this.forgotPasswordSubscription.unsubscribe();
+      }
+      if (this.resetPasswordSubscription) {
+        this.resetPasswordSubscription.unsubscribe();
+      }
+      if (this.changePasswordSubscription) {
+        this.changePasswordSubscription.unsubscribe();
+      }
+      if (this.setPasswordSubscription) {
+        this.setPasswordSubscription.unsubscribe();
       }
     }
   

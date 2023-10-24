@@ -41,6 +41,7 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
     changeLanguageSubscription!: Subscription;
     reportFollowerForm!:FormGroup;
     isSubmitted: boolean = false;
+    showSearchButtonForMobile:boolean=false;
     reportedFollowerId!:string;
     notificationViewModel!:NotificationViewModel;
     reportFollowerViewModel!:ReportFollowerViewModel
@@ -291,6 +292,10 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
         this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage});
     });
 
+  }
+
+  openSearch(){
+    this.showSearchButtonForMobile=true;
   }
 
 

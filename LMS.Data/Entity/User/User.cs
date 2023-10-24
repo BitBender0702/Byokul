@@ -29,6 +29,8 @@ namespace LMS.Data.Entity
         public IEnumerable<UserLanguage> UserLanguage { get; set; }
         public string? BlobSasToken { get; set; }
         public DateTime? BlobSasTokenExirationTime { get; set; }
+        public bool IsResetTokenUsed { get; set; }
+
 
 
     }

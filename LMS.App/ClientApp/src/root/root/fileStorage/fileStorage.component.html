@@ -49,8 +49,15 @@
             <img src="../../../assets/images/logo.svg" />
           </span>
           <div class="d-xl-none d-flex">
+            <button *ngIf="!showSearchButtonForMobile"
+              type="button"
+              class="mobile-search border_btn"
+              (click)="openSearchBox()"
+            >
+              <img src="../../../../assets/images/search-lg.svg" />
+            </button>
             <div class="search-header position-relative me-2">
-              <input
+              <input *ngIf="showSearchButtonForMobile"
                 [(ngModel)]="searchString"
                 class="form-control h_44"
                 type="search"

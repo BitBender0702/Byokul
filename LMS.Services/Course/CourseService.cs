@@ -402,7 +402,7 @@ namespace LMS.Services
                 if (singleLanguage == null)
                 {
 
-                    var classDetails = await _classService.GetClassByName(courseName, loginUserId);
+                    var classDetails = await _classService.GetClassByName(courseName, loginUserId,true);
 
                     var courses = new CourseDetailsViewModel();
                     courses.CourseId = classDetails.ClassId;
@@ -427,21 +427,21 @@ namespace LMS.Services
                     var isCourseRated = _classCourseRatingRepository.GetAll().Where(x => x.ClassId == model.CourseId && x.UserId == loginUserId).FirstOrDefault();
                     if (isCourseRated == null)
                     {
-                        model.IsRatedByUser = false;
+                        courses.IsRatedByUser = false;
                     }
                     else
                     {
-                        model.IsRatedByUser = true;
+                        courses.IsRatedByUser = true;
                     }
 
                     var isBanned = _courseStudentRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.StudentId == Guid.Parse(loginUserId)).FirstOrDefault();
                     if (isBanned == null)
                     {
-                        model.IsBannedFromClassCourse = false;
+                        courses.IsBannedFromClassCourse = false;
                     }
                     else
                     {
-                        model.IsBannedFromClassCourse = true;
+                        courses.IsBannedFromClassCourse = true;
                     }
 
                     courses.CourseCertificates = _mapper.Map<IEnumerable<CertificateViewModel>>(classDetails.ClassCertificates);
@@ -459,7 +459,7 @@ namespace LMS.Services
                     //    model.IsCourseAccessable = true;
 
                     //}
-                    model.IsCourseAccessable = true;
+                    courses.IsCourseAccessable = true;
 
                     return courses;
 
@@ -1034,9 +1034,9 @@ namespace LMS.Services
 
         }
 
-        public async Task<ClassViewModel> ConvertToClass(string courseName)
+        public async Task<ClassViewModel> ConvertToClass(Guid courseId)
         {
-            Class classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Replace(" ", "").ToLower() == courseName).FirstOrDefaultAsync();
+            Class classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassId == courseId).FirstOrDefaultAsync();
             if (classes != null)
             {
                 classes.IsCourse = false;

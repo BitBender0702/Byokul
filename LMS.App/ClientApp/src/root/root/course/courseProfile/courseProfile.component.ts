@@ -237,8 +237,10 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     var selectedLang = localStorage.getItem("selectedLanguage");
     this.translate.use(selectedLang ?? '');
 
-    var newCourseName = this.courseName.split(" ").join("").toLowerCase();
-    newCourseName = decodeURIComponent(newCourseName);
+    // var newCourseName = this.courseName.replace(/\s/g, '').toLowerCase();
+    var newCourseName = this.courseName.toLowerCase();
+
+    // newCourseName = decodeURIComponent(newCourseName);
     this._courseService.getCourseById(newCourseName).subscribe((response) => {
       debugger
       this.postsPageNumber = 1;
@@ -383,7 +385,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         //   }
         // const translatedSummary = this.translateService.instant('Success');
         // this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});      
-        let newCourseName = this.courseName.split(" ").join("").toLowerCase()   
+        let newCourseName = this.courseName.replace(/\s/g, '').toLowerCase()   
         this._courseService.getCourseById(newCourseName).subscribe((response) => {
           this.course = response;
           this.titleService.setTitle(this.course.courseName);
@@ -1114,13 +1116,15 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
   }
 
-  convertToClass(courseName: string, schoolName: string) {
+  convertToClass(courseName: string, schoolName: string,courseId:string) {
     courseName = courseName.split(" ").join("").toLowerCase();
     schoolName = schoolName.split(" ").join("").toLowerCase()
-    this._courseService.convertToClass(courseName).subscribe((response) => {
+    this._courseService.convertToClass(courseId).subscribe((response) => {
       // localStorage.setItem("isCourseConvertIntoClass", JSON.stringify(true));
       convertIntoClassResponse.next({ classId: response.classId, className: response.className, avatar: response.avatar, school: response.school });
       // convertIntoCourseResponse.next({courseId:response.courseId, courseName:response.courseName, avatar:response.avatar,school:response.school});
+      // const encodedCourseName = encodeURIComponent(courseName);
+      // const encodedSchoolName = encodeURIComponent(schoolName);
       this.router.navigate([`profile/class/${schoolName}/${courseName}`],
         { state: { convertIntoClass: true } });
       //window.location.href = `profile/class/${schoolName.replace(" ","").toLowerCase()}/${courseName.replace(" ","").toLowerCase()}`;

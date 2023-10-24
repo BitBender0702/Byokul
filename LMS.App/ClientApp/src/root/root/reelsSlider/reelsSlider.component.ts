@@ -838,11 +838,12 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     debugger
     if (this.from == "user") {
       this._userService.GetSliderReelsByUserId(this.userId, this.firstPostId, 1).subscribe((response: any) => {
+        debugger
         this.reels.unshift(...response);
         this.lastPostId = this.reels[this.reels.length - 1].id;
         this.firstPostId = this.reels[0].id;
         // this.isReelLoad = true;
-        this.cd.detectChanges();
+        // this.cd.detectChanges();
         // this.reels = this.reels.concat(response);
 
       });

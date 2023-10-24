@@ -388,7 +388,8 @@
                           "
                           class="routeLink"
                         >
-                          <img [lazyLoad]="post.parentImageUrl" />
+                          <img *ngIf="post.parentImageUrl != null && post.parentImageUrl != 'null'" [lazyLoad]="post.parentImageUrl" />
+                          <img *ngIf="post.parentImageUrl == null || post.parentImageUrl == 'null'" src="../../../../assets/images/classLogo.png"/>
                         </a>
                         <a
                           *ngIf="post.postAuthorType == 3"
@@ -397,7 +398,8 @@
                           "
                           class="routeLink"
                         >
-                          <img [lazyLoad]="post.parentImageUrl" />
+                          <img *ngIf="post.parentImageUrl != null && post.parentImageUrl != 'null'" [lazyLoad]="post.parentImageUrl" />
+                          <img *ngIf="post.parentImageUrl == null || post.parentImageUrl == 'null'" src="../../../../assets/images/classLogo.png"/>
                         </a>
                         <a
                           *ngIf="post.postAuthorType == 4"
@@ -1723,7 +1725,8 @@
                           <div
                             class="feed_userpicture school-img rounded-circle fit-image"
                           >
-                            <img [lazyLoad]="post.parentImageUrl" />
+                            <img *ngIf="post.parentImageUrl != null && post.parentImageUrl != 'null'" [lazyLoad]="post.parentImageUrl" />
+                            <img *ngIf="post.parentImageUrl == null || post.parentImageUrl == 'null'" src="../../../../assets/images/classLogo.png"/>
                           </div>
                         </a>
                         <a
@@ -1736,7 +1739,8 @@
                           <div
                             class="feed_userpicture school-img rounded-circle fit-image"
                           >
-                            <img [lazyLoad]="post.parentImageUrl" />
+                            <img *ngIf="post.parentImageUrl != null && post.parentImageUrl != 'null'" [lazyLoad]="post.parentImageUrl" />
+                            <img *ngIf="post.parentImageUrl == null || post.parentImageUrl == 'null'" src="../../../../assets/images/classLogo.png"/>
                           </div>
                         </a>
                         <a

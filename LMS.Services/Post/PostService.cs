@@ -28,6 +28,7 @@ using iText.Kernel.Pdf.Canvas.Parser.ClipperLib;
 //using LMS.Data.Entity.Chat;
 using LMS.Data.Migrations;
 using System.Threading;
+using System.Web;
 
 namespace LMS.Services
 {
@@ -149,6 +150,9 @@ namespace LMS.Services
                     model.ModeratorName = user.FirstName;
                     model.PostId = post.Id;
                     var response = await _bigBlueButtonService.Create(model);
+                    //response.StreamUrl = HttpUtility.UrlEncode(response.StreamUrl);
+
+                    //response.StreamUrl = Uri.EscapeDataString(response.StreamUrl);
                     postViewModel.StreamUrl = response.StreamUrl;
                     post.StreamUrl = response.StreamUrl;
                     post.ExternalMeetingId = new Guid(response.MeetingID);
@@ -177,7 +181,7 @@ namespace LMS.Services
                 if (scheduleLiveStream)
                     await ScheduleLiveStream(postViewModel, createdById, new DateTimeOffset(postViewModel.DateTime.Value));
                 if (isPostSchedule)
-                    BackgroundJob.Schedule(() => SaveSchedulePostInfo(postViewModel.Id), new DateTimeOffset(postViewModel.DateTime.Value));
+                    BackgroundJob.Schedule(() => SaveSchedulePostInfo(postViewModel, createdById), new DateTimeOffset(postViewModel.DateTime.Value));
 
 
                 if (postViewModel.PostType == (int)PostTypeEnum.Reel)
@@ -432,12 +436,50 @@ namespace LMS.Services
 
         //}
 
-        public async Task SaveSchedulePostInfo(Guid postId)
+        public async Task SaveSchedulePostInfo(PostViewModel postViewModel, string userId)
         {
-            var post = _postRepository.GetById(postId);
+            string reelId = "";           
+            var post = _postRepository.GetById(postViewModel.Id);
             post.IsPostSchedule = false;
             _postRepository.Update(post);
             _postRepository.Save();
+
+            if (postViewModel.PostType == (int)PostTypeEnum.Reel)
+            {
+                var postAttachment = await _postAttachmentRepository.GetAll().Where(x => x.PostId == post.Id).FirstOrDefaultAsync();
+                if (postAttachment != null)
+                {
+                    reelId = postAttachment.Id.ToString();
+                }
+
+            }
+
+            //this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.PostUploaded, notificationContent, this.loginUserId, response.id, response.postType, null, null).subscribe((response) => {
+            //});
+
+            var from = postViewModel.PostAuthorType == 1 ? "school" : postViewModel.PostAuthorType == 2 ? "class" : postViewModel.PostAuthorType == 4 ? "user" : null;
+            var chatType = from == "user" ? 1 : from == "school" ? 3 : from == "class" ? 4 : 0;
+
+            // here we aill add signal to send notification
+            var user = _userRepository.GetById(userId);
+            var model = new NotificationViewModel();
+            {
+                model.Id = Guid.NewGuid();
+                model.UserId = userId;
+                model.ActionDoneBy = userId;
+                model.Avatar = user.Avatar;
+                model.IsRead = false;
+                model.NotificationContent = user.FirstName + " " + user.LastName + " " + Constants.PostReadyToViewMessage;
+                model.NotificationType = NotificationTypeEnum.PostUploaded;
+                model.PostId = postViewModel.Id;
+                model.PostType = postViewModel.PostType == (int)PostTypeEnum.Post ? (int)PostTypeEnum.Post : (int)PostTypeEnum.Reel;
+                model.ChatType = (Data.Entity.Chat.ChatType)chatType;
+                model.ReelId = reelId == "" ? null : reelId;
+            }
+
+            var responseNotification = await _notificationService.AddNotification(model);
+            var userConnectionId = _chatHubs.GetUserConnectionId(userId);
+            await _hubContext.Clients.Client(userConnectionId).SendAsync("ReceiveNotification", responseNotification);
         }
 
         public async Task ScheduleLiveStream(PostViewModel postViewModel, string userId, DateTimeOffset scheduledTime)
@@ -453,7 +495,8 @@ namespace LMS.Services
             //if (postViewModel.UploadVideos != null)
             //{
             //post.StreamUrl = postAttachment.FileUrl;
-            post.IsLive = true;
+            post.IsLive = false;
+            post.IsLiveStreamEnded = false;
             post.IsPostSchedule = false;
             _postRepository.Update(post);
             _postRepository.Save();
@@ -776,6 +819,13 @@ namespace LMS.Services
 
                 post.ParentName = classes.ClassName;
                 post.ParentImageUrl = classes.Avatar;
+            }
+
+            if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
+            {
+                var course = await _courseRepository.GetAll().Include(x => x.ServiceType).Include(x => x.Accessibility).Where(x => x.CourseId == post.ParentId).FirstOrDefaultAsync();
+                post.ParentName = course.CourseName;
+                post.ParentImageUrl = course.Avatar;
             }
 
             if (post.PostAuthorType == (int)PostAuthorTypeEnum.User)
@@ -1628,9 +1678,13 @@ namespace LMS.Services
 
         }
 
-        public async Task DeletePost(Guid id)
+        public async Task<bool> DeletePost(Guid id)
         {
             var post = _postRepository.GetById(id);
+            if (post == null)
+            {
+                return false;
+            }
             var postAttachments = await _postAttachmentRepository.GetAll().Where(x => x.PostId == id).ToListAsync();
             if (postAttachments.Count() != 0)
             {
@@ -1675,6 +1729,7 @@ namespace LMS.Services
 
             _postRepository.Delete(post.Id);
             _postRepository.Save();
+            return true;
         }
 
         public async Task UpdateCommentThrottling(Guid postId, int noOfComments)

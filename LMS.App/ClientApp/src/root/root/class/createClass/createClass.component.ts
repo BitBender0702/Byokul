@@ -179,6 +179,7 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
     accessibilityId: this.fb.control('',[Validators.required]),
     languageIds:this.fb.control('',[Validators.required]),
     price:this.fb.control(''),
+    // createdById:this.fb.control(''),
     currency:this.fb.control(this.currencies[0].key),
     tags:this.fb.control('',[Validators.required]),
 
@@ -244,17 +245,21 @@ ngOnDestroy(): void {
 
 getSchoolsForDropdown(){
   this._classService.getAllSchools().subscribe((response) => {
+    debugger
     this.schools = response;
     this.createClassForm1.controls['schoolId'].setValue(this.schools[0].schoolId, {onlySelf: true});
     this.createClassForm1.controls['schoolName'].setValue(this.schools[0].schoolName, {onlySelf: true});
+    // this.createClassForm1.controls['createdById'].setValue(this.selectedSchool.createdById, {onlySelf: true});
   });  
 }
 
 getSelectedSchool(schoolId:string){
   this._classService.getSelectedSchool(schoolId).subscribe((response) => {
+    debugger
     this.selectedSchool = response;
     this.createClassForm1.controls['schoolId'].setValue(this.selectedSchool.schoolId, {onlySelf: true});
     this.createClassForm1.controls['schoolName'].setValue(this.selectedSchool.schoolName, {onlySelf: true});
+    // this.createClassForm1.controls['createdById'].setValue(this.selectedSchool.createdById, {onlySelf: true});
 
   });  
 }

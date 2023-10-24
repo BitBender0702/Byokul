@@ -126,6 +126,7 @@ namespace LMS.Services.Account
             user.UniqueToken = String.Format("{0}-{1}", Guid.NewGuid(), Guid.NewGuid());
             user.TokenCreatedOn = DateTime.UtcNow;
             user.ResetTokenExirationTime = DateTime.UtcNow.AddHours(1);
+            user.IsResetTokenUsed = false;
 
             var response = await _userManager.UpdateAsync(user);
             if (response.Succeeded)
@@ -229,7 +230,7 @@ namespace LMS.Services.Account
             var user = await GetUserByToken(resetPasswordDto.PasswordResetToken);
             try
             {
-                if (user.ResetTokenExirationTime < DateTime.UtcNow)
+                if (user.ResetTokenExirationTime < DateTime.UtcNow || user.IsResetTokenUsed)
                 {
                     return Constants.ResetTokenExpired;
                 }
@@ -247,6 +248,9 @@ namespace LMS.Services.Account
                     if (result.Succeeded)
                     {
                         result = await _userManager.AddPasswordAsync(user, resetPasswordDto.NewPassword);
+                        user.IsResetTokenUsed = true;
+                        _userRepository.Update(user);
+                        _userRepository.Save();
                     }
                     var token = await GenerateJSONWebToken(user);
                     return token;

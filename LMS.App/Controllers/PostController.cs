@@ -325,8 +325,12 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> DeletePost(Guid id)
         {
-            await _postService.DeletePost(id);
-            return Ok();
+            var response = await _postService.DeletePost(id);
+            if (response)
+            {
+                return Ok(new { Success = true, Message = Constants.PostDeletedSuccessfully });
+            }
+            return Ok(new { Success = false, Message = Constants.PostIdInvalid });
         }
 
         [Route("updateCommentThrottling")]

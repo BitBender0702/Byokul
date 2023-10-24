@@ -1417,6 +1417,7 @@
                     [src]="topChatHeadUser?.profileURL"
                     alt=""
                     class="rounded-circle"
+                    style="width: 100%; height: 100%;"
                   />
                   <img
                     *ngIf="topChatViewChatType == 1 && topChatHeadUser?.profileURL==null && topChatHeadUser?.gender==1"
@@ -1441,6 +1442,7 @@
                     [src]="topChatViewIcon"
                     alt=""
                     class="rounded-circle"
+                    style="width: 100%; height: 100%;"
                   />
                   <img
                     *ngIf="topChatViewChatType == 4"
@@ -1452,6 +1454,7 @@
                     [src]="topChatViewIcon"
                     alt=""
                     class="rounded-circle"
+                    style="width: 100%; height: 100%;"
                   />
                   <img
                     *ngIf="topChatViewChatType == 5"
@@ -1463,6 +1466,7 @@
                     [src]="topChatViewIcon"
                     alt=""
                     class="rounded-circle"
+                    style="width: 100%; height: 100%;"
                   />
                 </div>
                 <div class="name p-3 d-flex">
@@ -3072,7 +3076,10 @@
                 >
                   <span
                     class="bg-transparent rounded-circle comment-post-user rounded-circle"
-                    ><img class="rounded-circle" [src]="sender.avatar" />
+                    ><img class="rounded-circle" *ngIf="sender.avatar!=null" [src]="sender.avatar" />
+                    <img class="rounded-circle"  *ngIf="sender.avatar == null && gender == '1'"  src="../../../assets/images/maleProfile.jfif" />
+                    <img class="rounded-circle"  *ngIf="sender.avatar == null && (gender == '2' || gender == '3')"   src="../../../assets/images/femaleProfile.jfif" />
+                  
                   </span>
                   <input
                     (keyup)="getTextMessage($event, schoolInboxReceiverId)"
