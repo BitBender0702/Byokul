@@ -122,6 +122,25 @@ export class PostService{
         return this.http.post(`${this.apiUrl}/posts/getLikedPostsByUser`,null, {params:queryParams,headers: this.headers});
     }
 
+    GetSavedSliderReelsByUserId(userId:string,postId:string,scrollType:number){
+        debugger
+        let queryParams = new HttpParams().append("userId",userId).append("postId",postId).append("scrollType",scrollType);
+        return this.http.get(`${this.apiUrl}/posts/getSavedSliderReelsByUserId`, {params:queryParams,headers: this.headers}
+        );
+    }
+    GetSharedSliderReelsByUserId(userId:string,postId:string,scrollType:number){
+        debugger
+        let queryParams = new HttpParams().append("userId",userId).append("postId",postId).append("scrollType",scrollType);
+        return this.http.get(`${this.apiUrl}/posts/getSharedSliderReelsByUserId`, {params:queryParams,headers: this.headers}
+        );
+    }
+    GetLikedSliderReelsByUserId(userId:string,postId:string,scrollType:number){
+        debugger
+        let queryParams = new HttpParams().append("userId",userId).append("postId",postId).append("scrollType",scrollType);
+        return this.http.get(`${this.apiUrl}/posts/getLikedSliderReelsByUserId`, {params:queryParams,headers: this.headers}
+        );
+    }
+
     pinUnpinSavedPost(attachmentId:any,isPinned:boolean): Observable<any> {
         this.token = localStorage.getItem("jwt")?? '';
         this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
