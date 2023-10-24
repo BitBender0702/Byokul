@@ -271,6 +271,30 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [Route("getSavedSliderReelsByUserId")]
+        [HttpGet]
+        public async Task<IActionResult> GetSavedSliderReels(string userId, Guid postId, ScrollTypesEnum scrollType)
+        {
+            var response = await _postService.GetSavedSliderReels(userId, postId, scrollType);
+            return Ok(response);
+        }
+
+        [Route("getSharedSliderReelsByUserId")]
+        [HttpGet]
+        public async Task<IActionResult> GetSharedSliderReels(string userId, Guid postId, ScrollTypesEnum scrollType)
+        {
+            var response = await _postService.GetSharedSliderReels(userId, postId, scrollType);
+            return Ok(response);
+        }
+
+        [Route("getLikedSliderReelsByUserId")]
+        [HttpGet]
+        public async Task<IActionResult> GetLikedSliderReels(string userId, Guid postId, ScrollTypesEnum scrollType)
+        {
+            var response = await _postService.GetLikedSliderReels(userId, postId, scrollType);
+            return Ok(response);
+        }
+
         [Route("pinUnpinSavedPost")]
         [HttpPost]
         public async Task<IActionResult> PinUnpinSavedPost(Guid postId, bool isPinned)
