@@ -144,6 +144,15 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     if (this.from == Constant.User) {
       this.getReelsByUser(this.ownerId);
     }
+    if (this.from == Constant.Saved) {
+      this.getSavedReelsByUser(this.ownerId);
+    }
+    if (this.from == Constant.Liked) {
+      this.getLikedReelsByUser(this.ownerId);
+    }
+    if (this.from == Constant.Shared) {
+      this.getSharedReelsByUser(this.ownerId);
+    }
     if (this.from == Constant.School) {
       this.getReelsBySchool(this.ownerId);
     }
@@ -281,7 +290,116 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getReelsByUser(userId: string) {
+    debugger;
     this._userService.GetSliderReelsByUserId(userId, this.reelId, 3).subscribe((response) => {
+      this.reels = response;
+      this.selectedReel = this.reels[0];
+      this.lastPostId = this.reels[this.reels.length - 1].id;
+      this.firstPostId = this.reels[0].id;
+      this.reels.forEach((reel: any) => {
+        
+        // Extract postAttachments from each reel and add them to the allPostAttachments list
+        const postAttachments = reel.postAttachments;
+        this.videos.push(...postAttachments);
+      });
+
+      var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
+      this.selectedReelIndex = index;
+      this.carouselConfig.initialSlide = this.selectedReelIndex;
+      // this.reels.find(x => x.);
+      this.initializeReelsSlider();
+      setTimeout(() => {
+        const initialVideoElement = document.querySelector(`#video-${this.selectedReelIndex}`);
+        if(initialVideoElement){
+          const firstElement = initialVideoElement.children[0];
+          if (firstElement) {
+            const videoElement = firstElement.children[0] as HTMLVideoElement;
+            if (videoElement) {
+              videoElement?.play();
+              videoElement.autoplay = true;
+            }
+          }
+        }
+      }, 1000);
+    });
+  }
+
+
+  getSavedReelsByUser(userId:string){
+    debugger;
+    this._postService.GetSavedSliderReelsByUserId(userId, this.reelId, 3).subscribe((response) => {
+      debugger
+      this.reels = response;
+      this.selectedReel = this.reels[0];
+      this.lastPostId = this.reels[this.reels.length - 1].id;
+      this.firstPostId = this.reels[0].id;
+      this.reels.forEach((reel: any) => {
+        
+        // Extract postAttachments from each reel and add them to the allPostAttachments list
+        const postAttachments = reel.postAttachments;
+        this.videos.push(...postAttachments);
+      });
+
+      var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
+      this.selectedReelIndex = index;
+      this.carouselConfig.initialSlide = this.selectedReelIndex;
+      // this.reels.find(x => x.);
+      this.initializeReelsSlider();
+      setTimeout(() => {
+        const initialVideoElement = document.querySelector(`#video-${this.selectedReelIndex}`);
+        if(initialVideoElement){
+          const firstElement = initialVideoElement.children[0];
+          if (firstElement) {
+            const videoElement = firstElement.children[0] as HTMLVideoElement;
+            if (videoElement) {
+              videoElement?.play();
+              videoElement.autoplay = true;
+            }
+          }
+        }
+      }, 1000);
+    });
+  }
+
+  getSharedReelsByUser(userId:string){
+    debugger;
+    this._postService.GetSharedSliderReelsByUserId(userId, this.reelId, 3).subscribe((response) => {
+      debugger
+      this.reels = response;
+      this.selectedReel = this.reels[0];
+      this.lastPostId = this.reels[this.reels.length - 1].id;
+      this.firstPostId = this.reels[0].id;
+      this.reels.forEach((reel: any) => {
+        
+        // Extract postAttachments from each reel and add them to the allPostAttachments list
+        const postAttachments = reel.postAttachments;
+        this.videos.push(...postAttachments);
+      });
+
+      var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
+      this.selectedReelIndex = index;
+      this.carouselConfig.initialSlide = this.selectedReelIndex;
+      // this.reels.find(x => x.);
+      this.initializeReelsSlider();
+      setTimeout(() => {
+        const initialVideoElement = document.querySelector(`#video-${this.selectedReelIndex}`);
+        if(initialVideoElement){
+          const firstElement = initialVideoElement.children[0];
+          if (firstElement) {
+            const videoElement = firstElement.children[0] as HTMLVideoElement;
+            if (videoElement) {
+              videoElement?.play();
+              videoElement.autoplay = true;
+            }
+          }
+        }
+      }, 1000);
+    });
+  }
+
+  getLikedReelsByUser(userId:string){
+    debugger;
+    this._postService.GetLikedSliderReelsByUserId(userId, this.reelId, 3).subscribe((response) => {
       debugger
       this.reels = response;
       this.selectedReel = this.reels[0];
@@ -717,8 +835,45 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
 
   onSlideUp() {
+    debugger
     if (this.from == "user") {
       this._userService.GetSliderReelsByUserId(this.userId, this.firstPostId, 1).subscribe((response: any) => {
+        this.reels.unshift(...response);
+        this.lastPostId = this.reels[this.reels.length - 1].id;
+        this.firstPostId = this.reels[0].id;
+        // this.isReelLoad = true;
+        this.cd.detectChanges();
+        // this.reels = this.reels.concat(response);
+
+      });
+    }
+
+    if (this.from == "saved") {
+      this._postService.GetSavedSliderReelsByUserId(this.userId, this.firstPostId, 1).subscribe((response: any) => {
+        this.reels.unshift(...response);
+        this.lastPostId = this.reels[this.reels.length - 1].id;
+        this.firstPostId = this.reels[0].id;
+        // this.isReelLoad = true;
+        this.cd.detectChanges();
+        // this.reels = this.reels.concat(response);
+
+      });
+    }
+
+    if (this.from == "shared") {
+      this._postService.GetSharedSliderReelsByUserId(this.userId, this.firstPostId, 1).subscribe((response: any) => {
+        this.reels.unshift(...response);
+        this.lastPostId = this.reels[this.reels.length - 1].id;
+        this.firstPostId = this.reels[0].id;
+        // this.isReelLoad = true;
+        this.cd.detectChanges();
+        // this.reels = this.reels.concat(response);
+
+      });
+    }
+
+    if (this.from == "liked") {
+      this._postService.GetLikedSliderReelsByUserId(this.userId, this.firstPostId, 1).subscribe((response: any) => {
         this.reels.unshift(...response);
         this.lastPostId = this.reels[this.reels.length - 1].id;
         this.firstPostId = this.reels[0].id;
@@ -799,9 +954,69 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   currentSlide: any;
   onSlideDown() {
     // if(!this.isReelLoad){
-
+      debugger
     if (this.from == "user" && !this.isFinishDownReels) {
       this._userService.GetSliderReelsByUserId(this.userId, this.lastPostId, 2).subscribe((response: any) => {
+        
+        this.reels.push(...response);
+        if (response.length == 0) {
+          this.isFinishDownReels = true;
+        }
+        const previousSlideCount = this.reels.length;
+
+        this.lastPostId = this.reels[this.reels.length - 1].id;
+        this.firstPostId = this.reels[0].id;
+
+        const newSlideCount = this.reels.length;
+        const slideOffset = newSlideCount - previousSlideCount;
+        this.cd.detectChanges();
+        // this.reels = this.reels.concat(response);
+
+      });
+    }
+
+    if (this.from == "saved" && !this.isFinishDownReels) {
+      this._postService.GetSavedSliderReelsByUserId(this.userId, this.lastPostId, 2).subscribe((response: any) => {
+        
+        this.reels.push(...response);
+        if (response.length == 0) {
+          this.isFinishDownReels = true;
+        }
+        const previousSlideCount = this.reels.length;
+
+        this.lastPostId = this.reels[this.reels.length - 1].id;
+        this.firstPostId = this.reels[0].id;
+
+        const newSlideCount = this.reels.length;
+        const slideOffset = newSlideCount - previousSlideCount;
+        this.cd.detectChanges();
+        // this.reels = this.reels.concat(response);
+
+      });
+    }
+
+    if (this.from == "shared" && !this.isFinishDownReels) {
+      this._postService.GetSharedSliderReelsByUserId(this.userId, this.lastPostId, 2).subscribe((response: any) => {
+        
+        this.reels.push(...response);
+        if (response.length == 0) {
+          this.isFinishDownReels = true;
+        }
+        const previousSlideCount = this.reels.length;
+
+        this.lastPostId = this.reels[this.reels.length - 1].id;
+        this.firstPostId = this.reels[0].id;
+
+        const newSlideCount = this.reels.length;
+        const slideOffset = newSlideCount - previousSlideCount;
+        this.cd.detectChanges();
+        // this.reels = this.reels.concat(response);
+
+      });
+    }
+
+    if (this.from == "liked" && !this.isFinishDownReels) {
+      this._postService.GetLikedSliderReelsByUserId(this.userId, this.lastPostId, 2).subscribe((response: any) => {
         
         this.reels.push(...response);
         if (response.length == 0) {

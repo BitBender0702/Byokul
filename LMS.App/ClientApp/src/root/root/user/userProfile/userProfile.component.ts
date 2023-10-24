@@ -1223,16 +1223,39 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     const isMobileOrTab = window.innerWidth < screenWidthThreshold;
     // if (isMobileOrTab) {
     // this.router.navigateByUrl(`user/reelsView/${this.user.id}/user/${postAttachmentId}`);
-    this.router.navigate(
-      [`user/reelsView/${this.user.id}/user/${postAttachmentId}/${postId}`],
-      { state: { post: { postId: postId } } });
-
+  
     //   } else {
     //   const initialState = {
     //     postAttachmentId: postAttachmentId
     //   };
     //   this.bsModalService.show(ReelsViewComponent,{initialState});
     // }
+
+
+    if(this.isPostTab){
+      debugger;
+      this.router.navigate(
+        [`user/reelsView/${this.user.id}/user/${postAttachmentId}/${postId}`],
+        { state: { post: { postId: postId } } });
+  
+    }
+    else if(this.isSavedPostTab){
+      this.router.navigate(
+        [`user/reelsView/${this.user.id}/saved/${postAttachmentId}/${postId}`],
+        { state: { post: { postId: postId } } });
+    }
+    else if(this.isLikedPostTab){
+      this.router.navigate(
+        [`user/reelsView/${this.user.id}/liked/${postAttachmentId}/${postId}`],
+        { state: { post: { postId: postId } } });
+    }
+    else if(this.isSharedPostTab){
+      this.router.navigate(
+        [`user/reelsView/${this.user.id}/shared/${postAttachmentId}/${postId}`],
+        { state: { post: { postId: postId } } });
+    }
+
+
   }
 
   userChat() {
@@ -1851,11 +1874,14 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
 
   removeLogo() {
+    debugger;
     if (this.user.avatar != null) {
       this.userAvatar = '';
     }
     this.uploadImage = '';
     this.fileToUpload.set('avatarImage', '');
+    this.selectedImage= '';
+    this.cd.detectChanges();
   }
 
   openShareClassCourseModal(schoolName: string, name: string, type: number) {
