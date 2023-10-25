@@ -643,7 +643,7 @@
                   class="school-grid-box position-relative"
                 >
                   <div
-                    class="schoolgrid-header d-flex align-items-center justify-content-between position-relative"
+                    class="schoolgrid-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between position-relative gap-3"
                   >
                     <div class="d-flex align-items-center gap-2">
                       <div class="school-gridprofile-icon">
@@ -667,14 +667,22 @@
                       <h2
                         class="d-inline-block font_20 fw_600 text_sec1 mb-0 word-break"
                       >
-                        {{post.parentName}}<span *ngIf="post.isParentVerified" class="verified-badge"><img src="../../../../assets/images/green-verified.svg"/></span>
+                        {{ post.parentName
+                        }}<span
+                          *ngIf="post.isParentVerified"
+                          class="verified-badge"
+                          ><img
+                            src="../../../../assets/images/green-verified.svg"
+                        /></span>
                       </h2>
-                      <sharedSSC-component [sharedProfileUrl]="post.sharedProfileUrl"></sharedSSC-component>
-                    
+                      <sharedSSC-component
+                        [sharedProfileUrl]="post.sharedProfileUrl"
+                      ></sharedSSC-component>
+
                       <!-- <img class="ms-5" src="../../../../assets/images/Upload-dark.svg"/>
                       <h4 class="fw-500 ms-3 font_16 mt-2" style="color: grey">{{ "SharedPost" | translate }}</h4> -->
-                 
-                    <div *ngIf="post.isLive">
+
+                      <div *ngIf="post.isLive">
                         <img src="../../../../assets/images/live_img.png" />
                       </div>
                       <br />
@@ -1652,7 +1660,7 @@
                               *ngIf="post.postAttachments[0]?.fileType == 2"
                               class="videofile"
                             >
-                            <!-- style="height: 300px" -->
+                              <!-- style="height: 300px" -->
                               <img
                                 class="w-100 13"
                                 [lazyLoad]="
@@ -3092,9 +3100,7 @@
                             class="font_12 school-grid-date d-inline-block mb-0 text_ltgray"
                           >
                             {{ item?.startDate | date : "d" }}
-                            {{
-                              item?.startDate | date : "MMMM" | translate
-                            }}
+                            {{ item?.startDate | date : "MMMM" | translate }}
                             -&nbsp;
                           </p>
                           <p
@@ -6421,7 +6427,7 @@
                               <div class="videofile">
                                 <!-- style="height: 300px" -->
                                 <img
-                                class="w-100 21"
+                                  class="w-100 21"
                                   [src]="postAttachment.fileThumbnail"
                                 />
                               </div>
@@ -6569,7 +6575,7 @@
                               <div class="videofile">
                                 <!-- style="height: 300px" -->
                                 <img
-                                class="w-100 22"
+                                  class="w-100 22"
                                   [src]="postAttachment.fileThumbnail"
                                 />
                               </div>
@@ -6712,7 +6718,7 @@
                               <div class="videofile">
                                 <!-- style="height: 300px" -->
                                 <img
-                                class="w-100 23"
+                                  class="w-100 23"
                                   [src]="postAttachment.fileThumbnail"
                                 />
                               </div>
@@ -7249,6 +7255,15 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="d-flex justify-content-end mt-5 create_post_btn">
+        <button
+          (click)="openPostModal()"
+          type="button"
+          class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step"
+        >
+          <img lazyLoad="../../../assets/images/Edit-light.svg" alt="edit" />
+        </button>
       </div>
     </div>
 

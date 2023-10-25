@@ -1,135 +1,490 @@
 <div *ngIf="isDataLoaded">
-    <div appBsModal bsModal class="modal fade edit-school-modal show d-block post-view-large" id="create-post" tabindex="-1"
-    aria-labelledby="create-post" aria-hidden="true" area-modal="true">
+  <div
+    appBsModal
+    bsModal
+    class="modal fade edit-school-modal show d-block post-view-large"
+    id="create-post"
+    tabindex="-1"
+    aria-labelledby="create-post"
+    aria-hidden="true"
+    area-modal="true"
+  >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header border-0 justify-content-center position-relative">
-          <div class="custom-language-select liv-postbtn">
-          </div>
-          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center"></h1>
-          <button (click)="close()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
-              src="../../../assets/images/cross.svg" /></button>
+        <div
+          class="modal-header border-0 justify-content-center position-relative"
+        >
+          <div class="custom-language-select liv-postbtn"></div>
+          <h1
+            class="modal-title font_22 text_dark fw_700 border-0 text-center"
+          ></h1>
+          <button
+            (click)="close()"
+            type="button"
+            class="btn-close shadow-none"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            <img src="../../../assets/images/cross.svg" />
+          </button>
         </div>
         <div class="modal-body">
-      <section class="f-poppins">
-        <div>
-          <div class="live-header d-flex align-items-center justify-content-between">
-            <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark invisible"><img
-                src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-            <h1 class="font_22 text_dark fw-bold text-center mb-md-0">{{'Class/Course'| translate }}</h1>
-            <button (click)="back()" type="button" class="back-button bg-transparent border-0 invisible"><img src="../../../assets/images/cross.svg" /></button>
-          </div>
-          <div [ngClass]="showCommentsField? 'live-content' : 'live-content full-widthreel'"  class="live-content" id="reel_content">
-            <div class="live-inner w-100">
-              <div class="live-image overflow-hidden position-relative">
-                  <img *ngIf="classCourseDetails.classCourseItem.thumbnailType == 1" [src]="classCourseDetails.classCourseItem.thumbnailUrl" class="me-2"/>
-                  <!-- <video *ngIf="classCourseDetails.classCourseItem.thumbnailType == 2" width="100%" height="700" controls>
+          <section class="f-poppins">
+            <div>
+              <div
+                class="live-header d-flex align-items-center justify-content-between"
+              >
+                <button
+                  (click)="back()"
+                  type="button"
+                  class="back-button bg-transparent border-0 font_16 fw_400 text_dark invisible"
+                >
+                  <img src="../../../assets/images/arrow-left.svg" />
+                  {{ "Back" | translate }}
+                </button>
+                <h1 class="font_22 text_dark fw-bold text-center mb-md-0">
+                  {{ "Class/Course" | translate }}
+                </h1>
+                <button
+                  (click)="back()"
+                  type="button"
+                  class="back-button bg-transparent border-0 invisible"
+                >
+                  <img src="../../../assets/images/cross.svg" />
+                </button>
+              </div>
+              <div
+                [ngClass]="
+                  showCommentsField
+                    ? 'live-content'
+                    : 'live-content full-widthreel'
+                "
+                class="live-content flex-column flex-md-row gap-4"
+                id="reel_content"
+              >
+                <div class="w-100">
+                  <div class="live-image overflow-hidden position-relative">
+                    <img
+                      *ngIf="
+                        classCourseDetails.classCourseItem.thumbnailType == 1
+                      "
+                      [src]="classCourseDetails.classCourseItem.thumbnailUrl"
+                      class="w-100"
+                    />
+                    <!-- <video *ngIf="classCourseDetails.classCourseItem.thumbnailType == 2" width="100%" height="700" controls>
                     <source [src]="classCourseDetails.classCourseItem.thumbnailUrl" type="video/mp4"/>
                   </video> -->
 
-                   <videoJs-component *ngIf="classCourseDetails.classCourseItem.thumbnailType == 2"
-                                [postAttachment]="classCourseDetails.classCourseItem"
-                                [isClassCourseThumbnail]="true"
-                              ></videoJs-component>
-                <div class="live-bottom-text p-3">
-                  <h5 *ngIf="classCourseDetails.classCourseItem?.type == 1" [routerLink]="['/profile/class', classCourseDetails.classCourseItem?.schoolName,classCourseDetails.classCourseItem?.name]" (click)="hideModal()" class="font_14 mb-0 fw_600 text_sec1 cursor_pointer">{{classCourseDetails.classCourseItem?.name}} 
-                  </h5>
-                  <h5 *ngIf="classCourseDetails.classCourseItem?.type == 2" [routerLink]="['/profile/course', classCourseDetails.classCourseItem?.schoolName,classCourseDetails.classCourseItem?.name]" (click)="hideModal()" class="font_14 mb-0 fw_600 text_sec1 cursor_pointer">{{classCourseDetails.classCourseItem?.name}} 
-                  </h5>
-                </div>
-                <div class="reel-username font_16 white_text">
-                    <div *ngIf="classCourseDetails.classCourseItem.avatar != null">
-                      <img [src]="classCourseDetails.classCourseItem.avatar" class="me-2"/> {{classCourseDetails.classCourseItem.name}}
+                    <videoJs-component
+                      *ngIf="
+                        classCourseDetails.classCourseItem.thumbnailType == 2
+                      "
+                      [postAttachment]="classCourseDetails.classCourseItem"
+                      [isClassCourseThumbnail]="true"
+                    ></videoJs-component>
+                    <div class="live-bottom-text p-3">
+                      <h5
+                        *ngIf="classCourseDetails.classCourseItem?.type == 1"
+                        [routerLink]="[
+                          '/profile/class',
+                          classCourseDetails.classCourseItem?.schoolName,
+                          classCourseDetails.classCourseItem?.name
+                        ]"
+                        (click)="hideModal()"
+                        class="font_14 mb-0 fw_600 text_sec1 cursor_pointer"
+                      >
+                        {{ classCourseDetails.classCourseItem?.name }}
+                      </h5>
+                      <h5
+                        *ngIf="classCourseDetails.classCourseItem?.type == 2"
+                        [routerLink]="[
+                          '/profile/course',
+                          classCourseDetails.classCourseItem?.schoolName,
+                          classCourseDetails.classCourseItem?.name
+                        ]"
+                        (click)="hideModal()"
+                        class="font_14 mb-0 fw_600 text_sec1 cursor_pointer"
+                      >
+                        {{ classCourseDetails.classCourseItem?.name }}
+                      </h5>
                     </div>
-                </div>
-              </div>
-             
-            </div>
-            <div>
-              <span
-                *ngIf="classCourseDetails.classCourseItem.price != null && classCourseDetails.classCourseItem.price != 0"
-                class="payment-profile font_12 text_ltgray ms-2" style="margin-left: 65px !important;">
-               <strong class="cost_theme font_14">${{ classCourseDetails.classCourseItem.price }}
-               </strong>{{ "OnePayment" | translate }}
-              </span>
-              <button
-            *ngIf="
-              !isOwner &&
-              classCourseDetails.classCourseItem.price != null &&
-              classCourseDetails.classCourseItem.price != 0
-            "
-            (click)="openPaymentModal(classCourseDetails.classCourseItem)"
-            type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44 ps-4 pe-4"
-          >
-            {{ "Buy" | translate }} {{ classCourseDetails.price }} {{ classCourseDetails.currency }}
-          </button>
-              <div [ngClass]="showCommentsField? 'accordion-open d-block' : 'accordion-open d-none'" id="live-chat-open" style="display:none;max-width: 505px;">
-              <div class="live-action-buttons d-flex justify-content-between">
-                <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/chat-icon.svg"
-                    class="d-block rightImagesWidth" /> {{classCourseDetails.classCourseItem.commentsCount}}</button>
-                <button *ngIf="classCourseDetails.classCourseItem.type == 1" type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/eye.svg"
-                    class="d-block rightImagesWidth" /> {{classCourseDetails.classCourseItem.classViews.length}}</button>
-                    <button *ngIf="classCourseDetails.classCourseItem.type == 2" type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/eye.svg"
-                      class="d-block" style="max-width: 20px;"/> {{classCourseDetails.classCourseItem.courseViews.length}}</button>
-                    <button (click)="likeUnlikeClassCourse(classCourseDetails.classCourseItem.id,true,classCourseDetails.classCourseItem.type)" type="button" class="btn bg-transparent text_ltgray font_12">
-                      <img *ngIf="classCourseDetails.classCourseItem.isLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block rightImagesWidth" />
-                      <img *ngIf="!classCourseDetails.classCourseItem.isLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block rightImagesWidth" />
-    
-                      <span *ngIf="likesClassCourseLength != undefined && currentLikedClassCourseId== classCourseDetails.classCourseItem.id">{{likesClassCourseLength}}</span>
-                      <span *ngIf="currentLikedClassCourseId!= classCourseDetails.classCourseItem.id && classCourseDetails.classCourseItem.type == 1">{{classCourseDetails.classCourseItem.classLikes.length}}</span>
-                      <span *ngIf="currentLikedClassCourseId!= classCourseDetails.classCourseItem.id && classCourseDetails.classCourseItem.type == 2">{{classCourseDetails.classCourseItem.courseLikes.length}}</span>
-                    </button>
-                    <button (click)="saveClassCourse(classCourseDetails.classCourseItem.id,classCourseDetails.classCourseItem.type)" type="button" class="btn bg-transparent text_ltgray font_12">
-                      <img *ngIf="!classCourseDetails.classCourseItem.isClassCourseSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block rightImagesWidth">
-                      <img *ngIf="classCourseDetails.classCourseItem.isClassCourseSavedByCurrentUser" src="../../../../assets/images/bookmark-dash-fill.svg" class="d-block rightImagesWidth">
-                      {{classCourseDetails.classCourseItem.savedClassCourseCount}}
-                    </button>
-                <button (click)="openShareClassCourseModal(classCourseDetails.classCourseItem.schoolName, classCourseDetails.classCourseItem.name, classCourseDetails.classCourseItem.type)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
-                    class="d-block rightImagesWidth" /> 0</button>
-              </div>
-              <div class="live-chat-box text-center">
-                <div *ngIf="classCourseDetails.classCourseItem.createdById == userId && classCourseDetails.classCourseItem.isCommentsDisabled" (click)="showCommentsDiv(classCourseDetails.classCourseItem.id,classCourseDetails.classCourseItem.type,true)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatDisabled'| translate }}
-                </div>
-                <div *ngIf="classCourseDetails.classCourseItem.createdById == userId && !classCourseDetails.classCourseItem.isCommentsDisabled" (click)="showCommentsDiv(classCourseDetails.classCourseItem.id,classCourseDetails.classCourseItem.type,false)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
-                </div>
-                <div *ngIf="!classCourseDetails.classCourseItem.isCommentsDisabled" #groupChatList id="groupChat" class="live-chat-outer">
-                <div *ngFor="let item of classCourseDetails.classCourseItem.comments" class="live-message d-flex position-relative align-items-start">
-                  <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]"  *ngIf="item.userAvatar != null" [src]="item.userAvatar" class="comment-user cursor_pointer">
-                  <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]"  *ngIf="item.userAvatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="comment-user cursor_pointer"/>
-                  <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]"  *ngIf="(item.userAvatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="comment-user cursor_pointer"/>
-                  <div class="d-flex flex-column"><p (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" class="font_12 fw_600 text-start mb-0 cursor_pointer">{{item.userName}}
-                    <span *ngIf="item.user?.isVarified || item?.isUserVerified" class="verified-badge"
-                    ><img src="../../../../assets/images/green-verified.svg"/>
-                   </span>
-                  </p>
-                    <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
+                    <div class="reel-username font_16 white_text">
+                      <div
+                        *ngIf="
+                          classCourseDetails.classCourseItem.avatar != null
+                        "
+                      >
+                        <img
+                          [src]="classCourseDetails.classCourseItem.avatar"
+                          class="me-2"
+                        />
+                        {{ classCourseDetails.classCourseItem.name }}
+                      </div>
+                    </div>
                   </div>
-                  <button (click)="likeUnlikeComments(item.id,true,item.isCommentLikedByCurrentUser,item.likeCount)" type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat">
-                    <img *ngIf="item.isCommentLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
-                    <img *ngIf="!item.isCommentLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />
-                    <span>{{item.likeCount}}</span>
-                  </button>
                 </div>
-              </div>
-                <div class="add-comment d-flex align-items-center justify-content-between" style="margin-left:-40px">
-                  <span class="bg-transparent rounded-circle comment-post-user rounded-circle"><img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',sender.id]" *ngIf="sender.avatar != null" [src]="sender.avatar" style="max-height: 100%;"/>
-                    <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',sender.id]" *ngIf="sender.avatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" style="max-height: 100%;cursor: pointer;"/>
-                    <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',sender.id]" *ngIf="(sender.avatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" style="max-height: 100%;cursor: pointer;"/>
-                  </span>
-                  <input [(ngModel)]="messageToGroup" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="{{'YourMessage'| translate }}">
-                  <button (click)="sendToGroup()" type="button" class="comment-btn border-0"><img src="../../../assets/images/arrowup.svg" /></button>
+                <div style="min-width: 300px">
+                  <div
+                    [ngClass]="
+                      showCommentsField
+                        ? 'accordion-open d-block'
+                        : 'accordion-open d-none'
+                    "
+                    id="live-chat-open"
+                    style="display: none; max-width: 505px"
+                  >
+                    <div class="d-flex align-items-center gap-4 mb-4">
+                      <span
+                        *ngIf="
+                          classCourseDetails.classCourseItem.price != null &&
+                          classCourseDetails.classCourseItem.price != 0
+                        "
+                        class="payment-profile font_12 text_ltgray"
+                      >
+                        <strong class="cost_theme font_14"
+                          >${{
+                            classCourseDetails.classCourseItem.price
+                          }} </strong
+                        >{{ "OnePayment" | translate }}
+                      </span>
+                      <button
+                        *ngIf="
+                          !isOwner &&
+                          classCourseDetails.classCourseItem.price != null &&
+                          classCourseDetails.classCourseItem.price != 0
+                        "
+                        (click)="
+                          openPaymentModal(classCourseDetails.classCourseItem)
+                        "
+                        type="button"
+                        class="btn custom-btn primary_btn earning-btn fw_400 h_44 ps-4 pe-4"
+                      >
+                        {{ "Buy" | translate }} {{ classCourseDetails.price }}
+                        {{ classCourseDetails.currency }}
+                      </button>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <button
+                        type="button"
+                        class="btn bg-transparent text_ltgray font_12 cursor_auto"
+                      >
+                        <img
+                          src="../../../assets/images/chat-icon.svg"
+                          class="d-block rightImagesWidth"
+                        />
+                        {{ classCourseDetails.classCourseItem.commentsCount }}
+                      </button>
+                      <button
+                        *ngIf="classCourseDetails.classCourseItem.type == 1"
+                        type="button"
+                        class="btn bg-transparent text_ltgray font_12 cursor_auto"
+                      >
+                        <img
+                          src="../../../assets/images/eye.svg"
+                          class="d-block rightImagesWidth"
+                        />
+                        {{
+                          classCourseDetails.classCourseItem.classViews.length
+                        }}
+                      </button>
+                      <button
+                        *ngIf="classCourseDetails.classCourseItem.type == 2"
+                        type="button"
+                        class="btn bg-transparent text_ltgray font_12 cursor_auto"
+                      >
+                        <img
+                          src="../../../assets/images/eye.svg"
+                          class="d-block"
+                          style="max-width: 20px"
+                        />
+                        {{
+                          classCourseDetails.classCourseItem.courseViews.length
+                        }}
+                      </button>
+                      <button
+                        (click)="
+                          likeUnlikeClassCourse(
+                            classCourseDetails.classCourseItem.id,
+                            true,
+                            classCourseDetails.classCourseItem.type
+                          )
+                        "
+                        type="button"
+                        class="btn bg-transparent text_ltgray font_12"
+                      >
+                        <img
+                          *ngIf="
+                            classCourseDetails.classCourseItem
+                              .isLikedByCurrentUser
+                          "
+                          src="../../../assets/images/heart-red.svg"
+                          class="d-block rightImagesWidth"
+                        />
+                        <img
+                          *ngIf="
+                            !classCourseDetails.classCourseItem
+                              .isLikedByCurrentUser
+                          "
+                          src="../../../assets/images/Heart-dark.svg"
+                          class="d-block rightImagesWidth"
+                        />
+
+                        <span
+                          *ngIf="
+                            likesClassCourseLength != undefined &&
+                            currentLikedClassCourseId ==
+                              classCourseDetails.classCourseItem.id
+                          "
+                          >{{ likesClassCourseLength }}</span
+                        >
+                        <span
+                          *ngIf="
+                            currentLikedClassCourseId !=
+                              classCourseDetails.classCourseItem.id &&
+                            classCourseDetails.classCourseItem.type == 1
+                          "
+                          >{{
+                            classCourseDetails.classCourseItem.classLikes.length
+                          }}</span
+                        >
+                        <span
+                          *ngIf="
+                            currentLikedClassCourseId !=
+                              classCourseDetails.classCourseItem.id &&
+                            classCourseDetails.classCourseItem.type == 2
+                          "
+                          >{{
+                            classCourseDetails.classCourseItem.courseLikes
+                              .length
+                          }}</span
+                        >
+                      </button>
+                      <button
+                        (click)="
+                          saveClassCourse(
+                            classCourseDetails.classCourseItem.id,
+                            classCourseDetails.classCourseItem.type
+                          )
+                        "
+                        type="button"
+                        class="btn bg-transparent text_ltgray font_12"
+                      >
+                        <img
+                          *ngIf="
+                            !classCourseDetails.classCourseItem
+                              .isClassCourseSavedByCurrentUser
+                          "
+                          src="../../../../assets/images/Bookmark-dark.svg"
+                          class="d-block rightImagesWidth"
+                        />
+                        <img
+                          *ngIf="
+                            classCourseDetails.classCourseItem
+                              .isClassCourseSavedByCurrentUser
+                          "
+                          src="../../../../assets/images/bookmark-dash-fill.svg"
+                          class="d-block rightImagesWidth"
+                        />
+                        {{
+                          classCourseDetails.classCourseItem
+                            .savedClassCourseCount
+                        }}
+                      </button>
+                      <button
+                        (click)="
+                          openShareClassCourseModal(
+                            classCourseDetails.classCourseItem.schoolName,
+                            classCourseDetails.classCourseItem.name,
+                            classCourseDetails.classCourseItem.type
+                          )
+                        "
+                        type="button"
+                        class="btn bg-transparent text_ltgray font_12"
+                      >
+                        <img
+                          src="../../../assets/images/Upload.svg"
+                          class="d-block rightImagesWidth"
+                        />
+                        0
+                      </button>
+                    </div>
+                    <div class="live-chat-box text-center">
+                      <div
+                        *ngIf="
+                          classCourseDetails.classCourseItem.createdById ==
+                            userId &&
+                          classCourseDetails.classCourseItem.isCommentsDisabled
+                        "
+                        (click)="
+                          showCommentsDiv(
+                            classCourseDetails.classCourseItem.id,
+                            classCourseDetails.classCourseItem.type,
+                            true
+                          )
+                        "
+                        class="chat-enabled d-inline-flex align-items-center cursor_pointer"
+                      >
+                        <img src="../../../assets/images/Unlock.svg" />{{
+                          "ChatDisabled" | translate
+                        }}
+                      </div>
+                      <div
+                        *ngIf="
+                          classCourseDetails.classCourseItem.createdById ==
+                            userId &&
+                          !classCourseDetails.classCourseItem.isCommentsDisabled
+                        "
+                        (click)="
+                          showCommentsDiv(
+                            classCourseDetails.classCourseItem.id,
+                            classCourseDetails.classCourseItem.type,
+                            false
+                          )
+                        "
+                        class="chat-enabled d-inline-flex align-items-center cursor_pointer"
+                      >
+                        <img src="../../../assets/images/Unlock.svg" />{{
+                          "ChatEnabled" | translate
+                        }}
+                      </div>
+                      <div
+                        *ngIf="
+                          !classCourseDetails.classCourseItem.isCommentsDisabled
+                        "
+                        #groupChatList
+                        id="groupChat"
+                        class="live-chat-outer"
+                      >
+                        <div
+                          *ngFor="
+                            let item of classCourseDetails.classCourseItem
+                              .comments
+                          "
+                          class="live-message d-flex position-relative align-items-start"
+                        >
+                          <img
+                            (click)="hideCommentModal()"
+                            [routerLink]="['/user/userProfile', item.userId]"
+                            *ngIf="item.userAvatar != null"
+                            [src]="item.userAvatar"
+                            class="comment-user cursor_pointer"
+                          />
+                          <img
+                            (click)="hideCommentModal()"
+                            [routerLink]="['/user/userProfile', item.userId]"
+                            *ngIf="item.userAvatar == null && gender == '1'"
+                            src="../../../assets/images/maleProfile.jfif"
+                            class="comment-user cursor_pointer"
+                          />
+                          <img
+                            (click)="hideCommentModal()"
+                            [routerLink]="['/user/userProfile', item.userId]"
+                            *ngIf="
+                              item.userAvatar == null &&
+                              (gender == '2' || gender == '3')
+                            "
+                            src="../../../assets/images/femaleProfile.jfif"
+                            class="comment-user cursor_pointer"
+                          />
+                          <div class="d-flex flex-column">
+                            <p
+                              (click)="hideCommentModal()"
+                              [routerLink]="['/user/userProfile', item.userId]"
+                              class="font_12 fw_600 text-start mb-0 cursor_pointer"
+                            >
+                              {{ item.userName }}
+                              <span
+                                *ngIf="
+                                  item.user?.isVarified || item?.isUserVerified
+                                "
+                                class="verified-badge"
+                                ><img
+                                  src="../../../../assets/images/green-verified.svg"
+                                />
+                              </span>
+                            </p>
+                            <p class="text_sec1 font_12 fw_400 text-start mb-0">
+                              {{ item.content }}
+                            </p>
+                          </div>
+                          <button
+                            (click)="
+                              likeUnlikeComments(
+                                item.id,
+                                true,
+                                item.isCommentLikedByCurrentUser,
+                                item.likeCount
+                              )
+                            "
+                            type="button"
+                            class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"
+                          >
+                            <img
+                              *ngIf="item.isCommentLikedByCurrentUser"
+                              src="../../../assets/images/heart-red.svg"
+                              class="d-block"
+                            />
+                            <img
+                              *ngIf="!item.isCommentLikedByCurrentUser"
+                              src="../../../assets/images/Heart-dark.svg"
+                              class="d-block"
+                            />
+                            <span>{{ item.likeCount }}</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        class="add-comment d-flex align-items-center justify-content-between"
+                      >
+                        <span
+                          class="bg-transparent rounded-circle comment-post-user rounded-circle"
+                          ><img
+                            (click)="hideCommentModal()"
+                            [routerLink]="['/user/userProfile', sender.id]"
+                            *ngIf="sender.avatar != null"
+                            [src]="sender.avatar"
+                            style="max-height: 100%"
+                          />
+                          <img
+                            (click)="hideCommentModal()"
+                            [routerLink]="['/user/userProfile', sender.id]"
+                            *ngIf="sender.avatar == null && gender == '1'"
+                            src="../../../assets/images/maleProfile.jfif"
+                            style="max-height: 100%; cursor: pointer"
+                          />
+                          <img
+                            (click)="hideCommentModal()"
+                            [routerLink]="['/user/userProfile', sender.id]"
+                            *ngIf="
+                              sender.avatar == null &&
+                              (gender == '2' || gender == '3')
+                            "
+                            src="../../../assets/images/femaleProfile.jfif"
+                            style="max-height: 100%; cursor: pointer"
+                          />
+                        </span>
+                        <input
+                          [(ngModel)]="messageToGroup"
+                          type="text"
+                          class="form-control rounded-8 font_14 fw_400"
+                          placeholder="{{ 'YourMessage' | translate }}"
+                        />
+                        <button
+                          (click)="sendToGroup()"
+                          type="button"
+                          class="comment-btn border-0"
+                        >
+                          <img src="../../../assets/images/arrowup.svg" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            </div>
-          </div>
+          </section>
         </div>
-      </section>
+      </div>
     </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    
-    
+  </div>
+</div>
