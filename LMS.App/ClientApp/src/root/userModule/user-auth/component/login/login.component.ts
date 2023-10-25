@@ -161,7 +161,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
     if (!this.changePasswordSubscription) {
       this.changePasswordSubscription = changePassResponse.subscribe(response => {
         this.cd.detectChanges();
-        this.isChangePassword = response;
+        this.isChangePassword = response.isPasswordChange;
         if(this.isChangePassword){
           const translatedMessage = this.translateService.instant('PasswordChangedSuccessfully');
           const translatedSummary = this.translateService.instant('Success');

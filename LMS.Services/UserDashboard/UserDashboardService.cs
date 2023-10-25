@@ -60,6 +60,8 @@ namespace LMS.Services.UserDashboard
 
             // owned schools
             var schools = await _schoolRepository.GetAll().Where(x => x.CreatedById == userId && !x.IsDeleted).ToListAsync();
+            var teacherSchools = await _schoolTeacherRepository.GetAll().Include(x => x.Teacher).Include(x => x.School).Where(x => x.Teacher.UserId == userId).Select(x => x.School).ToListAsync();
+            schools = schools.Concat(teacherSchools).Distinct() .ToList();
             var OwnedSchools = _mapper.Map<List<SchoolViewModel>>(schools);
             model.OwnedSchools = OwnedSchools;
 
@@ -107,6 +109,7 @@ namespace LMS.Services.UserDashboard
 
 
             var followedSchool = _mapper.Map<IEnumerable<SchoolViewModel>>(schoolFollowers.Select(x => x.School).ToList());
+            followedSchool = followedSchool.Where(x => !(OwnedSchools.Any(y => y.SchoolId == x.SchoolId))).ToList();
             model.FollowedSchools = followedSchool;
 
             // followed classes
