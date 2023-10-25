@@ -4,6 +4,7 @@ using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Post;
 using LMS.Data.Entity;
+using LMS.DataAccess.Repository;
 using LMS.Services;
 using LMS.Services.Common;
 using Microsoft.AspNetCore.Authorization;
@@ -19,20 +20,23 @@ namespace LMS.App.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IClassService _classService;
         private readonly ICommonService _commonService;
+        private IGenericRepository<School> _schoolRepository;
 
-        public ClassController(UserManager<User> userManager, IClassService classService, ICommonService commonService)
+        public ClassController(UserManager<User> userManager, IClassService classService, ICommonService commonService, IGenericRepository<School> schoolRepository)
         {
             _userManager = userManager;
             _classService = classService;
             _commonService = commonService;
+            _schoolRepository = schoolRepository;
         }
 
         [Route("saveNewClass")]
         [HttpPost]
         public async Task<IActionResult> SaveNewClass(ClassViewModel classViewModel)
         {
-            var userId = await GetUserIdAsync(this._userManager);
-            var classId = await _classService.SaveNewClass(classViewModel, userId);
+            //var userId = await GetUserIdAsync(this._userManager);
+            var school = _schoolRepository.GetById(classViewModel.SchoolId);
+            var classId = await _classService.SaveNewClass(classViewModel, school.CreatedById);
             return Ok(classId);
         }
 

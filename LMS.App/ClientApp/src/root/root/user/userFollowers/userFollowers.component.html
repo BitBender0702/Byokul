@@ -17,14 +17,14 @@
           <div class="buttonTab">
             <button class="font_22 fw_700 f-monteserrat mb-md-0 btn custom-btn primary_btn earning-btn fw_400 h_44 me-4 ps-4 pe-4"
             (click)="getFollowers()"
-            
+
             >
               {{ "Followers" | translate }}
             </button>
-  
+
             <button class="font_22 fw_700 f-monteserrat mb-md-0 btn custom-btn primary_btn earning-btn fw_400 h_44 me-4 ps-4 pe-4"
             (click)="getBannedUser()"
-            
+
             >
               {{ "BannedUser" | translate }}
             </button>
@@ -98,12 +98,26 @@
           </div>
         </div>
 
+        <div class="mobile-action-button mb-4 mt-4">
+          <button
+            class="fw_700 f-monteserrat btn custom-btn primary_btn earning-btn fw_400 h_44 ps-4 pe-4"
+            (click)="getFollowers()"
+          >
+            {{ "Followers" | translate }}
+          </button>
+          <button
+            class="fw_700 f-monteserrat btn custom-btn primary_btn earning-btn fw_400 h_44 ps-4 pe-4"
+            (click)="getBannedUser()"
+          >
+            {{ "BannedUser" | translate }}
+          </button>
+        </div>
         <!---- Followers list html start ------>
         <div class="wht_newbox followers_box">
           <ul class="list-unstyled before-none mb-0">
             <div *ngIf="followersTab">
               <li *ngFor="let userfollower of userFollowers" class="mb-0">
-                <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
                   <span class="followers-name font_16 text_sec1 fw_600">
                     <img *ngIf="userfollower.follower.avatar != null"
                     (click)="getSelectedFollower(userfollower.follower.id)"
@@ -134,7 +148,7 @@
                       }}</a
                     ></span
                   >
-                  <span *ngIf="isOwner && followersTab" class="report_follower">
+                  <span *ngIf="isOwner && followersTab" class="followe_report d-flex align-items-center gap-3">
                     <button
                       (click)="
                         getReportFollower(
@@ -147,14 +161,14 @@
                       type="button"
                       data-bs-toggle="modal"
                       data-bs-target="#report-follower"
-                      class="border-0 bg-transparent font_14 text_dark fw_400 me-3 btn custom-btn primary_btn earning-btn fw_400 h_44 me-4 ps-4 pe-4"
+                      class="border-0 bg-transparent font_14 text_dark fw_400 btn custom-btn primary_btn earning-btn fw_400 h_44 ps-4 pe-4"
                     >
                       {{ "Report" | translate }}
                     </button>
                     <button
                       (click)="banFollower(userfollower.follower.id,userfollower.userId)"
                       type="button"
-                      class="border-0 bg-transparent font_14 text_dark fw_400 btn custom-btn primary_btn earning-btn fw_400 h_44 me-4 ps-4 pe-4"
+                      class="border-0 bg-transparent font_14 text_dark fw_400 btn custom-btn primary_btn earning-btn fw_400 h_44 ps-4 pe-4"
                     >
                       {{ "Ban" | translate }}
                     </button>
@@ -169,7 +183,7 @@
               <li *ngFor="let userfollower of userBannedFollowers" class="mb-0">
                 <div class="d-flex align-items-center justify-content-between">
                   <span class="followers-name font_16 text_sec1 fw_600">
-                    <img 
+                    <img
                     *ngIf="userfollower.follower.avatar != null"
                     (click)="getSelectedFollower(userfollower.follower.id)"
                       [src]="userfollower.follower.avatar"

@@ -1,29 +1,77 @@
 <div *ngIf="isDataLoaded">
-    <div appBsModal bsModal class="modal fade edit-school-modal show d-block post-view-large" id="create-post" tabindex="-1"
-    aria-labelledby="create-post" aria-hidden="true" area-modal="true">
+  <div
+    appBsModal
+    bsModal
+    class="modal fade edit-school-modal show d-block post-view-large"
+    id="create-post"
+    tabindex="-1"
+    aria-labelledby="create-post"
+    aria-hidden="true"
+    area-modal="true"
+  >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header border-0 justify-content-center position-relative">
-          <div class="custom-language-select liv-postbtn">
-          </div>
-          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center"></h1>
-          <button (click)="close()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
-              src="../../../assets/images/cross.svg" /></button>
+        <div
+          class="modal-header border-0 justify-content-center position-relative"
+        >
+          <div class="custom-language-select liv-postbtn"></div>
+          <h1
+            class="modal-title font_22 text_dark fw_700 border-0 text-center"
+          ></h1>
+          <button
+            (click)="close()"
+            type="button"
+            class="btn-close shadow-none"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            <img src="../../../assets/images/cross.svg" />
+          </button>
         </div>
         <div class="modal-body">
-      <section class="f-poppins">
-        <div>
-          <div class="live-header d-flex align-items-center justify-content-between">
-            <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark invisible"><img
-                src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-            <h1 class="font_22 text_dark fw-bold text-center mb-md-0">{{'Class/Course'| translate }}</h1>
-            <button (click)="back()" type="button" class="back-button bg-transparent border-0 invisible"><img src="../../../assets/images/cross.svg" /></button>
-          </div>
-          <div [ngClass]="showCommentsField? 'live-content' : 'live-content full-widthreel'"  class="live-content" id="reel_content">
-            <div class="live-inner w-100">
-              <div class="live-image overflow-hidden position-relative">
-                  <img *ngIf="classCourseDetails.classCourseItem.thumbnailType == 1" [src]="classCourseDetails.classCourseItem.thumbnailUrl" class="me-2"/>
-                  <!-- <video *ngIf="classCourseDetails.classCourseItem.thumbnailType == 2" width="100%" height="700" controls>
+          <section class="f-poppins">
+            <div>
+              <div
+                class="live-header d-flex align-items-center justify-content-between"
+              >
+                <button
+                  (click)="back()"
+                  type="button"
+                  class="back-button bg-transparent border-0 font_16 fw_400 text_dark invisible"
+                >
+                  <img src="../../../assets/images/arrow-left.svg" />
+                  {{ "Back" | translate }}
+                </button>
+                <h1 class="font_22 text_dark fw-bold text-center mb-md-0">
+                  {{ "Class/Course" | translate }}
+                </h1>
+                <button
+                  (click)="back()"
+                  type="button"
+                  class="back-button bg-transparent border-0 invisible"
+                >
+                  <img src="../../../assets/images/cross.svg" />
+                </button>
+              </div>
+              <div
+                [ngClass]="
+                  showCommentsField
+                    ? 'live-content'
+                    : 'live-content full-widthreel'
+                "
+                class="live-content flex-column flex-md-row gap-4"
+                id="reel_content"
+              >
+                <div class="w-100">
+                  <div class="live-image overflow-hidden position-relative">
+                    <img
+                      *ngIf="
+                        classCourseDetails.classCourseItem.thumbnailType == 1
+                      "
+                      [src]="classCourseDetails.classCourseItem.thumbnailUrl"
+                      class="w-100"
+                    />
+                    <!-- <video *ngIf="classCourseDetails.classCourseItem.thumbnailType == 2" width="100%" height="700" controls>
                     <source [src]="classCourseDetails.classCourseItem.thumbnailUrl" type="video/mp4"/>
                   </video> -->
 
@@ -147,7 +195,5 @@
     </div>
     </div>
     </div>
-    </div>
-    </div>
-    
-    
+  </div>
+</div>

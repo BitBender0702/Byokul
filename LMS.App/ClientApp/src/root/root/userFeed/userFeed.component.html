@@ -47,18 +47,18 @@
           <span class="logo_mobile d-xl-none">
             <img lazyLoad="../../../assets/images/logo.svg" />
           </span>
-          <div class="d-xl-none d-flex"
+          <div class="d-xl-none d-flex">
+            <button
+              *ngIf="!showSearchButtonForMobile"
+              type="button"
+              class="mobile-search border_btn"
+              (click)="openSearch()"
             >
-            <button *ngIf="!showSearchButtonForMobile"
-            type="button"
-            class="mobile-search border_btn"
-            (click)="openSearch()"
-          >
-            <img lazyLoad="../../../assets/images/search-lg.svg" />
-          </button>
-            <div class="search-header position-relative me-2"
-            >
-              <input *ngIf="showSearchButtonForMobile"
+              <img lazyLoad="../../../assets/images/search-lg.svg" />
+            </button>
+            <div class="search-header position-relative me-2">
+              <input
+                *ngIf="showSearchButtonForMobile"
                 [(ngModel)]="searchString"
                 class="form-control h_44"
                 type="search"
@@ -82,9 +82,11 @@
             >
               <img lazyLoad="../../../assets/images/menu.svg" />
               <span
-              *ngIf="hamburgerCount != 0" style="right: 0px;top: 2px;"
-              class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12"
-              >{{ hamburgerCount }}</span>
+                *ngIf="hamburgerCount != 0"
+                style="right: 0px; top: 2px"
+                class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12"
+                >{{ hamburgerCount }}</span
+              >
             </button>
           </div>
         </div>
@@ -314,14 +316,27 @@
                                   </div>
                                 </a>
                                 <!-- <img [lazyLoad]="school.avatar"/> {{school.schoolName}} -->
-                                <span  class="verified-badge" style="font-size: 90%;"
-                                >{{ post.parentName }}<img *ngIf="post.isParentVerified && post.postAuthorType == 4" src="../../../../assets/images/green-verified.svg" style="height: 20px;"
-                              />
-                              <img *ngIf="post.isParentVerified && post.postAuthorType == 1" src="../../../../assets/images/verified-badge.svg" style="height: 20px;"
-                              />
-
-                            </span>
-
+                                <span
+                                  class="verified-badge"
+                                  style="font-size: 90%"
+                                  >{{ post.parentName
+                                  }}<img
+                                    *ngIf="
+                                      post.isParentVerified &&
+                                      post.postAuthorType == 4
+                                    "
+                                    src="../../../../assets/images/green-verified.svg"
+                                    style="height: 20px"
+                                  />
+                                  <img
+                                    *ngIf="
+                                      post.isParentVerified &&
+                                      post.postAuthorType == 1
+                                    "
+                                    src="../../../../assets/images/verified-badge.svg"
+                                    style="height: 20px"
+                                  />
+                                </span>
                               </div>
                               <div
                                 class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"
@@ -388,8 +403,20 @@
                           "
                           class="routeLink"
                         >
-                          <img *ngIf="post.parentImageUrl != null && post.parentImageUrl != 'null'" [lazyLoad]="post.parentImageUrl" />
-                          <img *ngIf="post.parentImageUrl == null || post.parentImageUrl == 'null'" src="../../../../assets/images/classLogo.png"/>
+                          <img
+                            *ngIf="
+                              post.parentImageUrl != null &&
+                              post.parentImageUrl != 'null'
+                            "
+                            [lazyLoad]="post.parentImageUrl"
+                          />
+                          <img
+                            *ngIf="
+                              post.parentImageUrl == null ||
+                              post.parentImageUrl == 'null'
+                            "
+                            src="../../../../assets/images/classLogo.png"
+                          />
                         </a>
                         <a
                           *ngIf="post.postAuthorType == 3"
@@ -398,8 +425,20 @@
                           "
                           class="routeLink"
                         >
-                          <img *ngIf="post.parentImageUrl != null && post.parentImageUrl != 'null'" [lazyLoad]="post.parentImageUrl" />
-                          <img *ngIf="post.parentImageUrl == null || post.parentImageUrl == 'null'" src="../../../../assets/images/classLogo.png"/>
+                          <img
+                            *ngIf="
+                              post.parentImageUrl != null &&
+                              post.parentImageUrl != 'null'
+                            "
+                            [lazyLoad]="post.parentImageUrl"
+                          />
+                          <img
+                            *ngIf="
+                              post.parentImageUrl == null ||
+                              post.parentImageUrl == 'null'
+                            "
+                            src="../../../../assets/images/classLogo.png"
+                          />
                         </a>
                         <a
                           *ngIf="post.postAuthorType == 4"
@@ -429,9 +468,13 @@
                           (click)="getSelectedSchool(post.parentName)"
                           class="routeLink"
                         >
-                          {{ post.parentName }} <span *ngIf="post.isParentVerified" class="verified-badge"
-                          ><img src="../../../../assets/images/verified-badge.svg"
-                        /></span>
+                          {{ post.parentName }}
+                          <span
+                            *ngIf="post.isParentVerified"
+                            class="verified-badge"
+                            ><img
+                              src="../../../../assets/images/verified-badge.svg"
+                          /></span>
                         </a>
                         <a
                           *ngIf="post.postAuthorType == 2"
@@ -456,15 +499,35 @@
                           (click)="getUserDetails(post.parentId)"
                           class="routeLink"
                         >
-                          {{ post.parentName }} <span *ngIf="post.isParentVerified" class="verified-badge"
-                          ><img src="../../../../assets/images/green-verified.svg"
-                        /></span>
+                          {{ post.parentName }}
+                          <span
+                            *ngIf="post.isParentVerified"
+                            class="verified-badge"
+                            ><img
+                              src="../../../../assets/images/green-verified.svg"
+                          /></span>
                         </a>
-                        </h2>
-                          <img *ngIf="post.postAuthorType == 1" src="../../../assets/images/School.svg" class="icon_style" />
-                          <img *ngIf="post.postAuthorType == 2" src="../../../assets/images/Class.svg" class="icon_style" />
-                          <img *ngIf="post.postAuthorType == 3" src="../../../assets/images/Course.svg" class="icon_style"/>
-                          <img *ngIf="post.postAuthorType == 4" src="../../../assets/images/User.svg" class="icon_style"/>
+                      </h2>
+                      <img
+                        *ngIf="post.postAuthorType == 1"
+                        src="../../../assets/images/School.svg"
+                        class="icon_style"
+                      />
+                      <img
+                        *ngIf="post.postAuthorType == 2"
+                        src="../../../assets/images/Class.svg"
+                        class="icon_style"
+                      />
+                      <img
+                        *ngIf="post.postAuthorType == 3"
+                        src="../../../assets/images/Course.svg"
+                        class="icon_style"
+                      />
+                      <img
+                        *ngIf="post.postAuthorType == 4"
+                        src="../../../assets/images/User.svg"
+                        class="icon_style"
+                      />
                     </div>
                     <div>
                       <!-- <p
@@ -476,24 +539,33 @@
                       </p> -->
 
                       <p
-                      *ngIf="post.createdOn != null"
-                      class="font_14 school-grid-date d-inline-block mb-0 me-1"
-                    >
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
-                    </p>
-                    <p
-                      *ngIf="post.createdOn != null"
-                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                    >
-                      {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
-                    </p>
-                    <p
-                      *ngIf="post.createdOn != null"
-                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                    >
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
-                    </p>
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-1"
+                      >
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
+                        {{
+                          post.createdOn
+                            | ChangeTimeZonePipe
+                            | date : "MMMM"
+                            | translate
+                        }}
+                      </p>
+                      <p
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                      >
+                        {{
+                          post.createdOn | ChangeTimeZonePipe | date : "yyyy"
+                        }}
+                      </p>
+                      <p
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                      >
+                        {{
+                          post.createdOn | ChangeTimeZonePipe | date : "hh:mm a"
+                        }}
+                      </p>
                     </div>
                   </div>
 
@@ -502,15 +574,32 @@
                       post.title
                     }}</a>
                   </h4> -->
-                  <div class="d-flex justify-content-between align-items-center">
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
                     <!-- <h4 class="font_20 fw_600 text_sec1 mb-3">{{ post.title }}</h4> -->
-                    <h4 *ngIf="post.sharedProfileUrl != null" class="d-inline-block font_20 fw_600 text_sec1 mb-3 cursor_pointer"(click)="navigateToUrl(post.sharedProfileUrl)">
+                    <h4
+                      *ngIf="post.sharedProfileUrl != null"
+                      class="d-inline-block font_20 fw_600 text_sec1 mb-3 cursor_pointer"
+                      (click)="navigateToUrl(post.sharedProfileUrl)"
+                    >
                       {{ post.title }}
                     </h4>
-                    <h4 *ngIf="post.sharedProfileUrl == null" class="d-inline-block font_20 fw_600 text_sec1 mb-3">
+                    <h4
+                      *ngIf="post.sharedProfileUrl == null"
+                      class="d-inline-block font_20 fw_600 text_sec1 mb-3"
+                    >
                       {{ post.title }}
                     </h4>
-                    <h4 *ngIf="post?.isLiveStreamEnded || post?.externalMeetingId != null" style="color:red">Streamed</h4>
+                    <h4
+                      *ngIf="
+                        post?.isLiveStreamEnded ||
+                        post?.externalMeetingId != null
+                      "
+                      style="color: red"
+                    >
+                      Streamed
+                    </h4>
                   </div>
                   <div
                     class="school-grid-body videoChange"
@@ -572,8 +661,13 @@
                                 post.postAttachments[0]?.fileThumbnail
                               "
                             />
-                            <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                              <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                            <div
+                              class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                            >
+                              <i
+                                class="fas fa-play fa-5x"
+                                *ngIf="post.postAttachments[0]?.fileType == 2"
+                              ></i>
                             </div>
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
@@ -605,8 +699,13 @@
                                   style="cursor: pointer"
                                   [lazyLoad]="attachment?.fileThumbnail"
                                 />
-                                <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                                  <i class="fas fa-play fa-5x" *ngIf="attachment?.fileType == 2"></i>
+                                <div
+                                  class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                                >
+                                  <i
+                                    class="fas fa-play fa-5x"
+                                    *ngIf="attachment?.fileType == 2"
+                                  ></i>
                                 </div>
                               </div>
                               <div style="width: 50%">
@@ -636,8 +735,13 @@
                                 post.postAttachments[0]?.fileThumbnail
                               "
                             />
-                            <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                              <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                            <div
+                              class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                            >
+                              <i
+                                class="fas fa-play fa-5x"
+                                *ngIf="post.postAttachments[0]?.fileType == 2"
+                              ></i>
                             </div>
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
@@ -703,8 +807,13 @@
                                 post.postAttachments[0]?.fileThumbnail
                               "
                             />
-                            <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                              <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                            <div
+                              class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                            >
+                              <i
+                                class="fas fa-play fa-5x"
+                                *ngIf="post.postAttachments[0]?.fileType == 2"
+                              ></i>
                             </div>
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
@@ -1149,8 +1258,17 @@
                               <p
                                 class="font_14 school-grid-date d-inline-block mb-0"
                               >
-                                {{ gridItemInfo.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
-                                {{ gridItemInfo.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
+                                {{
+                                  gridItemInfo.createdOn
+                                    | ChangeTimeZonePipe
+                                    | date : "MMMM d"
+                                }}
+                                -
+                                {{
+                                  gridItemInfo.createdOn
+                                    | ChangeTimeZonePipe
+                                    | date : "hh:mm a"
+                                }}
                               </p>
                             </div>
                             <p class="text_sec1 font_14 pt-3">
@@ -1413,24 +1531,41 @@
                               {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
                             </p> -->
                             <p
-                            *ngIf="post.createdOn != null"
-                            class="font_14 school-grid-date d-inline-block mb-0 me-1"
-                          >
-                            {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
-                            {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
-                          </p>
-                          <p
-                            *ngIf="post.createdOn != null"
-                            class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                          >
-                            {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
-                          </p>
-                          <p
-                            *ngIf="post.createdOn != null"
-                            class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                          >
-                            {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
-                          </p>
+                              *ngIf="post.createdOn != null"
+                              class="font_14 school-grid-date d-inline-block mb-0 me-1"
+                            >
+                              {{
+                                post.createdOn
+                                  | ChangeTimeZonePipe
+                                  | date : "dd"
+                              }}
+                              {{
+                                post.createdOn
+                                  | ChangeTimeZonePipe
+                                  | date : "MMMM"
+                                  | translate
+                              }}
+                            </p>
+                            <p
+                              *ngIf="post.createdOn != null"
+                              class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                            >
+                              {{
+                                post.createdOn
+                                  | ChangeTimeZonePipe
+                                  | date : "yyyy"
+                              }}
+                            </p>
+                            <p
+                              *ngIf="post.createdOn != null"
+                              class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                            >
+                              {{
+                                post.createdOn
+                                  | ChangeTimeZonePipe
+                                  | date : "hh:mm a"
+                              }}
+                            </p>
                           </div>
                           <button
                             type="button"
@@ -1483,8 +1618,15 @@
                                       post.postAttachments[0]?.fileThumbnail
                                     "
                                   />
-                                  <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                                    <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                                  <div
+                                    class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                                  >
+                                    <i
+                                      class="fas fa-play fa-5x"
+                                      *ngIf="
+                                        post.postAttachments[0]?.fileType == 2
+                                      "
+                                    ></i>
                                   </div>
                                 </div>
                                 <img
@@ -1665,13 +1807,27 @@
                                   </div>
                                   <!-- {{post.parentName}} -->
                                 </a>
-                                <span  class="verified-badge" style="font-size: 90%;"
-                                >{{ post.parentName }}<img *ngIf="post.isParentVerified && post.postAuthorType == 4" src="../../../../assets/images/green-verified.svg" style="height: 20px;"
-                              />
-                              <img *ngIf="post.isParentVerified && post.postAuthorType == 1" src="../../../../assets/images/verified-badge.svg" style="height: 20px;"
-                              />
-
-                            </span>
+                                <span
+                                  class="verified-badge"
+                                  style="font-size: 90%"
+                                  >{{ post.parentName
+                                  }}<img
+                                    *ngIf="
+                                      post.isParentVerified &&
+                                      post.postAuthorType == 4
+                                    "
+                                    src="../../../../assets/images/green-verified.svg"
+                                    style="height: 20px"
+                                  />
+                                  <img
+                                    *ngIf="
+                                      post.isParentVerified &&
+                                      post.postAuthorType == 1
+                                    "
+                                    src="../../../../assets/images/verified-badge.svg"
+                                    style="height: 20px"
+                                  />
+                                </span>
                               </div>
                               <div
                                 class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"
@@ -1702,7 +1858,7 @@
                   class="school-grid-box position-relative"
                 >
                   <div
-                    class="schoolgrid-header flex-row align-items-center position-relative justify-content-between"
+                    class="schoolgrid-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between position-relative gap-3"
                   >
                     <div class="d-flex align-items-center gap-2">
                       <div class="school-gridprofile-icon">
@@ -1725,8 +1881,20 @@
                           <div
                             class="feed_userpicture school-img rounded-circle fit-image"
                           >
-                            <img *ngIf="post.parentImageUrl != null && post.parentImageUrl != 'null'" [lazyLoad]="post.parentImageUrl" />
-                            <img *ngIf="post.parentImageUrl == null || post.parentImageUrl == 'null'" src="../../../../assets/images/classLogo.png"/>
+                            <img
+                              *ngIf="
+                                post.parentImageUrl != null &&
+                                post.parentImageUrl != 'null'
+                              "
+                              [lazyLoad]="post.parentImageUrl"
+                            />
+                            <img
+                              *ngIf="
+                                post.parentImageUrl == null ||
+                                post.parentImageUrl == 'null'
+                              "
+                              src="../../../../assets/images/classLogo.png"
+                            />
                           </div>
                         </a>
                         <a
@@ -1739,8 +1907,20 @@
                           <div
                             class="feed_userpicture school-img rounded-circle fit-image"
                           >
-                            <img *ngIf="post.parentImageUrl != null && post.parentImageUrl != 'null'" [lazyLoad]="post.parentImageUrl" />
-                            <img *ngIf="post.parentImageUrl == null || post.parentImageUrl == 'null'" src="../../../../assets/images/classLogo.png"/>
+                            <img
+                              *ngIf="
+                                post.parentImageUrl != null &&
+                                post.parentImageUrl != 'null'
+                              "
+                              [lazyLoad]="post.parentImageUrl"
+                            />
+                            <img
+                              *ngIf="
+                                post.parentImageUrl == null ||
+                                post.parentImageUrl == 'null'
+                              "
+                              src="../../../../assets/images/classLogo.png"
+                            />
                           </div>
                         </a>
                         <a
@@ -1777,9 +1957,13 @@
                           (click)="getSelectedSchool(post.parentName)"
                           class="routeLink"
                         >
-                          {{ post.parentName }} <span *ngIf="post.isParentVerified" class="verified-badge"
-                          ><img src="../../../../assets/images/verified-badge.svg"
-                        /></span>
+                          {{ post.parentName }}
+                          <span
+                            *ngIf="post.isParentVerified"
+                            class="verified-badge"
+                            ><img
+                              src="../../../../assets/images/verified-badge.svg"
+                          /></span>
                         </a>
                         <a
                           *ngIf="post.postAuthorType == 2"
@@ -1804,14 +1988,34 @@
                           (click)="getUserDetails(post.parentId)"
                           class="routeLink"
                         >
-                          {{ post.parentName }} <span *ngIf="post.isParentVerified" class="verified-badge"
-                          ><img src="../../../../assets/images/green-verified.svg"
-                        /></span>
+                          {{ post.parentName }}
+                          <span
+                            *ngIf="post.isParentVerified"
+                            class="verified-badge"
+                            ><img
+                              src="../../../../assets/images/green-verified.svg"
+                          /></span>
                         </a>
-                        <img *ngIf="post.postAuthorType == 1" src="../../../assets/images/School.svg" class="icon_style" />
-                        <img *ngIf="post.postAuthorType == 2" src="../../../assets/images/Class.svg" class="icon_style" />
-                        <img *ngIf="post.postAuthorType == 3" src="../../../assets/images/Course.svg" class="icon_style"/>
-                        <img *ngIf="post.postAuthorType == 4" src="../../../assets/images/User.svg" class="icon_style"/>
+                        <img
+                          *ngIf="post.postAuthorType == 1"
+                          src="../../../assets/images/School.svg"
+                          class="icon_style"
+                        />
+                        <img
+                          *ngIf="post.postAuthorType == 2"
+                          src="../../../assets/images/Class.svg"
+                          class="icon_style"
+                        />
+                        <img
+                          *ngIf="post.postAuthorType == 3"
+                          src="../../../assets/images/Course.svg"
+                          class="icon_style"
+                        />
+                        <img
+                          *ngIf="post.postAuthorType == 4"
+                          src="../../../assets/images/User.svg"
+                          class="icon_style"
+                        />
                       </h2>
                     </div>
                     <div>
@@ -1824,19 +2028,28 @@
                         class="font_14 school-grid-date d-inline-block mb-0 me-1"
                       >
                         {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
-                        {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
+                        {{
+                          post.createdOn
+                            | ChangeTimeZonePipe
+                            | date : "MMMM"
+                            | translate
+                        }}
                       </p>
                       <p
                         *ngIf="post.createdOn != null"
                         class="font_14 school-grid-date d-inline-block mb-0 me-3"
                       >
-                        {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
+                        {{
+                          post.createdOn | ChangeTimeZonePipe | date : "yyyy"
+                        }}
                       </p>
                       <p
                         *ngIf="post.createdOn != null"
                         class="font_14 school-grid-date d-inline-block mb-0 me-3"
                       >
-                        {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
+                        {{
+                          post.createdOn | ChangeTimeZonePipe | date : "hh:mm a"
+                        }}
                       </p>
                     </div>
                   </div>
@@ -1845,13 +2058,23 @@
                     class="school-grid-body videoChange"
                     (click)="openPostsViewModal(post, 'globalFeed')"
                   >
-
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div
+                      class="d-flex justify-content-between align-items-center"
+                    >
                       <!-- <h4 class="font_20 fw_600 text_sec1 mb-3">{{ post.title }}</h4> -->
                       <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">
                         {{ post.title }}
                       </h4>
-                      <h4 *ngIf="post?.postAttachments[0]?.post.isLiveStreamEnded || post?.postAttachments[0]?.post?.externalMeetingId != null" style="color:red">Streamed</h4>
+                      <h4
+                        *ngIf="
+                          post?.postAttachments[0]?.post.isLiveStreamEnded ||
+                          post?.postAttachments[0]?.post?.externalMeetingId !=
+                            null
+                        "
+                        style="color: red"
+                      >
+                        Streamed
+                      </h4>
                     </div>
                     <p class="text_sec1 font_14" style="cursor: pointer">
                       {{ post.description }}
@@ -1906,8 +2129,13 @@
                                 post.postAttachments[0]?.fileThumbnail
                               "
                             />
-                            <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                              <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                            <div
+                              class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                            >
+                              <i
+                                class="fas fa-play fa-5x"
+                                *ngIf="post.postAttachments[0]?.fileType == 2"
+                              ></i>
                             </div>
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
@@ -1934,8 +2162,13 @@
                                 style="cursor: pointer"
                                 [lazyLoad]="attachment?.fileThumbnail"
                               />
-                              <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                                <i class="fas fa-play fa-5x" *ngIf="attachment.fileType == 2"></i>
+                              <div
+                                class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                              >
+                                <i
+                                  class="fas fa-play fa-5x"
+                                  *ngIf="attachment.fileType == 2"
+                                ></i>
                               </div>
                               <img
                                 style="cursor: pointer"
@@ -1962,8 +2195,13 @@
                                 post.postAttachments[0]?.fileThumbnail
                               "
                             />
-                            <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                              <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                            <div
+                              class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                            >
+                              <i
+                                class="fas fa-play fa-5x"
+                                *ngIf="post.postAttachments[0]?.fileType == 2"
+                              ></i>
                             </div>
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
@@ -2031,8 +2269,13 @@
                                 post.postAttachments[0]?.fileThumbnail
                               "
                             />
-                            <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                              <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                            <div
+                              class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                            >
+                              <i
+                                class="fas fa-play fa-5x"
+                                *ngIf="post.postAttachments[0]?.fileType == 2"
+                              ></i>
                             </div>
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
@@ -2509,12 +2752,14 @@
                                 class="font_14 school-grid-date d-inline-block mb-0"
                               >
                                 {{
-                                  gridItemInfoForGlobal.createdOn | ChangeTimeZonePipe
+                                  gridItemInfoForGlobal.createdOn
+                                    | ChangeTimeZonePipe
                                     | date : "MMMM d"
                                 }}
                                 -
                                 {{
-                                  gridItemInfoForGlobal.createdOn | ChangeTimeZonePipe
+                                  gridItemInfoForGlobal.createdOn
+                                    | ChangeTimeZonePipe
                                     | date : "hh:mm a"
                                 }}
                               </p>
@@ -2799,24 +3044,41 @@
                             </p> -->
 
                             <p
-                            *ngIf="post.createdOn != null"
-                            class="font_14 school-grid-date d-inline-block mb-0 me-1"
-                          >
-                            {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
-                            {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
-                          </p>
-                          <p
-                            *ngIf="post.createdOn != null"
-                            class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                          >
-                            {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
-                          </p>
-                          <p
-                            *ngIf="post.createdOn != null"
-                            class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                          >
-                            {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
-                          </p>
+                              *ngIf="post.createdOn != null"
+                              class="font_14 school-grid-date d-inline-block mb-0 me-1"
+                            >
+                              {{
+                                post.createdOn
+                                  | ChangeTimeZonePipe
+                                  | date : "dd"
+                              }}
+                              {{
+                                post.createdOn
+                                  | ChangeTimeZonePipe
+                                  | date : "MMMM"
+                                  | translate
+                              }}
+                            </p>
+                            <p
+                              *ngIf="post.createdOn != null"
+                              class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                            >
+                              {{
+                                post.createdOn
+                                  | ChangeTimeZonePipe
+                                  | date : "yyyy"
+                              }}
+                            </p>
+                            <p
+                              *ngIf="post.createdOn != null"
+                              class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                            >
+                              {{
+                                post.createdOn
+                                  | ChangeTimeZonePipe
+                                  | date : "hh:mm a"
+                              }}
+                            </p>
                           </div>
                           <button
                             type="button"
@@ -2863,8 +3125,15 @@
                                       post.postAttachments[0]?.fileThumbnail
                                     "
                                   />
-                                  <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                                    <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                                  <div
+                                    class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                                  >
+                                    <i
+                                      class="fas fa-play fa-5x"
+                                      *ngIf="
+                                        post.postAttachments[0]?.fileType == 2
+                                      "
+                                    ></i>
                                   </div>
                                 </div>
                                 <img
@@ -2895,16 +3164,21 @@
       </div>
       <div *ngFor="let key of getObjectKeys(globalSearchResult)">
         <ng-container *ngIf="key !== 'Posts'">
-        <h4 *ngIf="key == 'ClassAndCourse'" class="fw_600">
-          {{ "Classes&Courses" | translate }}
-        </h4>
-        <h4 *ngIf="key == 'User'" class="fw_600">{{ "People" | translate }}</h4>
-        <h4 *ngIf="key == 'School'" class="fw_600">
-          {{ "Schools" | translate }}
-        </h4>
+          <h4 *ngIf="key == 'ClassAndCourse'" class="fw_600">
+            {{ "Classes&Courses" | translate }}
+          </h4>
+          <h4 *ngIf="key == 'User'" class="fw_600">
+            {{ "People" | translate }}
+          </h4>
+          <h4 *ngIf="key == 'School'" class="fw_600">
+            {{ "Schools" | translate }}
+          </h4>
         </ng-container>
         <ng-container *ngFor="let item of globalSearchResult[key]">
-          <li *ngIf="item.type == 1 && !item.isPost" class="search-results__item">
+          <li
+            *ngIf="item.type == 1 && !item.isPost"
+            class="search-results__item"
+          >
             <div class="d-flex align-items-center justify-content-between">
               <span class="followers-name font_16 text_sec1">
                 <span class="serch-follow-image">
@@ -2921,7 +3195,10 @@
               >
             </div>
           </li>
-          <li *ngIf="item.type == 2 && !item.isPost" class="search-results__item">
+          <li
+            *ngIf="item.type == 2 && !item.isPost"
+            class="search-results__item"
+          >
             <div class="d-flex align-items-center justify-content-between">
               <span class="followers-name font_16 text_sec1">
                 <span class="serch-follow-image">
@@ -2938,7 +3215,10 @@
               >
             </div>
           </li>
-          <li *ngIf="item.type == 3 && !item.isPost" class="search-results__item">
+          <li
+            *ngIf="item.type == 3 && !item.isPost"
+            class="search-results__item"
+          >
             <div class="d-flex align-items-center justify-content-between">
               <span class="followers-name font_16 text_sec1">
                 <span class="serch-follow-image">
@@ -2955,22 +3235,32 @@
               >
             </div>
           </li>
-          <li *ngIf="item.type == 4 && !item.isPost" class="search-results__item">
+          <li
+            *ngIf="item.type == 4 && !item.isPost"
+            class="search-results__item"
+          >
             <div class="d-flex align-items-center justify-content-between">
               <span class="followers-name font_16 text_sec1">
                 <span class="serch-follow-image">
                   <img
-                  *ngIf="item?.avatar != null"
-                  [lazyLoad]="item?.avatar"
-                  class="rounded-circle img_style"
-                />
-                <img *ngIf="item?.avatar == null && item?.gender == 1"
-                src="../../../assets/images/maleProfile.jfif"
-                class="rounded-circle img_style">
+                    *ngIf="item?.avatar != null"
+                    [lazyLoad]="item?.avatar"
+                    class="rounded-circle img_style"
+                  />
+                  <img
+                    *ngIf="item?.avatar == null && item?.gender == 1"
+                    src="../../../assets/images/maleProfile.jfif"
+                    class="rounded-circle img_style"
+                  />
 
-                <img *ngIf="item?.avatar == null && (item?.gender == 2 || item?.gender == 3)"
-                src="../../../assets/images/femaleProfile.jfif"
-                class="rounded-circle img_style">
+                  <img
+                    *ngIf="
+                      item?.avatar == null &&
+                      (item?.gender == 2 || item?.gender == 3)
+                    "
+                    src="../../../assets/images/femaleProfile.jfif"
+                    class="rounded-circle img_style"
+                  />
                 </span>
                 <a
                   class="routeLink"
@@ -2980,7 +3270,6 @@
               >
             </div>
           </li>
-
         </ng-container>
         <a
           *ngIf="key == 'User' && globalSearchResult[key].length == 5"
@@ -3003,33 +3292,38 @@
       </div>
       <div *ngIf="getObjectKeys(globalSearchResult).includes('Posts')">
         <h4 class="fw_600">{{ "PostsWithTags" | translate }}</h4>
-          <li *ngFor="let item of globalSearchResult.Posts" class="search-results__item">
-            <div class="d-flex align-items-center justify-content-between">
-              <span class="followers-name font_16 text_sec1">
-                <span class="serch-follow-image">
-                  <img [lazyLoad]="item.avatar" class="rounded-circle img_style" />
-                </span>
-                <ng-container *ngIf="item.type === 1">
-                  <a class="routeLink" [routerLink]="['/user/post', item.id]">
-                    {{ item.name }}
-                  </a>
-                </ng-container>
-                <ng-container *ngIf="item.type === 3">
-                  <a class="routeLink" [routerLink]="['/user/reels', item.id]">
-                    {{ item.name }}
-                  </a>
-                </ng-container>
-
+        <li
+          *ngFor="let item of globalSearchResult.Posts"
+          class="search-results__item"
+        >
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="followers-name font_16 text_sec1">
+              <span class="serch-follow-image">
+                <img
+                  [lazyLoad]="item.avatar"
+                  class="rounded-circle img_style"
+                />
               </span>
-            </div>
-          </li>
+              <ng-container *ngIf="item.type === 1">
+                <a class="routeLink" [routerLink]="['/user/post', item.id]">
+                  {{ item.name }}
+                </a>
+              </ng-container>
+              <ng-container *ngIf="item.type === 3">
+                <a class="routeLink" [routerLink]="['/user/reels', item.id]">
+                  {{ item.name }}
+                </a>
+              </ng-container>
+            </span>
+          </div>
+        </li>
         <a
-    *ngIf="globalSearchResult.Posts.length == 5"
-    [routerLink]="['/user/globalSearch', searchString, 4]"
-    class="show-more-button show_more"
-  >
-    {{ "ShowMore" | translate }}
-  </a>
+          *ngIf="globalSearchResult.Posts.length == 5"
+          [routerLink]="['/user/globalSearch', searchString, 4]"
+          class="show-more-button show_more"
+        >
+          {{ "ShowMore" | translate }}
+        </a>
       </div>
       <li *ngIf="searchNotFound">
         <div class="crossButton">

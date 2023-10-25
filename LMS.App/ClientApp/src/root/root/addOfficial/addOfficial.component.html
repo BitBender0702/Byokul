@@ -44,12 +44,11 @@
           }}</span>
         </div>
         <form [formGroup]="createTeacherForm" class="latest-form add-tag-step">
-          <div class="col-4 d-flex" style="margin-left: 33%">
-            <div>
-              <label class="font_10">{{ "OfficialName" | translate }}</label>
-              <div class="form-group">
-                <span class="p-fluid">
-                  <!-- <p-autoComplete
+          <div class="oficial-name">
+            <label class="font_10">{{ "OfficialName" | translate }}</label>
+            <div class="form-group">
+              <span class="p-fluid">
+                <!-- <p-autoComplete
                 formControlName="userId"
                 [showEmptyMessage]="true"
                 [emptyMessage]="'NoResultFound' | translate"
@@ -66,19 +65,18 @@
               >
               </p-autoComplete> -->
 
-                  <p-autoComplete
-                    class="form-control w-100"
-                    formControlName="user"
-                    [suggestions]="filteredUsers"
-                    (completeMethod)="filterUsers($event)"
-                    field="userName"
-                    [minLength]="1"
-                    [showEmptyMessage]="true"
-                    [emptyMessage]="'NoResultFound' | translate"
-                    [size]="200"
-                  ></p-autoComplete>
-                </span>
-              </div>
+                <p-autoComplete
+                  class="form-control w-100"
+                  formControlName="user"
+                  [suggestions]="filteredUsers"
+                  (completeMethod)="filterUsers($event)"
+                  field="userName"
+                  [minLength]="1"
+                  [showEmptyMessage]="true"
+                  [emptyMessage]="'NoResultFound' | translate"
+                  [size]="200"
+                ></p-autoComplete>
+              </span>
             </div>
           </div>
         </form>
@@ -91,7 +89,7 @@
         </div>
 
         <div class="row">
-          <div class="col-4">
+          <div class="col-12 col-md-4">
             <label class="font_10">{{ "SelectSchools" | translate }}</label>
             <div class="form-group" class="d-flex">
               <input
@@ -152,7 +150,7 @@
               </div>
             </div>
           </div>
-          <div *ngIf="!hideClassSection" class="col-4">
+          <div *ngIf="!hideClassSection" class="col-12 col-md-4">
             <label class="font_10">{{ "SelectClasses" | translate }}</label>
             <div class="form-group">
               <div class="custom-language-select">
@@ -195,7 +193,7 @@
               </div>
             </div>
           </div>
-          <div *ngIf="!hideCourseSection" class="col-4">
+          <div *ngIf="!hideCourseSection" class="col-12 col-md-4">
             <label class="font_10">{{ "SelectCourses" | translate }}</label>
             <div class="form-group">
               <div class="custom-language-select">

@@ -1929,9 +1929,9 @@ body .liv-postbtn .post-attch-btn.active,
 .followers_box ul li:hover {
   background: #f2f4f7;
 }
-.followers_box ul li .followe_report {
+/* .followers_box ul li .followe_report {
   display: none;
-}
+} */
 .followers_box ul li:hover .followe_report {
   display: inline-block;
 }
@@ -3699,6 +3699,14 @@ p-autocomplete li:before {
 
 .textBlack {
   color: black;
+}
+
+@media screen and (max-width: 576px) {
+  .p-toast-top-right {
+    right: initial;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
 
 .p-toast-top-right {

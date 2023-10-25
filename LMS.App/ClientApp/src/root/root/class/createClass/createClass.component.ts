@@ -179,7 +179,7 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
     accessibilityId: this.fb.control('',[Validators.required]),
     languageIds:this.fb.control('',[Validators.required]),
     price:this.fb.control(''),
-    // createdById:this.fb.control(''),
+    createdById:this.fb.control(''),
     currency:this.fb.control(this.currencies[0].key),
     tags:this.fb.control('',[Validators.required]),
 
@@ -482,6 +482,7 @@ captureTeacherId(event: any) {
     this.fileToUpload.append('languageIds',JSON.stringify(this.class.languageIds));
     this.fileToUpload.append('price',this.class.price?.toString());
     this.fileToUpload.append('currency',this.class.currency);
+    // this.fileToUpload.append('createdById',this.class.createdById);
         // this.step += 1;
         this.isStepCompleted = false;
         this.nextPage = true;

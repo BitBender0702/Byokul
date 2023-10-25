@@ -37,9 +37,7 @@ namespace LMS.Services
         Task<List<VideoUploadResponseViewModel>> SaveUploadVideos(IEnumerable<IFormFile> uploadVideos, IEnumerable<IFormFile> uploadVideosThumbnail, Guid postId, string createdById,bool isJobRunning);
         Task<bool> EnableLiveStream(Guid postId);
         Task<IEnumerable<GlobalSearchViewModel>> PostsGlobalSearch(string searchString, int pageNumber, int pageSize);
-
         Task<List<PostDetailsViewModel>> GetSavedSliderReels(string userId, Guid lastPostId, ScrollTypesEnum scrollType);
-
         Task<List<PostDetailsViewModel>> GetSharedSliderReels(string userId, Guid lastPostId, ScrollTypesEnum scrollType);
         Task<List<PostDetailsViewModel>> GetLikedSliderReels(string userId, Guid lastPostId, ScrollTypesEnum scrollType);
     }
