@@ -11,7 +11,7 @@ import { ChatService } from 'src/root/service/chatService';
 import { PostService } from 'src/root/service/post.service';
 import { ReelsService } from 'src/root/service/reels.service';
 import { SchoolService } from 'src/root/service/school.service';
-import { commentLikeResponse, commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
+import { commentDeleteResponse, commentLikeResponse, commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
 import { SharePostComponent } from '../sharePost/sharePost.component';
 import { ClassCourseFilterTypeEnum } from 'src/root/Enums/classCourseFilterTypeEnum';
@@ -19,6 +19,7 @@ import { ClassService } from 'src/root/service/class.service';
 import { CourseService } from 'src/root/service/course.service';
 import { FormGroup } from '@angular/forms';
 import { PaymentComponent } from '../payment/payment.component';
+import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
 export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,type:string}>();  
 
 
@@ -70,6 +71,7 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     gender!:string;
     commentLikeUnlike!:CommentLikeUnlike;
     commentResponseSubscription!:Subscription;
+    commentDeletdResponseSubscription!: Subscription
 
     courseCertificateForm!:FormGroup;
     courseCertificateInfo:any;
@@ -113,7 +115,7 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
         if(!this.commentResponseSubscription){
         this.commentResponseSubscription = commentResponse.subscribe(response => {
           var comment: any[] =this.classCourseDetails.classCourseItem.comments;
-          var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar,isUserVerified: response.isUserVerified};
+          var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar,userName: response.userName,isUserVerified: response.isUserVerified};
           comment.push(commentObj);
         });
       }
@@ -132,7 +134,38 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
         });
         
       }
+      if(!this.commentDeletdResponseSubscription){
+        commentDeleteResponse.subscribe(response =>{
+          let indexOfComment = this.classCourseDetails.classCourseItem.comments.findIndex((x:any) => x.id == response.commentId)
+          this.classCourseDetails.classCourseItem.comments.splice(indexOfComment, 1)
+        })
+      }
      }
+
+     deleteComment(item:any){
+      debugger;
+      // this.initializeCommentLikeUnlike();
+      // this.commentLikeUnlike.userId = this.userId;
+      // this.commentLikeUnlike.commentId = item.id;
+      // this.commentLikeUnlike.groupName = item.groupName;
+      // if(this.userId == item.userId){
+      //   this._signalRService.notifyCommentDelete(this.commentLikeUnlike);
+      //   let indexOfComment = this.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId)
+      //   this.post.comments.splice(indexOfComment, 1)
+      // }
+      const initialState = { item : item, from : "deleteComment" };
+      this.bsModalService.show(DeleteConfirmationComponent, { initialState });
+      // if(!this.deleteCommentResponseSubscription){
+      //   deleteCommentResponse.subscribe(response =>{
+      //     debugger;
+      //     setTimeout(() => {
+      //       let indexOfComment = this.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId)
+      //       this.post.comments.splice(indexOfComment, 1)
+      //     }, 0);
+      //   })
+      // }
+  
+    }
 
     getLoginUserId(){
       debugger
@@ -154,6 +187,9 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     ngOnDestroy(): void {
       if(this.commentResponseSubscription){
         this.commentResponseSubscription.unsubscribe();
+      }
+      if (this.commentDeletdResponseSubscription) {
+        this.commentDeletdResponseSubscription.unsubscribe();
       }
     }
 
@@ -264,6 +300,7 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     var comment: any[] = this.classCourseDetails.classCourseItem.comments;
     this.InitializeCommentViewModel();
     this.commentViewModel.userId = this.sender.id;
+    this.commentViewModel.userName = this.sender.firstName + " " + this.sender.lastName;
     this.commentViewModel.groupName = this.classCourseDetails.classCourseItem.id + "_group";
     this.commentViewModel.content = this.messageToGroup;
     this.commentViewModel.userAvatar = this.sender.avatar;

@@ -8,3 +8,6 @@
 .cursor_pointer{
     cursor: pointer;
 }
+.trash-icon {
+    background-color: transparent;
+  }
