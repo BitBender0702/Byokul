@@ -220,6 +220,8 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
   isChatSelected:boolean=false;
   isChatHeadSelected:boolean=false;
   totalUnreadMessageCount:number=0;
+
+  myVar:any
   
   // @ViewChild('chatScrollList') chatScrollList!: ElementRef;
 
@@ -309,6 +311,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
             chats: [],
             isPinned: false, 
             unreadMessageCount: 0,
+            chatHeadId:'1'
           };
         });
       }
@@ -371,8 +374,9 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
     this.uploadAttachments = [];
 
     signalRResponse.subscribe((response) => {
+      
       debugger;
-    
+      this.cd.detectChanges();
       // var user = {
       //   userName: this.user.firstName + ' ' + this.user.lastName,
       //   receiverName: this.user.firstName + ' ' + this.user.lastName,
@@ -399,9 +403,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
           var user = this.allChatUsers.find((x: { chatHeadId: string }) => x.chatHeadId == response.chatHeadId);
           if(user!=undefined) user.unreadMessageCount = 0;
         }
-
-        // if (user == undefined && response.chatType=='3') {
-        
+        //  if (user == undefined && response.chatType=='3') {
         //   this.totalUnreadMessageCount += 1;
         //  if(response.chatType=='3' && this.userSchoolsList!=undefined){
         //   this.userSchoolsList.forEach((element:any) => {
@@ -409,17 +411,16 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
         //       element.schoolUnreadMessageCount +=1
         //     }
         //   });
-        //   if(this.schoolInboxList){
-        //     this.schoolInboxList.forEach((element:any) => {
-        //       if(element.chatTypeId == response.chatTypeId){
-        //         element.unreadMessageCount +=1
-        //       }
-        //     });
-        //   }
+        //   // if(this.schoolInboxList){
+        //   //   this.schoolInboxList.forEach((element:any) => {
+        //   //     if(element.chatTypeId == response.chatTypeId){
+        //   //       element.unreadMessageCount +=1
+        //   //     }
+        //   //   });
+        //   // }
         //  }
           
         // }
-        
         this._chatService
           .removeUnreadMessageCount(
             response.receiverId,
@@ -459,24 +460,27 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
               x.chatType == response.chatType &&
               x.chatHeadId == response.chatHeadId
           );
-          if (chatUser == undefined) {
+          if (chatUser == undefined && this.schoolInboxList!=undefined) {
             var chatSchoolUsers: any[] = this.schoolInboxList;
+          
             chatUser = chatSchoolUsers.find(
               (x) =>
                 x.userID == response.senderId &&
                 x.chatType == response.chatType &&
                 x.chatHeadId == response.chatHeadId
             );
-            if (chatUser == undefined) {
+            if (chatUser == undefined && this.classInboxList!=undefined) {
               var chatClassUsers: any[] = this.classInboxList;
+              
               chatUser = chatClassUsers.find(
                 (x) =>
                   x.userID == response.senderId &&
                   x.chatType == response.chatType &&
                   x.chatHeadId == response.chatHeadId
               );
-              if (chatUser == undefined) {
+              if (chatUser == undefined && this.courseInboxList!=undefined) {
                 var chatCourseUsers: any[] = this.courseInboxList;
+                
                 chatUser = chatCourseUsers.find(
                   (x) =>
                     x.userID == response.senderId &&
@@ -486,18 +490,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
               }
             }
           }
-          if (chatUser != undefined && response.chatType=='3') {
-            chatUser.unreadMessageCount = chatUser.unreadMessageCount + 1;
-            this.totalUnreadMessageCount += 1;
-           if(response.chatType=='3'){
-            this.userSchoolsList.forEach((element:any) => {
-              if(element.schoolId == response.chatTypeId){
-                element.schoolUnreadMessageCount +=1
-              }
-            });
-           }
-            
-          }
+       
         }
       }
       for (let i = 0; i < response.attachments.length; i++) {
@@ -537,6 +530,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
               chats: [],
               chatHeadId: response.chatHeadId,
               isPinned: false,
+              gender:result.gender,
               unreadMessageCount: (this.chatHeadId == response.chatHeadId || this.chatHeadId == '1') ? 0 : 1
             };
 
@@ -641,6 +635,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
         }
       }
       if (response.chatType == '3') {
+        debugger;
         if (this.schoolInboxList == undefined) {
           this.schoolInboxList = [];
         }
@@ -664,8 +659,8 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
                 gender:result.gender,
                 chatType: response.chatType,
                 chatHeadId: response.chatHeadId,
+                unreadMessageCount:1,
                 chats: [],
-                unreadMessageCount:0,
                 school: {
                   createdById: '',
                   schoolName: '',
@@ -686,24 +681,27 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
   
                     debugger;
                   this.schoolInboxList.unshift(userDetails);
-                  this.schoolInboxList[0].unreadMessageCount +=1;
-                  this.totalUnreadMessageCount +=1;
-                  if(response.chatType=='3'){
-                    this.userSchoolsList.forEach((element:any) => {
-                      if(element.schoolId == response.chatTypeId){
-                        element.schoolUnreadMessageCount +=1
-                      }
-                    });
-                   }
   
                   this.topSchoolInboxChatHeadUser=this.schoolInboxList[0];
   
                   var isSchoolExist = this.schoolInboxList.find((x: { chatHeadId: string; })=>x.chatHeadId==response.chatHeadId)
                   if(isSchoolExist) this.topChatViewName = this.schoolInboxList[0].userName;
+
+
   
                   // this.selectedChatHeadDiv = true;
                   // this.chatHeadId = response.chatHeadId;
                   this.schoolInboxReceiverId = this.schoolInboxList[0].userID;
+
+                  
+                  this.totalUnreadMessageCount += 1;
+                  this.userSchoolsList.forEach((element:any) => {
+                    if(response.chatType=='3'){
+                      if(element.schoolId == response.schoolId){
+                        element.schoolUnreadMessageCount += 1;
+                      }
+                    }
+                  });
   
                   var users: any[] = this.allChatUsers;
                   var receiverLastMessage = users.find(
@@ -820,6 +818,23 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
                 });
             });
           } else {
+            
+            if(this.chatHeadId!=response.chatHeadId){
+              this.totalUnreadMessageCount += 1;
+              this.userSchoolsList.forEach((element:any) => {
+               
+                  if(element.schoolId == response.schoolId){
+                    element.schoolUnreadMessageCount += 1;
+                  }
+                
+              });
+              this.schoolInboxList.forEach((element:any) => {
+                if(element.chatTypeId == response.schoolId && element.chatHeadId == response.chatHeadId){
+                      element.unreadMessageCount += 1;
+                } 
+                });
+             }
+            
             var users: any[] = this.schoolInboxList;
             var user = users.find((x) => x.chatHeadId == response.chatHeadId);
             user.lastMessage = response.message;
@@ -875,6 +890,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
             if(this.chatHeadId ==  response.chatHeadId){
               user.unreadMessageCount = 0;
             }
+           
             const userIndex = this.allChatUsers.findIndex((x: { chatHeadId: string; }) => x.chatHeadId === response.chatHeadId);
             if (userIndex !== -1) {
               let insertIndex = this.allChatUsers.findIndex((x: { isPinned: boolean; }) => x.isPinned === false);
@@ -928,192 +944,288 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
       }
 
       if (response.chatType == '4') {
+        
+        debugger;
         if (this.classInboxList == undefined) {
           this.classInboxList = [];
         }
+        if (this.schoolInboxList == undefined) {
+          this.schoolInboxList = [];
+        }
 
-        var chatUsers: any[] = this.classInboxList;
-        this.chatType = response.chatType;
-        var isuserExist = chatUsers.find((x) => x.userID == response.senderId);
-        if (isuserExist == undefined) {
-          this._userService.getUser(response.senderId).subscribe((result) => {
-            var userDetails = {
-              userName: result.firstName + ' ' + result.lastName,
-              userID: response.senderId,
-              profileURL: result.avatar,
-              chatType: response.chatType,
-              chatHeadId: response.chatHeadId,
-              chats: [],
-              class: {
-                createdById: '',
-                className: '',
-                avatar: '',
-                classId: '',
-                schoolId: '',
-              },
-            };
+        var isUserExistInMyInbox = this.allChatUsers.find((x: { chatHeadId: string; })=>x.chatHeadId==response.chatHeadId)
+        if(isUserExistInMyInbox==undefined){
+           var chatUsers:any[]=this.classInboxList;
+           this.chatType = response.chatType;
+           var isuserExist = chatUsers.find(
+            (x) =>
+              x.userID == response.senderId &&
+              x.chatType == 4 &&
+              x.chatHeadId == response.chatHeadId
+          );
+         
+            if (isuserExist == undefined) {
+              this._userService.getUser(response.senderId).subscribe((result) => {
+                var userDetails = {
+                  userName: result.firstName + ' ' + result.lastName,
+                  userID: response.senderId,
+                  profileURL: result.avatar,
+                  chatType: response.chatType,
+                  chatHeadId: response.chatHeadId,
+                  gender:result.gender,
+                  unreadMessageCount:1,
+                  chats: [],
+                  class: {
+                    createdById: '',
+                    className: '',
+                    avatar: '',
+                    classId: '',
+                    schoolId: '',
+                  },
+                };
+    
+                this._classService
+                  .getClass(response.chatTypeId)
+                  .subscribe((classDeatail) => {
+                    userDetails.class['createdById'] = classDeatail.createdById;
+                    userDetails.class['className'] = classDeatail.className;
+                    userDetails.class['avatar'] = classDeatail.avatar;
+                    userDetails.class['classId'] = classDeatail.classId;
+                    userDetails.class['classId'] = classDeatail.classId;
+                    userDetails.class['schoolId'] = classDeatail.schoolId;
+                    userDetails.userName =
+                      userDetails.userName + '(' + classDeatail.className + ')';
+    
+                    this.classInboxList.unshift(userDetails);
+                    this.schoolInboxList.unshift(userDetails);
+    
+                    this.topSchoolInboxChatHeadUser=this.schoolInboxList[0];
+    
+                    this.totalUnreadMessageCount += 1;
+                    this.userSchoolsList.forEach((element:any) => {
+                     
+                        if(element.schoolId == response.schoolId){
+                          element.schoolUnreadMessageCount += 1;
+                        }
+                      
+                    });
+    
+                    var users: any[] = this.allChatUsers;
+                    var receiverLastMessage = users.find(
+                      (x) =>
+                        x.userID == response.senderId &&
+                        x.chatType == 4 &&
+                        x.chatHeadId == response.chatHeadId
+                    );
+                    if (receiverLastMessage != undefined) {
+                      receiverLastMessage.lastMessage = response.message;
+                      receiverLastMessage.time = new Date()
+                        .toISOString()
+                        .slice(0, -1);
+                    }
+    
+                    var classUsers: any[] = this.classInboxList;
+                    var user = classUsers.find(
+                      (x) =>
+                        x.userID == response.senderId &&
+                        x.chatType == 4 &&
+                        x.chatHeadId == response.chatHeadId
+                    );
+    
+                    //  var users: any[] = this.schoolInboxList;
+                    //  var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == 4);
+                    //  receiverLastMessage.lastMessage = response.message;
+                    //  var users: any[] = this.classInboxList;
+                    //  var user = users.find(x => x.usechatHeadIdrID == response.chatHeadId);
+                    //  if(response.message != ""){
+                    //   user.lastMessage = response.message;
+                    //  }
+                    //  else{
+                    //   user.lastMessage = response.attachments[0].fileName;
+                    //  }
+                    if (user.class != null) {
+                      if (
+                        user.class.ownerId == this.sender.id ||
+                        user.class?.createdById == this.sender.id
+                      ) {
+                        this.isSchoolOwner = true;
+                        user.lastMessage = response.message;
+                        user.time = new Date().toISOString().slice(0, -1);
+                        var senderDetails = {
+                          id: response.id,
+                          receiver: result.firstName + ' ' + result.lastName,
+                          message: response.message,
+                          isTest: true,
+                          receiverId: response.receiverId,
+                          isSchoolOwner: this.isSchoolOwner,
+                          replyChatContent: response.replyChatContent,
+                          replyMessageType: response.replyMessageType,
+                          fileName: response.fileName,
+                          fileURL: response.fileURL,
+                          isForwarded: response.isForwarded,
+                          forwardedFileName: response.forwardedFileName,
+                          forwardedFileURL: response.forwardedFileURL,
+                          forwardedFileType: response.forwardedFileType,
+                          chatHeadId: response.chatHeadId
+                        };
+                        this.generateChatLi(senderDetails, result.avatar, '4');
+                      } else {
+                        this.isSchoolOwner = false;
+                        var senderDetailss = {
+                          id: response.id,
+                          receiver: user.class.className,
+                          message: response.message,
+                          isTest: true,
+                          receiverId: response.receiverId,
+                          isSchoolOwner: this.isSchoolOwner,
+                          replyChatContent: response.replyChatContent,
+                          replyMessageType: response.replyMessageType,
+                          fileName: response.fileName,
+                          fileURL: response.fileURL,
+                          isForwarded: response.isForwarded,
+                          forwardedFileName: response.forwardedFileName,
+                          forwardedFileURL: response.forwardedFileURL,
+                          forwardedFileType: response.forwardedFileType,
+                          chatHeadId: response.chatHeadId
+                        };
+                        this.generateChatLi(senderDetailss, user.class.avatar, '4');
+                      }
+                    } else {
+                      this.isSchoolOwner = false;
+                      var senderDetailsss = {
+                        id: response.id,
+                        receiver: user.class.className,
+                        message: response.message,
+                        isTest: true,
+                        receiverId: response.receiverId,
+                        isSchoolOwner: this.isSchoolOwner,
+                        replyChatContent: response.replyChatContent,
+                        replyMessageType: response.replyMessageType,
+                        fileName: response.fileName,
+                        fileURL: response.fileURL,
+                        isForwarded: response.isForwarded,
+                        forwardedFileName: response.forwardedFileName,
+                        forwardedFileURL: response.forwardedFileURL,
+                        forwardedFileType: response.forwardedFileType,
+                        chatHeadId: response.chatHeadId
+                      };
+                      this.generateChatLi(senderDetailsss, user.class.avatar, '4');
+                    }
+                  });
+              });
+            } else {
+              var users: any[] = this.allChatUsers;
+              this.totalUnreadMessageCount += 1;
+              this.userSchoolsList.forEach((element:any) => {
+                if(element.schoolId == response.schoolId){
+                      element.schoolUnreadMessageCount += 1;
+                } 
+                });
+                this.classInboxList.forEach((element:any) => {
+                  if(element.class.schoolId == response.schoolId && element.chatHeadId == response.chatHeadId){
+                        element.unreadMessageCount += 1;
+                  } 
+                  });
 
-            this._classService
-              .getClass(response.chatTypeId)
-              .subscribe((classDeatail) => {
-                userDetails.class['createdById'] = classDeatail.createdById;
-                userDetails.class['className'] = classDeatail.className;
-                userDetails.class['avatar'] = classDeatail.avatar;
-                userDetails.class['classId'] = classDeatail.classId;
-                userDetails.class['classId'] = classDeatail.classId;
-                userDetails.class['schoolId'] = classDeatail.schoolId;
-                userDetails.userName =
-                  userDetails.userName + '(' + classDeatail.className + ')';
-
-                this.classInboxList.unshift(userDetails);
-                this.schoolInboxList.unshift(userDetails);
-
-                var users: any[] = this.allChatUsers;
-                var receiverLastMessage = users.find(
-                  (x) =>
-                    x.userID == response.senderId &&
-                    x.chatType == 4 &&
-                    x.chatHeadId == response.chatHeadId
-                );
-                if (receiverLastMessage != undefined) {
-                  receiverLastMessage.lastMessage = response.message;
-                  receiverLastMessage.time = new Date()
-                    .toISOString()
-                    .slice(0, -1);
-                }
-
-                var classUsers: any[] = this.classInboxList;
-                var user = classUsers.find(
-                  (x) =>
-                    x.userID == response.senderId &&
-                    x.chatType == 4 &&
-                    x.chatHeadId == response.chatHeadId
-                );
-
-                //  var users: any[] = this.schoolInboxList;
-                //  var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == 4);
-                //  receiverLastMessage.lastMessage = response.message;
-                //  var users: any[] = this.classInboxList;
-                //  var user = users.find(x => x.usechatHeadIdrID == response.chatHeadId);
-                //  if(response.message != ""){
-                //   user.lastMessage = response.message;
-                //  }
-                //  else{
-                //   user.lastMessage = response.attachments[0].fileName;
-                //  }
-                if (user.class != null) {
-                  if (
-                    user.class.ownerId == this.sender.id ||
-                    user.class?.createdById == this.sender.id
-                  ) {
-                    this.isSchoolOwner = true;
-                    user.lastMessage = response.message;
-                    user.time = new Date().toISOString().slice(0, -1);
-                    var senderDetails = {
-                      id: response.id,
-                      receiver: result.firstName + ' ' + result.lastName,
-                      message: response.message,
-                      isTest: true,
-                      receiverId: response.receiverId,
-                      isSchoolOwner: this.isSchoolOwner,
-                      replyChatContent: response.replyChatContent,
-                      replyMessageType: response.replyMessageType,
-                      fileName: response.fileName,
-                      fileURL: response.fileURL,
-                      isForwarded: response.isForwarded,
-                      forwardedFileName: response.forwardedFileName,
-                      forwardedFileURL: response.forwardedFileURL,
-                      forwardedFileType: response.forwardedFileType,
-                      chatHeadId: response.chatHeadId
-                    };
-                    this.generateChatLi(senderDetails, result.avatar, '4');
-                  } else {
-                    this.isSchoolOwner = false;
-                    var senderDetailss = {
-                      id: response.id,
-                      receiver: user.class.className,
-                      message: response.message,
-                      isTest: true,
-                      receiverId: response.receiverId,
-                      isSchoolOwner: this.isSchoolOwner,
-                      replyChatContent: response.replyChatContent,
-                      replyMessageType: response.replyMessageType,
-                      fileName: response.fileName,
-                      fileURL: response.fileURL,
-                      isForwarded: response.isForwarded,
-                      forwardedFileName: response.forwardedFileName,
-                      forwardedFileURL: response.forwardedFileURL,
-                      forwardedFileType: response.forwardedFileType,
-                      chatHeadId: response.chatHeadId
-                    };
-                    this.generateChatLi(senderDetailss, user.class.avatar, '4');
-                  }
+              var receiverLastMessage = users.find(
+                (x) =>
+                  x.userID == response.senderId &&
+                  x.chatType == 4 &&
+                  x.chatHeadId == response.chatHeadId
+              );
+              if (receiverLastMessage != undefined) {
+                receiverLastMessage.lastMessage = response.message;
+                receiverLastMessage.time = new Date().toISOString().slice(0, -1);
+              }
+    
+              var classUsers: any[] = this.classInboxList;
+              var user = classUsers.find(
+                (x) =>
+                  x.userID == response.senderId &&
+                  x.chatType == 4 &&
+                  x.chatHeadId == response.chatHeadId
+              );
+    
+              //         var users: any[] = this.allChatUsers;
+              //         var receiverLastMessage = users.find(x => x.chatHeadId == response.chatHeadId);
+              //         receiverLastMessage.lastMessage = response.message;
+              //  var users: any[] = this.classInboxList;
+              //  var user = users.find(x => x.userID == response.senderId);
+              if (user.class != null) {
+                if (
+                  user.class.ownerId == this.sender.id ||
+                  user.class?.createdById == this.sender.id
+                ) {
+                  this.isSchoolOwner = true;
+                  user.lastMessage = response.message;
+                  user.time = new Date().toISOString().slice(0, -1);
                 } else {
                   this.isSchoolOwner = false;
-                  var senderDetailsss = {
-                    id: response.id,
-                    receiver: user.class.className,
-                    message: response.message,
-                    isTest: true,
-                    receiverId: response.receiverId,
-                    isSchoolOwner: this.isSchoolOwner,
-                    replyChatContent: response.replyChatContent,
-                    replyMessageType: response.replyMessageType,
-                    fileName: response.fileName,
-                    fileURL: response.fileURL,
-                    isForwarded: response.isForwarded,
-                    forwardedFileName: response.forwardedFileName,
-                    forwardedFileURL: response.forwardedFileURL,
-                    forwardedFileType: response.forwardedFileType,
-                    chatHeadId: response.chatHeadId
-                  };
-                  this.generateChatLi(senderDetailsss, user.class.avatar, '4');
                 }
-              });
-          });
-        } else {
-          var users: any[] = this.allChatUsers;
-          var receiverLastMessage = users.find(
-            (x) =>
-              x.userID == response.senderId &&
-              x.chatType == 4 &&
-              x.chatHeadId == response.chatHeadId
-          );
-          if (receiverLastMessage != undefined) {
-            receiverLastMessage.lastMessage = response.message;
-            receiverLastMessage.time = new Date().toISOString().slice(0, -1);
-          }
-
-          var classUsers: any[] = this.classInboxList;
-          var user = classUsers.find(
-            (x) =>
-              x.userID == response.senderId &&
-              x.chatType == 4 &&
-              x.chatHeadId == response.chatHeadId
-          );
-
-          //         var users: any[] = this.allChatUsers;
-          //         var receiverLastMessage = users.find(x => x.chatHeadId == response.chatHeadId);
-          //         receiverLastMessage.lastMessage = response.message;
-          //  var users: any[] = this.classInboxList;
-          //  var user = users.find(x => x.userID == response.senderId);
-          if (user.class != null) {
-            if (
-              user.class.ownerId == this.sender.id ||
-              user.class?.createdById == this.sender.id
-            ) {
-              this.isSchoolOwner = true;
-              user.lastMessage = response.message;
-              user.time = new Date().toISOString().slice(0, -1);
-            } else {
-              this.isSchoolOwner = false;
+              } else {
+                this.isSchoolOwner = false;
+              }
+              if (response.message != '') {
+                user.lastMessage = response.message;
+                user.time = new Date().toISOString().slice(0, -1);
+              } else {
+                if (response.forwardedFileName != undefined) {
+                  user.lastMessage = response.forwardedFileName;
+                } else {
+                  user.lastMessage = response.attachments[0].fileName;
+                }
+              }
+    
+              var senderDeatail = {
+                id: response.id,
+                receiver: this.receiverName,
+                message: response.message,
+                isTest: true,
+                receiverId: response.receiverId,
+                isSchoolOwner: this.isSchoolOwner,
+                replyChatContent: response.replyChatContent,
+                replyMessageType: response.replyMessageType,
+                fileName: response.fileName,
+                fileURL: response.fileURL,
+                isForwarded: response.isForwarded,
+                forwardedFileName: response.forwardedFileName,
+                forwardedFileURL: response.forwardedFileURL,
+                forwardedFileType: response.forwardedFileType,
+                chatHeadId: response.chatHeadId
+    
+              };
+              this.generateChatLi(senderDeatail, this.receiverAvatar, '4');
             }
-          } else {
-            this.isSchoolOwner = false;
+          
+        }
+        else {
+
+          /* need to test !!!!!!!!!!!! */
+          var users: any[] = this.allChatUsers;
+          var user = users.find((x) => x.chatHeadId == response.chatHeadId);
+          if(this.chatHeadId ==  response.chatHeadId){
+            user.unreadMessageCount = 0;
           }
+         
+          const userIndex = this.allChatUsers.findIndex((x: { chatHeadId: string; }) => x.chatHeadId === response.chatHeadId);
+          if (userIndex !== -1) {
+            let insertIndex = this.allChatUsers.findIndex((x: { isPinned: boolean; }) => x.isPinned === false);
+            if (insertIndex === -1) {
+              insertIndex = this.allChatUsers.length;
+            }
+            const userToMove = this.allChatUsers.splice(userIndex, 1)[0];
+            this.allChatUsers.splice(insertIndex, 0, userToMove);
+          }
+          if (this.receiverName == undefined) {
+            this.receiverName = user.userName;
+          }
+          if (this.receiverAvatar == undefined) {
+            this.receiverAvatar = user.profileURL;
+          }
+          this.senderID = user.userID;
+          this.chatType = response.chatType;
           if (response.message != '') {
             user.lastMessage = response.message;
-            user.time = new Date().toISOString().slice(0, -1);
           } else {
             if (response.forwardedFileName != undefined) {
               user.lastMessage = response.forwardedFileName;
@@ -1122,7 +1234,9 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
             }
           }
 
-          var senderDeatail = {
+          user.time = new Date().toISOString().slice(0, -1);
+
+          var result = {
             id: response.id,
             receiver: this.receiverName,
             message: response.message,
@@ -1138,115 +1252,164 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
             forwardedFileURL: response.forwardedFileURL,
             forwardedFileType: response.forwardedFileType,
             chatHeadId: response.chatHeadId
-
           };
-          this.generateChatLi(senderDeatail, this.receiverAvatar, '4');
-        }
+          this.generateChatLi(result, this.receiverAvatar, '1');
+        
+      }
+        // var chatUsers: any[] = this.classInboxList;
+        // this.chatType = response.chatType;
+        // var isuserExist = chatUsers.find((x) => x.userID == response.senderId && x.chatHeadId == response.chatHeadId);
+        
       }
 
       if (response.chatType == '5') {
+        debugger;
         if (this.courseInboxList == undefined) {
           this.courseInboxList = [];
         }
-
-        var chatUsers: any[] = this.courseInboxList;
-        this.chatType = response.chatType;
-        var isuserExist = chatUsers.find((x) => x.userID == response.senderId);
-        if (isuserExist == undefined) {
-          this._userService.getUser(response.senderId).subscribe((result) => {
-            var userDetails = {
-              userName: result.firstName + ' ' + result.lastName,
-              userID: response.senderId,
-              profileURL: result.avatar,
-              chatType: response.chatType,
-              chatHeadId: response.chatHeadId,
-              chats: [],
-              course: {
-                createdById: '',
-                courseName: '',
-                avatar: '',
-                courseId: '',
-                schoolId: '',
-              },
-            };
-
-            this._courseService
-              .getCourse(response.chatTypeId)
-              .subscribe((courseDeatail) => {
-                userDetails.course['createdById'] = courseDeatail.createdById;
-                userDetails.course['courseName'] = courseDeatail.courseName;
-                userDetails.course['avatar'] = courseDeatail.avatar;
-                userDetails.course['courseId'] = courseDeatail.courseId;
-                userDetails.course['schoolId'] = courseDeatail.schoolId;
-                userDetails.userName =
-                  userDetails.userName + '(' + courseDeatail.courseName + ')';
-
-                this.courseInboxList.unshift(userDetails);
-                this.schoolInboxList.unshift(userDetails);
-
-                var users: any[] = this.allChatUsers;
-                var receiverLastMessage = users.find(
-                  (x) =>
-                    x.userID == response.senderId &&
-                    x.chatType == 5 &&
-                    x.chatHeadId == response.chatHeadId
-                );
-                if (receiverLastMessage != undefined) {
-                  receiverLastMessage.lastMessage = response.message;
-                  receiverLastMessage.time = new Date()
-                    .toISOString()
-                    .slice(0, -1);
-                }
-
-                var courseUsers: any[] = this.courseInboxList;
-                var user = courseUsers.find(
-                  (x) =>
-                    x.userID == response.senderId &&
-                    x.chatType == 5 &&
-                    x.chatHeadId == response.chatHeadId
-                );
-
-                //  var users: any[] = this.allChatUsers;
-                //  var receiverLastMessage = users.find(x => x.userID == response.senderId);
-                //  receiverLastMessage.lastMessage = response.message;
-                //  var users: any[] = this.courseInboxList;
-                //  var user = users.find(x => x.userID == response.senderId);
-                //  if(response.message != ""){
-                //   user.lastMessage = response.message;
-                //  }
-                //  else{
-                //   user.lastMessage = response.attachments[0].fileName;
-                //  }
-                if (user.course != null) {
-                  if (
-                    user.course.ownerId == this.sender.id ||
-                    user.course?.createdById == this.sender.id
-                  ) {
-                    this.isSchoolOwner = true;
-                    user.lastMessage = response.message;
-                    user.time = new Date().toISOString().slice(0, -1);
-                    var senderDetails = {
-                      id: response.id,
-                      receiver: result.firstName + ' ' + result.lastName,
-                      message: response.message,
-                      isTest: true,
-                      receiverId: response.receiverId,
-                      isSchoolOwner: this.isSchoolOwner,
-                      replyChatContent: response.replyChatContent,
-                      replyMessageType: response.replyMessageType,
-                      fileName: response.fileName,
-                      fileURL: response.fileURL,
-                      isForwarded: response.isForwarded,
-                      forwardedFileName: response.forwardedFileName,
-                      forwardedFileURL: response.forwardedFileURL,
-                      forwardedFileType: response.forwardedFileType,
-                      chatHeadId: response.chatHeadId
-
-                    };
-                    this.generateChatLi(senderDetails, result.avatar, '5');
+        if (this.schoolInboxList == undefined) {
+          this.schoolInboxList = [];
+        }
+        var isUserExistInMyInbox = this.allChatUsers.find((x: { chatHeadId: string; })=>x.chatHeadId==response.chatHeadId)
+        if(isUserExistInMyInbox==undefined){
+          var chatUsers: any[] = this.courseInboxList;
+          this.chatType = response.chatType;
+          var isuserExist = chatUsers.find(
+            (x) =>
+              x.userID == response.senderId &&
+              x.chatType == 5 &&
+              x.chatHeadId == response.chatHeadId
+          );
+          if (isuserExist == undefined) {
+            this._userService.getUser(response.senderId).subscribe((result) => {
+              var userDetails = {
+                userName: result.firstName + ' ' + result.lastName,
+                userID: response.senderId,
+                profileURL: result.avatar,
+                chatType: response.chatType,
+                chatHeadId: response.chatHeadId,
+                gender:result.gender,
+                unreadMessageCount:1,
+                chats: [],
+                course: {
+                  createdById: '',
+                  courseName: '',
+                  avatar: '',
+                  courseId: '',
+                  schoolId: '',
+                },
+              };
+  
+              this._courseService
+                .getCourse(response.chatTypeId)
+                .subscribe((courseDeatail) => {
+                  userDetails.course['createdById'] = courseDeatail.createdById;
+                  userDetails.course['courseName'] = courseDeatail.courseName;
+                  userDetails.course['avatar'] = courseDeatail.avatar;
+                  userDetails.course['courseId'] = courseDeatail.courseId;
+                  userDetails.course['schoolId'] = courseDeatail.schoolId;
+                  userDetails.userName =
+                    userDetails.userName + '(' + courseDeatail.courseName + ')';
+  
+                  this.courseInboxList.unshift(userDetails);
+                  this.schoolInboxList.unshift(userDetails);
+  
+                  this.topSchoolInboxChatHeadUser=this.schoolInboxList[0];
+                  this.totalUnreadMessageCount += 1;
+                  this.userSchoolsList.forEach((element:any) => {
+                      if(element.schoolId == response.chatTypeId){
+                        element.schoolUnreadMessageCount += 1;
+                      }
+                  });
+  
+                  var users: any[] = this.allChatUsers;
+                  var receiverLastMessage = users.find(
+                    (x) =>
+                      x.userID == response.senderId &&
+                      x.chatType == 5 &&
+                      x.chatHeadId == response.chatHeadId
+                  );
+                  if (receiverLastMessage != undefined) {
+                    receiverLastMessage.lastMessage = response.message;
+                    receiverLastMessage.time = new Date()
+                      .toISOString()
+                      .slice(0, -1);
+                  }
+  
+                  var courseUsers: any[] = this.courseInboxList;
+                  var user = courseUsers.find(
+                    (x) =>
+                      x.userID == response.senderId &&
+                      x.chatType == 5 &&
+                      x.chatHeadId == response.chatHeadId
+                  );
+  
+                  //  var users: any[] = this.allChatUsers;
+                  //  var receiverLastMessage = users.find(x => x.userID == response.senderId);
+                  //  receiverLastMessage.lastMessage = response.message;
+                  //  var users: any[] = this.courseInboxList;
+                  //  var user = users.find(x => x.userID == response.senderId);
+                  //  if(response.message != ""){
+                  //   user.lastMessage = response.message;
+                  //  }
+                  //  else{
+                  //   user.lastMessage = response.attachments[0].fileName;
+                  //  }
+                  if (user.course != null) {
+                    if (
+                      user.course.ownerId == this.sender.id ||
+                      user.course?.createdById == this.sender.id
+                    ) {
+                      this.isSchoolOwner = true;
+                      user.lastMessage = response.message;
+                      user.time = new Date().toISOString().slice(0, -1);
+                      var senderDetails = {
+                        id: response.id,
+                        receiver: result.firstName + ' ' + result.lastName,
+                        message: response.message,
+                        isTest: true,
+                        receiverId: response.receiverId,
+                        isSchoolOwner: this.isSchoolOwner,
+                        replyChatContent: response.replyChatContent,
+                        replyMessageType: response.replyMessageType,
+                        fileName: response.fileName,
+                        fileURL: response.fileURL,
+                        isForwarded: response.isForwarded,
+                        forwardedFileName: response.forwardedFileName,
+                        forwardedFileURL: response.forwardedFileURL,
+                        forwardedFileType: response.forwardedFileType,
+                        chatHeadId: response.chatHeadId
+  
+                      };
+                      this.generateChatLi(senderDetails, result.avatar, '5');
+                    } else {
+                      this.isSchoolOwner = false;
+                      var senderDetailss = {
+                        id: response.id,
+                        receiver: user.course.courseName,
+                        message: response.message,
+                        isTest: true,
+                        receiverId: response.receiverId,
+                        isSchoolOwner: this.isSchoolOwner,
+                        replyChatContent: response.replyChatContent,
+                        replyMessageType: response.replyMessageType,
+                        fileName: response.fileName,
+                        fileURL: response.fileURL,
+                        isForwarded: response.isForwarded,
+                        forwardedFileName: response.forwardedFileName,
+                        forwardedFileURL: response.forwardedFileURL,
+                        forwardedFileType: response.forwardedFileType,
+                        chatHeadId: response.chatHeadId
+                      };
+                      this.generateChatLi(
+                        senderDetailss,
+                        user.course.avatar,
+                        '5'
+                      );
+                    }
                   } else {
                     this.isSchoolOwner = false;
-                    var senderDetailss = {
+                    var senderDetailsss = {
                       id: response.id,
                       receiver: user.course.courseName,
                       message: response.message,
@@ -1263,71 +1426,117 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
                       forwardedFileType: response.forwardedFileType,
                       chatHeadId: response.chatHeadId
                     };
-                    this.generateChatLi(
-                      senderDetailss,
-                      user.course.avatar,
-                      '5'
-                    );
+                    this.generateChatLi(senderDetailsss, user.course.avatar, '5');
                   }
-                } else {
-                  this.isSchoolOwner = false;
-                  var senderDetailsss = {
-                    id: response.id,
-                    receiver: user.course.courseName,
-                    message: response.message,
-                    isTest: true,
-                    receiverId: response.receiverId,
-                    isSchoolOwner: this.isSchoolOwner,
-                    replyChatContent: response.replyChatContent,
-                    replyMessageType: response.replyMessageType,
-                    fileName: response.fileName,
-                    fileURL: response.fileURL,
-                    isForwarded: response.isForwarded,
-                    forwardedFileName: response.forwardedFileName,
-                    forwardedFileURL: response.forwardedFileURL,
-                    forwardedFileType: response.forwardedFileType,
-                    chatHeadId: response.chatHeadId
-                  };
-                  this.generateChatLi(senderDetailsss, user.course.avatar, '5');
+                });
+            });
+          } else {
+           if(this.chatHeadId!=response.chatHeadId){
+            this.totalUnreadMessageCount += 1;
+            this.userSchoolsList.forEach((element:any) => {
+             
+                if(element.schoolId == response.schoolId){
+                  element.schoolUnreadMessageCount += 1;
                 }
+              
+            });
+            this.courseInboxList.forEach((element:any) => {
+              if(element.course.schoolId == response.schoolId && element.chatHeadId == response.chatHeadId){
+                    element.unreadMessageCount += 1;
+              } 
               });
-          });
-        } else {
-          var users: any[] = this.allChatUsers;
-          var receiverLastMessage = users.find(
-            (x) =>
-              x.userID == response.senderId &&
-              x.chatType == '5' &&
-              x.chatHeadId == response.chatHeadId
-          );
-          if (receiverLastMessage != undefined) {
-            receiverLastMessage.lastMessage = response.message;
-            receiverLastMessage.time = new Date().toISOString().slice(0, -1);
-          }
-          var users: any[] = this.courseInboxList;
-          var user = users.find(
-            (x) =>
-              x.userID == response.senderId &&
-              x.chatType == '5' &&
-              x.chatHeadId == response.chatHeadId
-          );
-          if (user.course != null) {
-            if (
-              user.course.ownerId == this.sender.id ||
-              user.course?.createdById == this.sender.id
-            ) {
-              this.isSchoolOwner = true;
-              user.lastMessage = response.message;
-              user.time = new Date().toISOString().slice(0, -1);
+           }
+            var users: any[] = this.allChatUsers;
+            var receiverLastMessage = users.find(
+              (x) =>
+                x.userID == response.senderId &&
+                x.chatType == '5' &&
+                x.chatHeadId == response.chatHeadId
+            );
+            if (receiverLastMessage != undefined) {
+              receiverLastMessage.lastMessage = response.message;
+              receiverLastMessage.time = new Date().toISOString().slice(0, -1);
+            }
+            var users: any[] = this.courseInboxList;
+            var user = users.find(
+              (x) =>
+                x.userID == response.senderId &&
+                x.chatType == '5' &&
+                x.chatHeadId == response.chatHeadId
+            );
+            if (user.course != null) {
+              if (
+                user.course.ownerId == this.sender.id ||
+                user.course?.createdById == this.sender.id
+              ) {
+                this.isSchoolOwner = true;
+                user.lastMessage = response.message;
+                user.time = new Date().toISOString().slice(0, -1);
+              } else {
+                this.isSchoolOwner = false;
+              }
             } else {
               this.isSchoolOwner = false;
             }
-          } else {
-            this.isSchoolOwner = false;
+            if (response.message != '') {
+              user.lastMessage = response.message;
+              user.time = new Date().toISOString().slice(0, -1);
+            } else {
+              if (response.forwardedFileName != undefined) {
+                user.lastMessage = response.forwardedFileName;
+              } else {
+                user.lastMessage = response.attachments[0].fileName;
+              }
+            }
+  
+            var senderDeatail = {
+              id: response.id,
+              receiver: this.receiverName,
+              message: response.message,
+              isTest: true,
+              receiverId: response.receiverId,
+              isSchoolOwner: this.isSchoolOwner,
+              replyChatContent: response.replyChatContent,
+              replyMessageType: response.replyMessageType,
+              fileName: response.fileName,
+              fileURL: response.fileURL,
+              isForwarded: response.isForwarded,
+              forwardedFileName: response.forwardedFileName,
+              forwardedFileURL: response.forwardedFileURL,
+              forwardedFileType: response.forwardedFileType,
+              chatHeadId: response.chatHeadId
+            };
+            this.generateChatLi(senderDeatail, this.receiverAvatar, '4');
           }
+        }
+        else {
+
+          /* need to test !!!!!!!!!!!! */
+          var users: any[] = this.allChatUsers;
+          var user = users.find((x) => x.chatHeadId == response.chatHeadId);
+          if(this.chatHeadId ==  response.chatHeadId){
+            user.unreadMessageCount = 0;
+          }
+         
+          const userIndex = this.allChatUsers.findIndex((x: { chatHeadId: string; }) => x.chatHeadId === response.chatHeadId);
+          if (userIndex !== -1) {
+            let insertIndex = this.allChatUsers.findIndex((x: { isPinned: boolean; }) => x.isPinned === false);
+            if (insertIndex === -1) {
+              insertIndex = this.allChatUsers.length;
+            }
+            const userToMove = this.allChatUsers.splice(userIndex, 1)[0];
+            this.allChatUsers.splice(insertIndex, 0, userToMove);
+          }
+          if (this.receiverName == undefined) {
+            this.receiverName = user.userName;
+          }
+          if (this.receiverAvatar == undefined) {
+            this.receiverAvatar = user.profileURL;
+          }
+          this.senderID = user.userID;
+          this.chatType = response.chatType;
           if (response.message != '') {
             user.lastMessage = response.message;
-            user.time = new Date().toISOString().slice(0, -1);
           } else {
             if (response.forwardedFileName != undefined) {
               user.lastMessage = response.forwardedFileName;
@@ -1336,7 +1545,9 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
             }
           }
 
-          var senderDeatail = {
+          user.time = new Date().toISOString().slice(0, -1);
+
+          var result = {
             id: response.id,
             receiver: this.receiverName,
             message: response.message,
@@ -1353,8 +1564,11 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
             forwardedFileType: response.forwardedFileType,
             chatHeadId: response.chatHeadId
           };
-          this.generateChatLi(senderDeatail, this.receiverAvatar, '4');
-        }
+          this.generateChatLi(result, this.receiverAvatar, '1');
+        
+      }
+
+     
       }
     });
 
@@ -1575,6 +1789,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
               this.allChatUsers.unshift(isuserExist);
               }
              else{
+              debugger
                 this.classInfo.chatType = 4;
                 this.allChatUsers.unshift(this.classInfo);
                 this.topChatHeadUser = this.allChatUsers[0];
@@ -1788,6 +2003,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
     });
     this.allChatUsers[0].unreadMessageCount = 0;
 
+    debugger
     this.chatHeadId = this.allChatUsers[0].chatHeadId;
     this.cd.detectChanges();
     this.chatList.nativeElement.scrollTop =
@@ -2042,6 +2258,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
     // this.schoolInboxList = newList;
     // console.log(this.schoolInboxList)
     // console.log("-----")
+    debugger;
     var schoolIdForCheckingUnreadMessageCount:string
     if(this.schoolInboxList[0].chatType=='3'){
       schoolIdForCheckingUnreadMessageCount = this.schoolInboxList[0].school.schoolId;
@@ -2171,7 +2388,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
       
     }
     if(From=="FromSchoolInbox"){
-      this.topSchoolInboxChatHeadUser = this.schoolInboxList.find((item:any)=>item.userID == recieverId)
+      this.topSchoolInboxChatHeadUser = this.schoolInboxList.find((item:any)=>item.chatHeadId == chatHeadId)
       let data = this.initialChatUsersData.find((item:any)=>item.userID == recieverId)
     }
     this.topChatViewIsUserVerified = this.topChatHeadUser.isUserVerified;
@@ -2253,7 +2470,7 @@ if(From=="FromMyInbox"){
 else{
   var schoolChatUsers: any[] = this.schoolInboxList;
   currentChatHead = schoolChatUsers.find(
-     (x) => x.userID == recieverId && x.chatType == chatType
+     (x) => x.userID == recieverId && x.chatType == chatType && x.chatHeadId == chatHeadId
    );
   let schoolData  = schoolChatUsers.find(
     (x) => x.chatHeadId == chatHeadId
@@ -2276,6 +2493,9 @@ else{
       this.userSchoolsList.forEach((element:any) => {
         if(element.schoolId == schoolId){
           element.schoolUnreadMessageCount -= currentChatHead?.unreadMessageCount;
+          if(element.schoolUnreadMessageCount<0){
+            element.schoolUnreadMessageCount = 0;
+          }
         }
       });
       unreadChatResponse.next({
@@ -2737,8 +2957,8 @@ else{
     var user = users.find(
       (x) =>
         x.userID == receiverId &&
-        x.chatType == this.chatType
-        // x.chatHeadId == this.chatHeadId
+        x.chatType == this.chatType &&
+        x.chatHeadId == this.chatHeadId
     );
     if (this.isForwarded == true) {
       this.chatViewModel.isForwarded = this.isForwarded;
@@ -2758,16 +2978,19 @@ else{
       if (this.receiverInfo.school != null) {
         this.chatViewModel.chatTypeId = this.receiverInfo?.school.schoolId;
         chatTypeId = this.receiverInfo?.school.schoolId;
+        this.chatViewModel.schoolId = this.receiverInfo?.school.schoolId;
       }
       if (this.receiverInfo.class != null) {
         this.chatViewModel.chatTypeId = this.receiverInfo?.class.classId;
         this.chatViewModel.schoolId = this.receiverInfo?.class.schoolId;
         chatTypeId = this.receiverInfo?.class.classId;
+        this.chatViewModel.schoolId = this.receiverInfo?.class.schoolId;
       }
       if (this.receiverInfo.course != null) {
         this.chatViewModel.chatTypeId = this.receiverInfo?.course.courseId;
         this.chatViewModel.schoolId = this.receiverInfo?.course.schoolId;
         chatTypeId = this.receiverInfo?.course.courseId;
+        this.chatViewModel.schoolId = this.receiverInfo?.course.schoolId;
       }
       // this.chatViewModel.chatTypeId = this.receiverInfo?.chatTypeId;
       if (
@@ -2777,6 +3000,7 @@ else{
         this.isSchoolOwner = true;
         this.chatViewModel.chatTypeId = this.receiverInfo.school.schoolId;
         chatTypeId = this.receiverInfo.school.schoolId;
+        this.chatViewModel.schoolId = this.receiverInfo?.school.schoolId;
       } else {
         if (this.receiverInfo.class?.createdById == this.sender.id) {
           this.isSchoolOwner = true;
@@ -2809,6 +3033,7 @@ else{
         );
         this.receiverInfo = user;
         this.chatViewModel.chatTypeId = this.receiverInfo?.school?.schoolId;
+        this.chatViewModel.schoolId = this.receiverInfo?.school.schoolId;
         chatTypeId = this.receiverInfo?.school?.schoolId;
         if (
           this.receiverInfo.school?.ownerId == this.sender.id ||
@@ -2876,7 +3101,7 @@ else{
           ...this.uploadImage,
           ...this.uploadVideos,
           ...this.uploadAttachments,
-        ];
+        ];  
         user.lastMessage = attachments[0].fileName;
       }
     }
@@ -3306,6 +3531,7 @@ else{
     this.topChatViewIsSchoolVerified=this.allChatUsers[0].isVerified;
     this.topChatViewIsUserVerified=this.allChatUsers[0].isUserVerified;
     this.topChatViewChatType = this.allChatUsers[0].chatType;
+    this.chatHeadId = this.allChatUsers[0].chatHeadId
   }
 
   showSchoolInboxDiv() {
