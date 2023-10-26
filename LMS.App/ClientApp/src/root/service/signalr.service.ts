@@ -15,6 +15,7 @@ import { banUnbanUserProgression } from '../admin/registeredUsers/registeredUser
 import { disableEnableResponse } from '../admin/registeredCourses/registeredCourses.component';
 
 export const signalRResponse = new Subject<{
+  [x: string]: any;
   id:string;
   receiver: any;
   message: string;
@@ -34,7 +35,7 @@ export const signalRResponse = new Subject<{
   forwardedFileURL: string | null;
   forwardedFileType: number | null;
   schoolId:string | null;
-
+  isSchoolOwner:boolean
 }>();
 export const commentResponse = new Subject<{
   id:string;
@@ -90,7 +91,7 @@ export class SignalrService {
 
   initializeConnection(token: string) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://byokul.com/chatHub', {
+      .withUrl('https://localhost:7220/chatHub', {
          httpClient: new CustomXhrHttpClient(token)
       })
       .withAutomaticReconnect()
@@ -149,8 +150,8 @@ export class SignalrService {
         forwardedFileName: user.forwardedFileName,
         forwardedFileURL:user.forwardedFileURL,
         forwardedFileType: user.forwardedFileType,
-        schoolId:user.schoolId
-
+        schoolId:user.schoolId,
+        isSchoolOwner:user.isSchoolOwner
       });
       unreadChatResponse.next({readMessagesCount:1,type:"add",chatHeadId: user.chatHeadId});
     });
