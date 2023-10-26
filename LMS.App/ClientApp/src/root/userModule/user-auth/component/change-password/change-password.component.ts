@@ -5,10 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/root/service/auth.service';
 import { ChangePasswordModel } from 'src/root/interfaces/change-password';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
-import { BehaviorSubject, finalize } from 'rxjs';
+import { BehaviorSubject, Subject, finalize } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
-export const changePassResponse =new BehaviorSubject <boolean>(false);  
+// export const changePassResponse =new BehaviorSubject <boolean>(false);  
+export const changePassResponse =new Subject <{isPasswordChange:boolean}>();  
+
 
 
 @Component({
@@ -142,7 +144,8 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
 
                   
                   this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Password changed successfully...' });
-                  changePassResponse.next(true); 
+                  // changePassResponse.next(true); 
+                  changePassResponse.next({isPasswordChange:true}); 
                   }
                 },
                 error: (err: HttpErrorResponse) => this.invalidPasswordChange = true

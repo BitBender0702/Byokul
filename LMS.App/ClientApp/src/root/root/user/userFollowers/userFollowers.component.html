@@ -14,7 +14,10 @@
             {{ "Back" | translate }}
           </button>
 
-          <div class="buttonTab">
+          <h1 *ngIf="!isOwner" class="font_22 fw_700 f-monteserrat mb-md-0">
+            {{ "Followers" | translate }}
+          </h1>
+          <div *ngIf="isOwner" class="buttonTab">
             <button class="font_22 fw_700 f-monteserrat mb-md-0 btn custom-btn primary_btn earning-btn fw_400 h_44 me-4 ps-4 pe-4"
             (click)="getFollowers()"
 
