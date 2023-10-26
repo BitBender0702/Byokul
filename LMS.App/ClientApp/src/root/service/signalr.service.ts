@@ -33,6 +33,7 @@ export const signalRResponse = new Subject<{
   forwardedFileName: string | null;
   forwardedFileURL: string | null;
   forwardedFileType: number | null;
+  schoolId:string | null;
 
 }>();
 export const commentResponse = new Subject<{
@@ -147,7 +148,8 @@ export class SignalrService {
         isForwarded: user.isForwarded,
         forwardedFileName: user.forwardedFileName,
         forwardedFileURL:user.forwardedFileURL,
-        forwardedFileType: user.forwardedFileType
+        forwardedFileType: user.forwardedFileType,
+        schoolId:user.schoolId
 
       });
       unreadChatResponse.next({readMessagesCount:1,type:"add",chatHeadId: user.chatHeadId});
