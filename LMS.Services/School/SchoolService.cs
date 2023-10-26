@@ -1722,6 +1722,7 @@ namespace LMS.Services
                 item.IsClassCourseSavedByCurrentUser = savedClassCourse.Any(x => x.ClassId == classDetails.ClassId && x.UserId == userId);
                 item.SavedClassCourseCount = savedClassCourse.Where(x => x.ClassId == classDetails.ClassId && x.UserId == userId).Count();
                 item.SharedClassCourseCount = sharedClassCourse.Where(x => x.ClassId == classDetails.ClassId).Count();
+                item.Currency = classDetails.Currency;
                 model.Add(item);
             }
 
@@ -1890,6 +1891,7 @@ namespace LMS.Services
                 item.IsClassCourseSavedByCurrentUser = savedClassCourse.Any(x => x.CourseId == courseDetails.CourseId && x.UserId == userId);
                 item.SavedClassCourseCount = savedClassCourse.Where(x => x.CourseId == courseDetails.CourseId && x.UserId == userId).Count();
                 item.SharedClassCourseCount = sharedClassCourse.Where(x => x.CourseId == courseDetails.CourseId).Count();
+                item.Currency = courseDetails.Currency;
                 model.Add(item);
             }
 

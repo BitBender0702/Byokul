@@ -66,7 +66,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   @ViewChild('videoComp') videoComp: any;
   @ViewChild(SlickCarouselComponent, { static: false }) carousel!: SlickCarouselComponent;
   @ViewChild('slickCarousel') slickCarousel!: ElementRef;
-
+ 
   commentDeletdResponseSubscription!: Subscription;
 
 
@@ -1544,7 +1544,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     }
   }
 
-
+ 
   getSelectedSchool(schoolName: string) {
     window.location.href = `profile/school/${schoolName.split(" ").join("").toLowerCase()}`;
   }
