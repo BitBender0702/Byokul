@@ -13,13 +13,17 @@
             <img src="../../../../assets/images/arrow-left.svg" />
             {{ "Back" | translate }}
           </button>
-          <div class="buttonTab gap-3">
+          <h1 *ngIf="!isOwner" class="font_22 fw_700 f-monteserrat mb-md-0">
+            {{ "Followers" | translate }}
+          </h1>
+          <div class="buttonTab gap-3" *ngIf="isOwner">
             <button
               class="font_22 fw_700 f-monteserrat btn custom-btn primary_btn earning-btn fw_400 h_44 ps-4 pe-4"
               (click)="schoolFollower()"
             >
               {{ "Followers" | translate }}
             </button>
+
             <button
               class="font_22 fw_700 f-monteserrat btn custom-btn primary_btn earning-btn fw_400 h_44 ps-4 pe-4"
               (click)="getBannedUser()"
