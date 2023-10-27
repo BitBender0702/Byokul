@@ -23,6 +23,7 @@ namespace LMS.Common.ViewModels.School
         public string? Avatar { get; set; }
         public double? Rating { get; set; }
         public long? Price { get; set; }
+        public string? Currency { get; set; }
         public string? Description { get; set; }
         public DateTime CreatedOn { get; set; }
         public String CreatedById { get; set; }
