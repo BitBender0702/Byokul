@@ -1769,123 +1769,121 @@
                   <br />
 
                   <div
-                    class="schoolgrid-header d-flex align-items-center position-relative gap-2"
+                    class="schoolgrid-header d-flex flex-column flex-md-row align-items-md-center position-relative gap-3 gap-md-2"
                   >
-                    <div class="school-gridprofile-icon">
-                      <a
-                        *ngIf="post.postAuthorType == 1"
-                        [routerLink]="['/profile/school', post.parentName]"
-                        class="routeLink"
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="school-gridprofile-icon">
+                        <a
+                          *ngIf="post.postAuthorType == 1"
+                          [routerLink]="['/profile/school', post.parentName]"
+                          class="routeLink"
+                        >
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 2"
+                          [routerLink]="[
+                            '/profile/class',
+                            post.schoolName,
+                            post.parentName
+                          ]"
+                          class="routeLink"
+                        >
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 3"
+                          [routerLink]="[
+                            '/profile/course',
+                            post.schoolName,
+                            post.parentName
+                          ]"
+                          class="routeLink"
+                        >
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 4"
+                          [routerLink]="['/user/userProfile', post.parentId]"
+                          class="routeLink"
+                        >
+                          <img
+                            *ngIf="post.parentImageUrl != null"
+                            [src]="post.parentImageUrl"
+                          />
+                          <img
+                            *ngIf="post.parentImageUrl == null && gender == '1'"
+                            src="../../../assets/images/maleProfile.jfif"
+                          />
+                          <img
+                            *ngIf="
+                              post.parentImageUrl == null &&
+                              (gender == '2' || gender == '3')
+                            "
+                            src="../../../assets/images/femaleProfile.jfif"
+                          />
+                        </a>
+                      </div>
+                      <h2
+                        class="d-inline-block font_20 fw_600 text_sec1 mb-0 word-break"
                       >
-                        <img [src]="post.parentImageUrl" />
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 2"
-                        [routerLink]="[
-                          '/profile/class',
-                          post.schoolName,
-                          post.parentName
-                        ]"
-                        class="routeLink"
-                      >
-                        <img [src]="post.parentImageUrl" />
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 3"
-                        [routerLink]="[
-                          '/profile/course',
-                          post.schoolName,
-                          post.parentName
-                        ]"
-                        class="routeLink"
-                      >
-                        <img [src]="post.parentImageUrl" />
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 4"
-                        [routerLink]="['/user/userProfile', post.parentId]"
-                        class="routeLink"
-                      >
-                        <img
-                          *ngIf="post.parentImageUrl != null"
-                          [src]="post.parentImageUrl"
-                        />
-                        <img
-                          *ngIf="post.parentImageUrl == null && gender == '1'"
-                          src="../../../assets/images/maleProfile.jfif"
-                        />
-                        <img
-                          *ngIf="
-                            post.parentImageUrl == null &&
-                            (gender == '2' || gender == '3')
-                          "
-                          src="../../../assets/images/femaleProfile.jfif"
-                        />
-                      </a>
+                        <a
+                          *ngIf="post.postAuthorType == 1"
+                          [routerLink]="['/profile/school', post.parentName]"
+                          class="routeLink"
+                        >
+                          {{ post.parentName }}
+                          <span
+                            *ngIf="
+                              post.isParentVerified && post.postAuthorType == 1
+                            "
+                            class="verified-badge"
+                            ><img
+                              src="../../../../assets/images/verified-badge.svg"
+                          /></span>
+                          <span
+                            *ngIf="
+                              post.isParentVerified && post.postAuthorType == 4
+                            "
+                            class="verified-badge"
+                            ><img
+                              src="../../../../assets/images/green-verified.svg"
+                          /></span>
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 2"
+                          [routerLink]="[
+                            '/profile/class',
+                            post.schoolName,
+                            post.parentName
+                          ]"
+                          class="routeLink"
+                        >
+                          {{ post.title }}
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 3"
+                          [routerLink]="[
+                            '/profile/course',
+                            post.schoolName,
+                            post.parentName
+                          ]"
+                          class="routeLink"
+                        >
+                          {{ post.title }}
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 4"
+                          [routerLink]="['/user/userProfile', post.parentId]"
+                          class="routeLink"
+                        >
+                          {{ post.title }}
+                        </a>
+                      </h2>
                     </div>
-                    <h2
-                      class="d-inline-block font_20 fw_600 text_sec1 mb-0 word-break"
-                    >
-                      <a
-                        *ngIf="post.postAuthorType == 1"
-                        [routerLink]="['/profile/school', post.parentName]"
-                        class="routeLink"
-                      >
-                        {{ post.parentName }}
-                        <span
-                          *ngIf="
-                            post.isParentVerified && post.postAuthorType == 1
-                          "
-                          class="verified-badge"
-                          ><img
-                            src="../../../../assets/images/verified-badge.svg"
-                        /></span>
-                        <span
-                          *ngIf="
-                            post.isParentVerified && post.postAuthorType == 4
-                          "
-                          class="verified-badge"
-                          ><img
-                            src="../../../../assets/images/green-verified.svg"
-                        /></span>
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 2"
-                        [routerLink]="[
-                          '/profile/class',
-                          post.schoolName,
-                          post.parentName
-                        ]"
-                        class="routeLink"
-                      >
-                        {{ post.title }}
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 3"
-                        [routerLink]="[
-                          '/profile/course',
-                          post.schoolName,
-                          post.parentName
-                        ]"
-                        class="routeLink"
-                      >
-                        {{ post.title }}
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 4"
-                        [routerLink]="['/user/userProfile', post.parentId]"
-                        class="routeLink"
-                      >
-                        {{ post.title }}
-                      </a>
-                    </h2>
 
-                    <br />
-
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="d-flex align-items-center gap-1">
                         <p
                           *ngIf="post.createdOn != null"
                           class="font_14 school-grid-date d-inline-block mb-0 me-1"
@@ -1909,17 +1907,20 @@
                             post.createdOn | ChangeTimeZonePipe | date : "yyyy"
                           }}
                         </p>
-                        <p
-                          *ngIf="post.createdOn != null"
-                          class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                        >
-                          {{
-                            post.createdOn
-                              | ChangeTimeZonePipe
-                              | date : "hh:mm a"
-                          }}
-                        </p>
                       </div>
+                      <p
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                      >
+                        {{
+                          post.createdOn | ChangeTimeZonePipe | date : "hh:mm a"
+                        }}
+                      </p>
+                    </div>
+
+                    <div
+                      class="d-flex justify-content-between align-items-center"
+                    >
                       <h4
                         *ngIf="
                           post?.isLiveStreamEnded ||
@@ -2777,7 +2778,7 @@
                   </div>
                   <br />
                   <div
-                    class="schoolgrid-header d-flex align-items-center position-relative gap-2"
+                    class="schoolgrid-header d-flex align-items-center position-relative gap-2 bbb"
                   >
                     <div class="school-gridprofile-icon">
                       <a
@@ -3671,7 +3672,7 @@
                   </div>
                   <br />
                   <div
-                    class="schoolgrid-header d-flex align-items-center position-relative gap-2"
+                    class="schoolgrid-header d-flex align-items-center position-relative gap-2 ccc"
                   >
                     <div class="school-gridprofile-icon">
                       <a
@@ -3845,126 +3846,131 @@
                   </div>
                   <br />
                   <div
-                    class="schoolgrid-header d-flex align-items-center position-relative gap-2"
+                    class="schoolgrid-header d-flex flex-column flex-md-row align-items-md-center position-relative gap-3 gap-md-2"
                   >
-                    <div class="school-gridprofile-icon">
-                      <a
-                        *ngIf="post.postAuthorType == 1"
-                        [routerLink]="['/profile/school', post.parentName]"
-                        class="routeLink"
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="school-gridprofile-icon">
+                        <a
+                          *ngIf="post.postAuthorType == 1"
+                          [routerLink]="['/profile/school', post.parentName]"
+                          class="routeLink"
+                        >
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 2"
+                          [routerLink]="[
+                            '/profile/class',
+                            post.schoolName,
+                            post.parentName
+                          ]"
+                          class="routeLink"
+                        >
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 3"
+                          [routerLink]="[
+                            '/profile/course',
+                            post.schoolName,
+                            post.parentName
+                          ]"
+                          class="routeLink"
+                        >
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 4"
+                          [routerLink]="['/user/userProfile', post.parentId]"
+                          class="routeLink"
+                        >
+                          <img
+                            *ngIf="post.parentImageUrl != null"
+                            [src]="post.parentImageUrl"
+                          />
+                          <img
+                            *ngIf="post.parentImageUrl == null && gender == '1'"
+                            src="../../../assets/images/maleProfile.jfif"
+                          />
+                          <img
+                            *ngIf="
+                              post.parentImageUrl == null &&
+                              (gender == '2' || gender == '3')
+                            "
+                            src="../../../assets/images/femaleProfile.jfif"
+                          />
+                        </a>
+                      </div>
+                      <h2
+                        class="d-inline-block font_20 fw_600 text_sec1 mb-0 word-break"
                       >
-                        <img [src]="post.parentImageUrl" />
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 2"
-                        [routerLink]="[
-                          '/profile/class',
-                          post.schoolName,
-                          post.parentName
-                        ]"
-                        class="routeLink"
-                      >
-                        <img [src]="post.parentImageUrl" />
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 3"
-                        [routerLink]="[
-                          '/profile/course',
-                          post.schoolName,
-                          post.parentName
-                        ]"
-                        class="routeLink"
-                      >
-                        <img [src]="post.parentImageUrl" />
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 4"
-                        [routerLink]="['/user/userProfile', post.parentId]"
-                        class="routeLink"
-                      >
-                        <img
-                          *ngIf="post.parentImageUrl != null"
-                          [src]="post.parentImageUrl"
-                        />
-                        <img
-                          *ngIf="post.parentImageUrl == null && gender == '1'"
-                          src="../../../assets/images/maleProfile.jfif"
-                        />
-                        <img
-                          *ngIf="
-                            post.parentImageUrl == null &&
-                            (gender == '2' || gender == '3')
-                          "
-                          src="../../../assets/images/femaleProfile.jfif"
-                        />
-                      </a>
+                        <a
+                          *ngIf="post.postAuthorType == 1"
+                          [routerLink]="['/profile/school', post.parentName]"
+                          class="routeLink"
+                        >
+                          {{ post.title }}
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 2"
+                          [routerLink]="[
+                            '/profile/class',
+                            post.schoolName,
+                            post.parentName
+                          ]"
+                          class="routeLink"
+                        >
+                          {{ post.parentName }}
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 3"
+                          [routerLink]="[
+                            '/profile/course',
+                            post.schoolName,
+                            post.parentName
+                          ]"
+                          class="routeLink"
+                        >
+                          {{ post.title }}
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 4"
+                          [routerLink]="['/user/userProfile', post.parentId]"
+                          class="routeLink"
+                        >
+                          {{ post.title }}
+                        </a>
+                      </h2>
                     </div>
-                    <h2
-                      class="d-inline-block font_20 fw_600 text_sec1 mb-0 word-break"
-                    >
-                      <a
-                        *ngIf="post.postAuthorType == 1"
-                        [routerLink]="['/profile/school', post.parentName]"
-                        class="routeLink"
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="d-flex align-items-center gap-1">
+                        <p class="font_14 school-grid-date d-inline-block mb-0">
+                          {{
+                            post.createdOn | ChangeTimeZonePipe | date : "dd"
+                          }}
+                          {{
+                            post.createdOn
+                              | ChangeTimeZonePipe
+                              | date : "MMMM"
+                              | translate
+                          }}
+                        </p>
+                        <p
+                          class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                        >
+                          {{
+                            post.createdOn | ChangeTimeZonePipe | date : "yyyy"
+                          }}
+                        </p>
+                      </div>
+                      <p
+                        class="font_14 school-grid-date d-inline-block mb-0 me-3"
                       >
-                        {{ post.title }}
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 2"
-                        [routerLink]="[
-                          '/profile/class',
-                          post.schoolName,
-                          post.parentName
-                        ]"
-                        class="routeLink"
-                      >
-                        {{ post.parentName }}
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 3"
-                        [routerLink]="[
-                          '/profile/course',
-                          post.schoolName,
-                          post.parentName
-                        ]"
-                        class="routeLink"
-                      >
-                        {{ post.title }}
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 4"
-                        [routerLink]="['/user/userProfile', post.parentId]"
-                        class="routeLink"
-                      >
-                        {{ post.title }}
-                      </a>
-                    </h2>
-                    <br />
-                    <!-- <p class="font_14 school-grid-date d-inline-block mb-0">
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
-                    </p> -->
-                    <p class="font_14 school-grid-date d-inline-block mb-0">
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
-                      {{
-                        post.createdOn
-                          | ChangeTimeZonePipe
-                          | date : "MMMM"
-                          | translate
-                      }}
-                    </p>
-                    <p
-                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                    >
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "yyyy" }}
-                    </p>
-                    <p
-                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                    >
-                      {{
-                        post.createdOn | ChangeTimeZonePipe | date : "hh:mm a"
-                      }}
-                    </p>
+                        {{
+                          post.createdOn | ChangeTimeZonePipe | date : "hh:mm a"
+                        }}
+                      </p>
+                    </div>
                     <div
                       class="d-flex justify-content-between align-items-center"
                     >
@@ -4837,7 +4843,7 @@
                   </div>
                   <br />
                   <div
-                    class="schoolgrid-header d-flex align-items-center position-relative gap-2"
+                    class="schoolgrid-header d-flex align-items-center position-relative gap-2 eee"
                   >
                     <div class="school-gridprofile-icon">
                       <a
@@ -5087,134 +5093,139 @@
                   </div>
                   <br />
                   <div
-                    class="schoolgrid-header d-flex align-items-center position-relative gap-2"
+                    class="schoolgrid-header d-flex flex-column flex-md-row align-items-md-center position-relative gap-3 gap-md-2"
                   >
-                    <div class="school-gridprofile-icon">
-                      <a
-                        *ngIf="post.postAuthorType == 1"
-                        [routerLink]="['/profile/school', post.parentName]"
-                        class="routeLink"
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="school-gridprofile-icon">
+                        <a
+                          *ngIf="post.postAuthorType == 1"
+                          [routerLink]="['/profile/school', post.parentName]"
+                          class="routeLink"
+                        >
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 2"
+                          [routerLink]="[
+                            '/profile/class',
+                            post.schoolName,
+                            post.parentName
+                          ]"
+                          class="routeLink"
+                        >
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 3"
+                          [routerLink]="[
+                            '/profile/course',
+                            post.schoolName,
+                            post.parentName
+                          ]"
+                          class="routeLink"
+                        >
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 4"
+                          [routerLink]="['/user/userProfile', post.parentId]"
+                          class="routeLink"
+                        >
+                          <img
+                            *ngIf="post.parentImageUrl != null"
+                            [src]="post.parentImageUrl"
+                          />
+                          <img
+                            *ngIf="post.parentImageUrl == null && gender == '1'"
+                            src="../../../assets/images/maleProfile.jfif"
+                          />
+                          <img
+                            *ngIf="
+                              post.parentImageUrl == null &&
+                              (gender == '2' || gender == '3')
+                            "
+                            src="../../../assets/images/femaleProfile.jfif"
+                          />
+                        </a>
+                      </div>
+                      <h2
+                        class="d-inline-block font_20 fw_600 text_sec1 mb-0 word-break"
                       >
-                        <img [src]="post.parentImageUrl" />
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 2"
-                        [routerLink]="[
-                          '/profile/class',
-                          post.schoolName,
-                          post.parentName
-                        ]"
-                        class="routeLink"
-                      >
-                        <img [src]="post.parentImageUrl" />
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 3"
-                        [routerLink]="[
-                          '/profile/course',
-                          post.schoolName,
-                          post.parentName
-                        ]"
-                        class="routeLink"
-                      >
-                        <img [src]="post.parentImageUrl" />
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 4"
-                        [routerLink]="['/user/userProfile', post.parentId]"
-                        class="routeLink"
-                      >
-                        <img
-                          *ngIf="post.parentImageUrl != null"
-                          [src]="post.parentImageUrl"
-                        />
-                        <img
-                          *ngIf="post.parentImageUrl == null && gender == '1'"
-                          src="../../../assets/images/maleProfile.jfif"
-                        />
-                        <img
-                          *ngIf="
-                            post.parentImageUrl == null &&
-                            (gender == '2' || gender == '3')
-                          "
-                          src="../../../assets/images/femaleProfile.jfif"
-                        />
-                      </a>
+                        <a
+                          *ngIf="post.postAuthorType == 1"
+                          [routerLink]="['/profile/school', post.parentName]"
+                          class="routeLink"
+                        >
+                          {{ post.parentName }}
+                          <span
+                            *ngIf="
+                              post.isParentVerified && post.postAuthorType == 1
+                            "
+                            class="verified-badge"
+                            ><img
+                              src="../../../../assets/images/verified-badge.svg"
+                          /></span>
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 2"
+                          [routerLink]="[
+                            '/profile/class',
+                            post.schoolName,
+                            post.parentName
+                          ]"
+                          class="routeLink"
+                        >
+                          {{ post.title }}
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 3"
+                          [routerLink]="[
+                            '/profile/course',
+                            post.schoolName,
+                            post.parentName
+                          ]"
+                          class="routeLink"
+                        >
+                          {{ post.title }}
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 4"
+                          [routerLink]="['/user/userProfile', post.parentId]"
+                          class="routeLink"
+                        >
+                          {{ post.title }}
+                        </a>
+                      </h2>
                     </div>
-                    <h2
-                      class="d-inline-block font_20 fw_600 text_sec1 mb-0 word-break"
-                    >
-                      <a
-                        *ngIf="post.postAuthorType == 1"
-                        [routerLink]="['/profile/school', post.parentName]"
-                        class="routeLink"
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="d-flex align-items-center gap-1">
+                        <p class="font_14 school-grid-date d-inline-block mb-0">
+                          {{
+                            post.createdOn | ChangeTimeZonePipe | date : "dd"
+                          }}
+                          {{
+                            post.createdOn
+                              | ChangeTimeZonePipe
+                              | date : "MMMM"
+                              | translate
+                          }}
+                        </p>
+                        <p
+                          class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                        >
+                          {{
+                            post.createdOn | ChangeTimeZonePipe | date : "yyyy"
+                          }}
+                        </p>
+                      </div>
+                      <p
+                        class="font_14 school-grid-date d-inline-block mb-0 me-3"
                       >
-                        {{ post.parentName }}
-                        <span
-                          *ngIf="
-                            post.isParentVerified && post.postAuthorType == 1
-                          "
-                          class="verified-badge"
-                          ><img
-                            src="../../../../assets/images/verified-badge.svg"
-                        /></span>
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 2"
-                        [routerLink]="[
-                          '/profile/class',
-                          post.schoolName,
-                          post.parentName
-                        ]"
-                        class="routeLink"
-                      >
-                        {{ post.title }}
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 3"
-                        [routerLink]="[
-                          '/profile/course',
-                          post.schoolName,
-                          post.parentName
-                        ]"
-                        class="routeLink"
-                      >
-                        {{ post.title }}
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 4"
-                        [routerLink]="['/user/userProfile', post.parentId]"
-                        class="routeLink"
-                      >
-                        {{ post.title }}
-                      </a>
-                    </h2>
-                    <br />
-                    <!-- <p class="font_14 school-grid-date d-inline-block mb-0">
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
-                    </p> -->
-                    <p class="font_14 school-grid-date d-inline-block mb-0">
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
-                      {{
-                        post.createdOn
-                          | ChangeTimeZonePipe
-                          | date : "MMMM"
-                          | translate
-                      }}
-                    </p>
-                    <p
-                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                    >
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "yyyy" }}
-                    </p>
-                    <p
-                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                    >
-                      {{
-                        post.createdOn | ChangeTimeZonePipe | date : "hh:mm a"
-                      }}
-                    </p>
+                        {{
+                          post.createdOn | ChangeTimeZonePipe | date : "hh:mm a"
+                        }}
+                      </p>
+                    </div>
                     <div
                       class="d-flex justify-content-between align-items-center"
                     >
