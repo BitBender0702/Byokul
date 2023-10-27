@@ -1,11 +1,40 @@
-.folder_files_overflow{
-    overflow-y: auto;
-    overflow-x: clip;
-    max-height: 800px;
+.folder_files_overflow {
+  overflow-y: auto;
+  overflow-x: clip;
+  max-height: 800px;
 }
 
-.delete_button{
-    position: relative;
-    justify-content: end;
-    top: -38px;
+.delete_button {
+  position: relative;
+  justify-content: end;
+  top: -38px;
+}
+
+.trash-icon {
+  background-color: transparent;
+  color: #000;
+  border: 0;
+}
+
+.trash-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.action-button {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.accordion-open {
+  padding: 16px;
+  margin-left: 0;
+}
+
+@media screen and (min-width: 991px) {
+  .accordion-open {
+    min-width: 600px;
+    padding: 32px 36px;
+  }
 }

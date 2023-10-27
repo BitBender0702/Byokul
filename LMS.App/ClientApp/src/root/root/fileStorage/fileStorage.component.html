@@ -49,7 +49,8 @@
             <img src="../../../assets/images/logo.svg" />
           </span>
           <div class="d-xl-none d-flex">
-            <button *ngIf="!showSearchButtonForMobile"
+            <button
+              *ngIf="!showSearchButtonForMobile"
               type="button"
               class="mobile-search border_btn"
               (click)="openSearchBox()"
@@ -57,7 +58,8 @@
               <img src="../../../../assets/images/search-lg.svg" />
             </button>
             <div class="search-header position-relative me-2">
-              <input *ngIf="showSearchButtonForMobile"
+              <input
+                *ngIf="showSearchButtonForMobile"
                 [(ngModel)]="searchString"
                 class="form-control h_44"
                 type="search"
@@ -308,7 +310,6 @@
             [ngClass]="isOpenCommentsSection ? 'd-block' : 'd-none'"
             class="accordion-open"
             id="live-chat-open"
-            style="min-width: 600px"
           >
             <div class="live-action-buttons d-flex justify-content-center pb-4">
               <div class="text-center w-100 font_20 fw-bold">
@@ -349,79 +350,99 @@
                 </div>
                 <div
                   *ngFor="let item of fileComments"
-                  class="live-message d-flex position-relative align-items-start flex-column"
+                  class="d-flex position-relative align-items-start flex-column"
                 >
-                  <div class="d-flex">
-                    <img
-                      [src]="item.userAvatar"
-                      class="comment-user"
-                      style="margin-right: 12px; width: 36px; height: 36px"
-                    />
-                    <p
-                      *ngIf="item.userName == null"
-                      class="font_16 fw-bold mb-0 mt-1 text-start text_sec1"
-                    >
-                      {{ item.user.firstName + item.user.lastName }}
-                      <span
-                        *ngIf="item.user?.isVarified || item?.isUserVerified"
-                        class="verified-badge"
-                        ><img
-                          src="../../../../assets/images/green-verified.svg"
+                  <div class="d-flex justify-content-between w-100 mb-3">
+                    <div>
+                      <div class="d-flex">
+                        <img
+                          [src]="item.userAvatar"
+                          class="comment-user"
+                          style="margin-right: 12px; width: 36px; height: 36px"
                         />
-                      </span>
-                    </p>
-                    <p
-                      *ngIf="item.userName != null"
-                      class="font_16 fw-bold mb-0 mt-1 text-start text_sec1"
-                    >
-                      {{ item.userName }}
-                      <span
-                        *ngIf="item.user?.isVarified || item?.isUserVerified"
-                        class="verified-badge"
-                        ><img
-                          src="../../../../assets/images/green-verified.svg"
+                        <p
+                          *ngIf="item.userName == null"
+                          class="font_16 fw-bold mb-0 text-start text_sec1"
+                        >
+                          {{ item.user.firstName + item.user.lastName }}
+                          <span
+                            *ngIf="
+                              item.user?.isVarified || item?.isUserVerified
+                            "
+                            class="verified-badge"
+                            ><img
+                              src="../../../../assets/images/green-verified.svg"
+                            />
+                          </span>
+                        </p>
+                        <p
+                          *ngIf="item.userName != null"
+                          class="font_16 fw-bold mb-0 mt-1 text-start text_sec1"
+                        >
+                          {{ item.userName }}
+                          <span
+                            *ngIf="
+                              item.user?.isVarified || item?.isUserVerified
+                            "
+                            class="verified-badge"
+                            ><img
+                              src="../../../../assets/images/green-verified.svg"
+                            />
+                          </span>
+                        </p>
+                      </div>
+                      <p
+                        class="text_sec1 font_12 fw_400 text-start mb-0 ms-1 pt-2"
+                      >
+                        {{ item.content }}
+                      </p>
+                    </div>
+                    <div class="action-button">
+                      <button
+                        (click)="
+                          likeUnlikeComments(
+                            item.id,
+                            true,
+                            item.isCommentLikedByCurrentUser,
+                            item.likeCount
+                          )
+                        "
+                        type="button"
+                        class="btn bg-transparent text_ltgray font_12 p-0 border-0"
+                      >
+                        <img
+                          *ngIf="item.isCommentLikedByCurrentUser"
+                          src="../../../assets/images/heart-red.svg"
+                          class="d-block"
                         />
-                      </span>
-                    </p>
+                        <img
+                          *ngIf="!item.isCommentLikedByCurrentUser"
+                          src="../../../assets/images/Heart-dark.svg"
+                          class="d-block"
+                        />
+                        <span>{{ item.likeCount }}</span>
+                      </button>
+                      <button
+                        (click)="deleteComment(item)"
+                        class="trash-icon"
+                        *ngIf="userId == item.userId"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
-                  <div>
-                    <p
-                      class="text_sec1 font_12 fw_400 text-start mb-0 ms-1 pt-2"
-                    >
-                      {{ item.content }}
-                    </p>
-                  </div>
-                  <button
-                    (click)="deleteComment(item)"
-                    style="border: 0"
-                    *ngIf="userId == item.userId"
-                  >
-                    <i class="fa-solid fa-trash"></i>
-                  </button>
-                  <button
-                    (click)="
-                      likeUnlikeComments(
-                        item.id,
-                        true,
-                        item.isCommentLikedByCurrentUser,
-                        item.likeCount
-                      )
-                    "
-                    type="button"
-                    class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"
-                  >
-                    <img
-                      *ngIf="item.isCommentLikedByCurrentUser"
-                      src="../../../assets/images/heart-red.svg"
-                      class="d-block"
-                    />
-                    <img
-                      *ngIf="!item.isCommentLikedByCurrentUser"
-                      src="../../../assets/images/Heart-dark.svg"
-                      class="d-block"
-                    />
-                    <span>{{ item.likeCount }}</span>
-                  </button>
                   <div class="d-flex justify-content-end w-100">
                     <p
                       class="text_sec1 font_12 fw_400 text-start mb-0 ms-1 pt-2 text-muted"
