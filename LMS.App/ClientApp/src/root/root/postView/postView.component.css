@@ -8,6 +8,7 @@
 
 .trash-icon {
   background-color: transparent;
+  border: 0;
 }
 
 .trash-icon svg {
