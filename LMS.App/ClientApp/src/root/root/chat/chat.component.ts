@@ -82,10 +82,10 @@ export class ChatComponent
   @ViewChild('schoolChatList') schoolChatList!: ElementRef;
   @ViewChild('videoPlayer', { static: false }) videoPlayer!: ElementRef;
 
-  schoolVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
+  schoolVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
   <img src="../../../../assets/images/verified-badge.svg" style="height: 20px;" class="m-0"/>
    </span>`
-userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
+userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
 <img src="../../../../assets/images/green-verified.svg" style="height: 20px;" class="m-0"/>
 </span>`
 
@@ -741,11 +741,26 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
                   userDetails.school['schoolName'] = schoolDeatail.schoolName;
                   userDetails.school['avatar'] = schoolDeatail.avatar;
                   userDetails.school['schoolId'] = schoolDeatail.schoolId;
+
+                  if(result.isVarified && !schoolDeatail.isVarified){
+                    userDetails.userName =
+                    userDetails.userName + this.userVerifiedBatch + '(' + schoolDeatail.schoolName + ')';
+                  }
+                  else if(schoolDeatail.isVarified && !result.isVarified){
+                    userDetails.userName =
+                    userDetails.userName + '(' + schoolDeatail.schoolName+ this.schoolVerifiedBatch + ')';
+                  }
+                  else if(schoolDeatail.isVarified && result.isVarified){
+                    userDetails.userName =
+                    userDetails.userName + this.userVerifiedBatch + '(' + schoolDeatail.schoolName+ this.schoolVerifiedBatch + ')';
+                  }
+                 else{
                   userDetails.userName =
-                    userDetails.userName + '(' + schoolDeatail.schoolName + ')';
+                  userDetails.userName + '(' + schoolDeatail.schoolName + ')';
+                 }
   
                     debugger;
-                  this.schoolInboxList.unshift(userDetails);
+                    if(this.schoolInboxList.length==0 || userDetails.school.schoolId == this.schoolInboxList[0].schoolId) this.schoolInboxList.unshift(userDetails);
   
                   this.topSchoolInboxChatHeadUser=this.schoolInboxList[0];
   
@@ -1125,11 +1140,18 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
                       userDetails.class['classId'] = classDeatail.classId;
                       userDetails.class['classId'] = classDeatail.classId;
                       userDetails.class['schoolId'] = classDeatail.schoolId;
-                      userDetails.userName =
+                      if(result.isVarified){
+                        userDetails.userName =
+                        userDetails.userName + this.userVerifiedBatch + '(' + classDeatail.className + ')';
+                      }
+                      else{
+                        userDetails.userName =
                         userDetails.userName + '(' + classDeatail.className + ')';
+                      }
       
                       this.classInboxList.unshift(userDetails);
-                      this.schoolInboxList.unshift(userDetails);
+                      debugger
+                     if(this.schoolInboxList.length==0 || userDetails.class.schoolId == this.schoolInboxList[0].schoolId) this.schoolInboxList.unshift(userDetails);
       
                       this.topSchoolInboxChatHeadUser=this.schoolInboxList[0];
       
@@ -1512,11 +1534,19 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
                     userDetails.course['avatar'] = courseDeatail.avatar;
                     userDetails.course['courseId'] = courseDeatail.courseId;
                     userDetails.course['schoolId'] = courseDeatail.schoolId;
-                    userDetails.userName =
+
+                    if(result.isVarified){
+                      userDetails.userName =
+                      userDetails.userName + this.userVerifiedBatch + '(' + courseDeatail.courseName + ')';
+                    }
+                    else{
+                      userDetails.userName =
                       userDetails.userName + '(' + courseDeatail.courseName + ')';
+                    }
+
     
                     this.courseInboxList.unshift(userDetails);
-                    this.schoolInboxList.unshift(userDetails);
+                    if(this.schoolInboxList.length==0 || userDetails.course.schoolId == this.schoolInboxList[0].schoolId) this.schoolInboxList.unshift(userDetails);
     
                     this.topSchoolInboxChatHeadUser=this.schoolInboxList[0];
                     this.totalUnreadMessageCount += 1;
@@ -2350,27 +2380,22 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
           item.userName = result.firstName + " " + result.lastName;
           item.profileURL = result.avatar;
           
-          var schoolVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
-                       <img src="../../../../assets/images/verified-badge.svg" style="height: 20px;" class="m-0"/>
-                        </span>`
-          var userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
-          <img src="../../../../assets/images/green-verified.svg" style="height: 20px;" class="m-0"/>
-           </span>`
+        
       if (item.school != null && !(item.userName.indexOf('(') >= 0)) {
           
             //item.userName = item.userName + '(' + item.school.schoolName;
             if(item.isVerified && !item.isUserVerified){
-              item.userName = item.userName +' (' + item.school.schoolName + schoolVerifiedBatch;
+              item.userName = item.userName +' (' + item.school.schoolName + this.schoolVerifiedBatch;
               // this.topChatViewName = item.userName;
               // this.topChatViewIcon = item.profileURL;
             }
             else if(!item.isVerified && item.isUserVerified){
-              item.userName = item.userName+ userVerifiedBatch +' (' + item.school.schoolName;
+              item.userName = item.userName+ this.userVerifiedBatch +' (' + item.school.schoolName;
               // this.topChatViewName = item.userName;
               // this.topChatViewIcon = item.profileURL;
             }
             else if(item.isVerified && item.isUserVerified){
-              item.userName = item.userName+ userVerifiedBatch +' (' + item.school.schoolName + schoolVerifiedBatch;
+              item.userName = item.userName+ this.userVerifiedBatch +' (' + item.school.schoolName + this.schoolVerifiedBatch;
               // this.topChatViewName = item.userName;
               // this.topChatViewIcon = item.profileURL;
             }
@@ -2389,7 +2414,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
 
 
         if(item.isUserVerified){
-          item.userName = item.userName + userVerifiedBatch + '(' + item.class.className + ')';
+          item.userName = item.userName + this.userVerifiedBatch + '(' + item.class.className + ')';
         }
         else{
          item.userName = item.userName + '(' + item.class.className + ')';           
@@ -2399,7 +2424,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
       }
       if (item.course != null && !(item.userName.indexOf('(') >= 0)) {
         if(item.isUserVerified){
-          item.userName = item.userName + userVerifiedBatch + '(' + item.course.courseName + ')';
+          item.userName = item.userName + this.userVerifiedBatch + '(' + item.course.courseName + ')';
         }
         else{
          item.userName = item.userName + '(' + item.course.courseName + ')';           

@@ -97,7 +97,10 @@
               <span
                 *ngIf="classCourseDetails.classCourseItem.price != null && classCourseDetails.classCourseItem.price != 0"
                 class="payment-profile font_12 text_ltgray ms-2" style="margin-left: 65px !important;">
-               <strong class="cost_theme font_14">${{ classCourseDetails.classCourseItem.price }}
+               <strong class="cost_theme font_14"><span *ngIf="classCourseDetails.classCourseItem.currency == 'USD'">${{ classCourseDetails.classCourseItem.price }}</span>
+                <span *ngIf="classCourseDetails.classCourseItem.currency == 'TRY'">₺{{ classCourseDetails.classCourseItem.price }}</span>
+                <span *ngIf="classCourseDetails.classCourseItem.currency == 'EUR'">€{{ classCourseDetails.classCourseItem.price }}</span>
+                <span *ngIf="classCourseDetails.classCourseItem.currency == 'GBP'">£{{ classCourseDetails.classCourseItem.price }}</span>
                </strong>{{ "OnePayment" | translate }}
               </span>
               <button
