@@ -14,7 +14,7 @@
             {{ "Back" | translate }}
           </button>
           <h2 class="font_22 fw_700 f-monteserrat mb-md-0">
-            {{ "Followings" | translate }}
+            {{ "Students" | translate }}
           </h2>
           <div class="search-header position-relative">
             <input
@@ -43,14 +43,28 @@
           <span class="logo_mobile d-xl-none">
             <img src="../../../../assets/images/logo.svg" />
           </span>
-          <div class="d-xl-none">
+          <div class="d-xl-none d-flex">
             <button
+              *ngIf="!showSearchButtonForMobile"
               type="button"
               class="mobile-search border_btn"
-              onclick="openSearch()"
+              (click)="openSearch()"
             >
               <img src="../../../../assets/images/search-lg.svg" />
             </button>
+            <div class="search-header position-relative me-2">
+              <input
+                *ngIf="showSearchButtonForMobile"
+                [(ngModel)]="searchString"
+                type="search"
+                #searchInput
+                (input)="studentsSearch()"
+                class="form-control h_44"
+              />
+              <button type="button" class="btn search-icon">
+                <img lazyLoad="../../../assets/images/school/search-gray.svg" />
+              </button>
+            </div>
             <button
               type="button"
               class="mobile-search border_btn notification-btn position-relative border-0 bg-transparent"

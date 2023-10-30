@@ -97,8 +97,7 @@
           </div>
         </div>
 
-        <!---- Followers list html start ------>
-        <div class="mobile-action-button mb-4 mt-4">
+        <div class="mobile-action-button mb-4 mt-4" *ngIf="isOwner">
           <button
             class="fw_700 f-monteserrat btn custom-btn primary_btn earning-btn fw_400 h_44 ps-4 pe-4"
             (click)="schoolFollower()"

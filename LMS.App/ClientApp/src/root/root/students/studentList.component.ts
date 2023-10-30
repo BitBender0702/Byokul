@@ -45,6 +45,7 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
   hamburgerCountSubscription!: Subscription;
   hamburgerCount:number = 0;
   changeLanguageSubscription!: Subscription;
+  showSearchButtonForMobile:boolean=false;
 
   constructor(injector: Injector, studentService: StudentService, private route: ActivatedRoute, 
     courseService: CourseService, classService: ClassService, private translateService: TranslateService,
@@ -277,5 +278,8 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
     }
   }
 
+  openSearch(){
+    this.showSearchButtonForMobile=true;
+  }
 
 }

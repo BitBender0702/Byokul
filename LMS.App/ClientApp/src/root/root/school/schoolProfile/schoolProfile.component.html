@@ -3191,12 +3191,14 @@
                           >
                           <span
                             *ngIf="item.price != null && item.price != 0"
-                            class="payment-profile font_12 text_ltgray ms-2"
-                            ><strong class="cost_theme font_14">
+                            class="payment-profile font_12 text_ltgray ms-2">
+                            <strong class="cost_theme font_14">
                               <span *ngIf="item.currency == 'USD'">${{ item.price }}</span>
                               <span *ngIf="item.currency == 'TRY'">₺{{ item.price }}</span>
                               <span *ngIf="item.currency == 'EUR'">€{{ item.price }}</span>
-                              <span *ngIf="item.currency == 'GBP'">£{{ item.price }}</span></strong>{{ "OnePayment" | translate }}</span>
+                              <span *ngIf="item.currency == 'GBP'">£{{ item.price }}</span>
+                            </strong>
+                              {{ "OnePayment" | translate }}</span>
                         </div>
                       </div>
                     </div>
@@ -3555,11 +3557,13 @@
                           >
                           <span
                             *ngIf="item.price != null && item.price != 0"
-                            class="payment-profile font_12 text_ltgray ms-2"
-                            ><strong class="cost_theme font_14"
-                              >${{ item.price }}</strong
-                            >{{ "OnePayment" | translate }}</span
-                          >
+                            class="payment-profile font_12 text_ltgray ms-2">
+                            <strong class="cost_theme font_14">
+                              <span *ngIf="item.currency == 'USD'">${{ item.price }}</span>
+                              <span *ngIf="item.currency == 'TRY'">₺{{ item.price }}</span>
+                              <span *ngIf="item.currency == 'EUR'">€{{ item.price }}</span>
+                              <span *ngIf="item.currency == 'GBP'">£{{ item.price }}</span>
+                            </strong>{{ "OnePayment" | translate }}</span>
                         </div>
                       </div>
                     </div>
