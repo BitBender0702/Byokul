@@ -3186,13 +3186,21 @@ else{
     }
 
     var users: any[] = this.allChatUsers;
+
+    if(!this.isForwarded){
     var user = users.find(
       (x) =>
         x.userID == receiverId &&
         x.chatType == this.chatType &&
         x.chatHeadId == this.chatHeadId
     );
+    }
     if (this.isForwarded == true) {
+      var user = users.find(
+        (x) =>
+          x.userID == receiverId &&
+          x.chatType == this.chatType
+      );
       this.chatViewModel.isForwarded = this.isForwarded;
       this.chatViewModel.forwardedFileName = this.forwardedFileName == undefined ? null : this.forwardedFileName;
       this.chatViewModel.forwardedFileURL = this.forwardedFileURL == undefined ? null: this.forwardedFileURL;
