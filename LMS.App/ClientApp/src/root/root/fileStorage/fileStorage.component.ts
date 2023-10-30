@@ -107,9 +107,8 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   showSearchButtonForMobile:boolean=false;
   hamburgerCountSubscription!: Subscription;
   hamburgerCount:number = 0;
-
+  gender!: string;
   commentDeletdResponseSubscription!:Subscription;
-
   private _notificationService;
 
 
@@ -135,6 +134,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     this.loadingIcon = true;
     this.isFirstPage = true;
     var selectedLang = localStorage.getItem('selectedLanguage');
+    this.gender = localStorage.getItem("gender") ?? '';
     this.translate.use(selectedLang ?? '');
     this.parentId = this.activatedRoute.snapshot.paramMap.get('id') ?? '';
     this.ownerId = this.activatedRoute.snapshot.paramMap.get('ownerId') ?? '';
