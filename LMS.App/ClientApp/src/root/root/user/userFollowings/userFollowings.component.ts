@@ -34,6 +34,7 @@ export class UserFollowingsComponent extends MultilingualComponent implements On
     gender!: string;
     hamburgerCountSubscription!: Subscription;
     hamburgerCount:number = 0;
+    showSearchButtonForMobile:boolean=false;
 
     constructor(injector: Injector,userService: UserService,private route: ActivatedRoute) { 
       super(injector);
@@ -174,5 +175,9 @@ export class UserFollowingsComponent extends MultilingualComponent implements On
       id: '',
       isFollowed: false
      };
+  }
+
+  openSearch(){
+    this.showSearchButtonForMobile=true;
   }
 }
