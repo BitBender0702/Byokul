@@ -268,9 +268,17 @@ getSelectedSchool(schoolId:string){
 dateLessThan(from: string, to: string, currentDate:string) {
   debugger
   return (group: FormGroup): {[key: string]: any} => {
+    debugger
    let f = group.controls[from];
    let t = group.controls[to];
-   if ((new Date(f.value) > new Date(t.value) && t.value != "" && f.value != "") || new Date(f.value) < new Date(currentDate)) {
+   const startDateParts = f.value.split('/');
+   const endDateParts = t.value.split('/');
+   var fromDate = new Date(`${startDateParts[1]}/${startDateParts[0]}/${startDateParts[2]}`);
+  var toDate = new Date(`${endDateParts[1]}/${endDateParts[0]}/${endDateParts[2]}`);
+   if(fromDate < toDate){
+    var p = "test";
+   }
+   if ((fromDate > toDate && t.value != "" && f.value != "")) {
      return {
        dates: `Please enter valid date`
      };
