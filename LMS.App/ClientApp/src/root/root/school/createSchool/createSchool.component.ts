@@ -257,9 +257,15 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   copyMessage(inputElement: any) {
-    inputElement.select();
+    const tempInput = document.createElement("input");
+    const encodedSchoolName = encodeURIComponent(this.schoolName.split(" ").join("").toLowerCase());
+    var url = `${this.apiUrl}/profile/school/` + encodedSchoolName;
+    tempInput.value = url;
+    document.body.appendChild(tempInput);
+    tempInput.select();
     document.execCommand('copy');
-    inputElement.setSelectionRange(0, 0);
+    document.body.removeChild(tempInput);
+
     const translatedInfoSummary = this.translateService.instant('Success');
     const translatedMessage = this.translateService.instant('CopiedToClipboard');
     this.messageService.add({ severity: 'success', summary: translatedInfoSummary, life: 3000, detail: translatedMessage });

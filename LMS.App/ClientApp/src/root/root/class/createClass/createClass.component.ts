@@ -24,6 +24,7 @@ import { enumToObjects } from 'src/root/Enums/getEnum';
 import { CurrencyEnum } from 'src/root/Enums/CurrencyEnum';
 import { uploadClassOrCourseThumbail } from '../../root.component';
 import { UploadTypeEnum } from 'src/root/Enums/uploadTypeEnum';
+import { environment } from 'src/environments/environment.prod';
 
 export const ownedClassResponse =new Subject<{classId: string, classAvatar : string,className:string,schoolName:string, action:string}>(); 
 export const thumbnailUploadResponse =new Subject<{thumbnailUrl: string}>(); 
@@ -37,8 +38,10 @@ export const thumbnailUploadResponse =new Subject<{thumbnailUrl: string}>();
 })
 
 export class CreateClassComponent extends MultilingualComponent implements OnInit, OnDestroy {
+  get apiUrl(): string {
+    return environment.apiUrl;
+  }
   private _classService;
-
   languages:any;
   students:any;
   filteredStudents!: any[];
@@ -320,9 +323,21 @@ captureTeacherId(event: any) {
 }
 
   copyMessage(inputElement:any){
-    inputElement.select();
+    // inputElement.select();
+    // document.execCommand('copy');
+    // inputElement.setSelectionRange(0, 0);
+
+    const tempInput = document.createElement("input");
+    const encodedSchoolName = encodeURIComponent(this.selectedSchool.schoolName.split(" ").join("").toLowerCase());
+    const encodedClassName = encodeURIComponent(this.className.split(" ").join("").toLowerCase());
+    var url = `${this.apiUrl}/profile/class/` + encodedSchoolName + "/" + encodedClassName;
+    tempInput.value = url;
+    document.body.appendChild(tempInput);
+    tempInput.select();
     document.execCommand('copy');
-    inputElement.setSelectionRange(0, 0);
+    document.body.removeChild(tempInput);
+
+
     const translatedInfoSummary = this.translateService.instant('Success');
     const translatedMessage = this.translateService.instant('CopiedToClipboard');
     this.messageService.add({severity:'success', summary:translatedInfoSummary,life: 3000, detail:translatedMessage});

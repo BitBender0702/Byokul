@@ -63,7 +63,8 @@ export class SharePostComponent implements OnInit {
     debugger
     this.post = this.options.initialState;
     if(this.post.schoolName != undefined && this.post.className == undefined && this.post.courseName == undefined){
-      this.websiteUrl = `${this.apiUrl}/profile/school/` + this.post.schoolName;
+      const encodedSchoolName = encodeURIComponent(this.post.schoolName.split(" ").join("").toLowerCase());
+      this.websiteUrl = `${this.apiUrl}/profile/school/` + encodedSchoolName;
     }
     if(this.post.postId != undefined){
       this.addFbMetaTags(this.post.title,this.post.description,this.post.image,`${this.apiUrl}/user/post/` + this.post.postId,"profile");
@@ -74,12 +75,16 @@ export class SharePostComponent implements OnInit {
     if(this.post.className != undefined){
       this.addFbMetaTags(this.post.title,this.post.description,this.post.image,`${this.apiUrl}/profile/class/` + this.post.schoolName + '/' + this.post.className,"profile");
       this.addTwitterMetaTags(this.post.title,this.post.description,this.post.image);
-      this.websiteUrl = `${this.apiUrl}/profile/class/` + this.post.schoolName + '/' + this.post.className;
+      const encodedSchoolName = encodeURIComponent(this.post.schoolName.split(" ").join("").toLowerCase());
+      const encodedClassName = encodeURIComponent(this.post.className.split(" ").join("").toLowerCase());
+      this.websiteUrl = `${this.apiUrl}/profile/class/` + encodedSchoolName + '/' + encodedClassName;
     }
     if(this.post.courseName != undefined){
       this.addFbMetaTags(this.post.title,this.post.description,this.post.image,`${this.apiUrl}/profile/course/` + this.post.schoolName + '/' + this.post.courseName,"profile");
       this.addTwitterMetaTags(this.post.title,this.post.description,this.post.image);
-      this.websiteUrl = `${this.apiUrl}/profile/course/` + this.post.schoolName + '/' + this.post.courseName;
+      const encodedSchoolName = encodeURIComponent(this.post.schoolName.split(" ").join("").toLowerCase());
+      const encodedCourseName = encodeURIComponent(this.post.courseName.split(" ").join("").toLowerCase());
+      this.websiteUrl = `${this.apiUrl}/profile/course/` + encodedSchoolName + '/' + encodedCourseName;
     }
 
     if(this.streamUrl != undefined){
@@ -87,15 +92,20 @@ export class SharePostComponent implements OnInit {
     }
 
     if(this.schoolId != undefined && this.schoolName != undefined){
-      this.websiteUrl = `${this.apiUrl}/profile/school/` + this.schoolName;
+      const encodedSchoolName = encodeURIComponent(this.schoolName.split(" ").join("").toLowerCase());
+      this.websiteUrl = `${this.apiUrl}/profile/school/` + encodedSchoolName;
     }
     
     if(this.classId != undefined && this.schoolName != undefined && this.className != undefined){
-      this.websiteUrl = `${this.apiUrl}/profile/class/` + this.schoolName + '/' + this.className;
+      const encodedSchoolName = encodeURIComponent(this.schoolName.split(" ").join("").toLowerCase());
+      const encodedClassName = encodeURIComponent(this.className.split(" ").join("").toLowerCase());
+      this.websiteUrl = `${this.apiUrl}/profile/class/` + encodedSchoolName + '/' + encodedClassName;
     }
 
     if(this.courseId != undefined && this.schoolName != undefined && this.courseName != undefined){
-      this.websiteUrl = `${this.apiUrl}/profile/course/` + this.schoolName + '/' + this.courseName;
+      const encodedSchoolName = encodeURIComponent(this.schoolName.split(" ").join("").toLowerCase());
+      const encodedCourseName = encodeURIComponent(this.courseName.split(" ").join("").toLowerCase());
+      this.websiteUrl = `${this.apiUrl}/profile/course/` + encodedSchoolName + '/' + encodedCourseName;
     }
 
     var validToken = localStorage.getItem('jwt');
@@ -168,7 +178,24 @@ saveUserSharedPost(){
 }
 
 copyMessage(){
+  debugger
   var url = this.websiteUrl;
+  if(this.schoolName != undefined && this.className == undefined && this.courseName == undefined){
+    const encodedSchoolName = encodeURIComponent(this.schoolName.split(" ").join("").toLowerCase());
+     url = `${this.apiUrl}/profile/school/` + encodedSchoolName;
+  }
+
+  if(this.schoolName != undefined && this.className != undefined && this.courseName == undefined){
+    const encodedSchoolName = encodeURIComponent(this.schoolName.split(" ").join("").toLowerCase());
+    const encodedClassName = encodeURIComponent(this.className.split(" ").join("").toLowerCase());
+    url = `${this.apiUrl}/profile/class/` + encodedSchoolName + "/" + encodedClassName;
+  }
+
+  if(this.schoolName != undefined && this.className == undefined && this.courseName != undefined){
+    const encodedSchoolName = encodeURIComponent(this.schoolName.split(" ").join("").toLowerCase());
+    const encodedCourseName = encodeURIComponent(this.courseName.split(" ").join("").toLowerCase());
+    url = `${this.apiUrl}/profile/course/` + encodedSchoolName + "/" + encodedCourseName;
+  }
   const inputElement = this.elementRef.nativeElement.appendChild(document.createElement('input'));
   inputElement.value = url;
   inputElement.select();
