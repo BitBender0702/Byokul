@@ -48,6 +48,8 @@ namespace LMS.Services
 
         Task<bool?> BanUnbanStudentFromCourse(BanUnbanStudentModel banUnbanStudent);
 
+        Task<IEnumerable<GlobalSearchViewModel>> CoursesGlobalSearch(string searchString, int pageNumber, int pageSize);
+
 
     }
 }

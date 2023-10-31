@@ -165,6 +165,10 @@ export class CourseService{
         return this.http.post(`${this.apiUrl}/course/banUnbanStudentFromCourse`,banUnbanStudentFromCourse, {headers: this.headers});
     }
 
-
+    courseGlobalSearch(searchString:string,pageNumber:number,pageSize:number){
+        let queryParams = new HttpParams().append("searchString",searchString).append("pageNumber",pageNumber).append("pageSize",pageSize);
+        return this.http.get(`${this.apiUrl}/course/coursesGlobalSearch`, {params:queryParams,headers: this.headers}
+        );
+    }
 
 }

@@ -12,6 +12,7 @@ import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotifica
 import { SchoolService } from 'src/root/service/school.service';
 import { ClassService } from 'src/root/service/class.service';
 import { PostService } from 'src/root/service/post.service';
+import { CourseService } from 'src/root/service/course.service';
 
 @Component({
     selector: 'globalSearch',
@@ -25,6 +26,7 @@ import { PostService } from 'src/root/service/post.service';
     private _schoolService;
     private _classService;
     private _postService;
+    private _courseService;
     isDataLoaded:boolean = false;
     loadingIcon:boolean = false;
     postLoadingIcon: boolean = false;
@@ -39,13 +41,14 @@ import { PostService } from 'src/root/service/post.service';
     hamburgerCount:number = 0;
     changeLanguageSubscription!: Subscription;
 
-    constructor( injector: Injector,private route: ActivatedRoute,userService:UserService,schoolService:SchoolService,classService:ClassService,postService:PostService) {
+    constructor( injector: Injector,private route: ActivatedRoute,userService:UserService,schoolService:SchoolService,classService:ClassService,postService:PostService,courseService:CourseService) {
         super(injector);
         this._userService = userService;
         this._schoolService = schoolService;
         this._classService = classService;
         this._postService = postService;
-    }
+        this._courseService = courseService;
+    }  
 
     ngOnInit(): void {
       var selectedLang = localStorage.getItem('selectedLanguage');
@@ -97,7 +100,7 @@ import { PostService } from 'src/root/service/post.service';
         });
       }
       if(this.searchType == "3"){
-      this._classService.classAndCoursesGlobalSearch(searchString,pageNumber,pageSize).subscribe((response) => {
+      this._classService.classGlobalSearch(searchString,pageNumber,pageSize).subscribe((response) => {
         this.loadingIcon = false;
         this.isDataLoaded = true;
         this.globalSearchResult = response;
@@ -106,6 +109,15 @@ import { PostService } from 'src/root/service/post.service';
     }
 
     if(this.searchType == "4"){
+      this._courseService.courseGlobalSearch(searchString,pageNumber,pageSize).subscribe((response) => {
+        this.loadingIcon = false;
+        this.isDataLoaded = true;
+        this.globalSearchResult = response;
+      });
+      
+    }
+
+    if(this.searchType == "5"){
       this._postService.postsGlobalSearch(searchString,pageNumber,pageSize).subscribe((response) => {
         this.loadingIcon = false;
         this.isDataLoaded = true;
@@ -172,7 +184,7 @@ import { PostService } from 'src/root/service/post.service';
       }
 
       if(this.searchType == "3"){
-        this._classService.classAndCoursesGlobalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize).subscribe((response:any) => {
+        this._classService.classGlobalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize).subscribe((response:any) => {
           if(response.length != 0){
             this.globalSearchResult =[...this.globalSearchResult, ...response];
           }
@@ -183,6 +195,17 @@ import { PostService } from 'src/root/service/post.service';
       }
 
       if(this.searchType == "4"){
+        this._courseService.courseGlobalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize).subscribe((response:any) => {
+          if(response.length != 0){
+            this.globalSearchResult =[...this.globalSearchResult, ...response];
+          }
+          this.postLoadingIcon = false;
+          this.scrollSearchResponseCount = response.length; 
+          this.scrolled = false;
+        });
+      }
+
+      if(this.searchType == "5"){
         this._postService.postsGlobalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize).subscribe((response:any) => {
           if(response.length != 0){
             this.globalSearchResult =[...this.globalSearchResult, ...response];

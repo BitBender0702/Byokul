@@ -215,6 +215,8 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
   isGenerateChatLi: boolean = false;
   groupedMessages: any;
   @ViewChild('chatHeadsScrollList') chatHeadsScrollList!: ElementRef;
+  @ViewChild('chatForwardHeadsScrollList') chatForwardHeadsScrollList!: ElementRef;
+
   isScreenPc: boolean = false;
   isScreenMobile: boolean = false;
   isChatSelected:boolean=false;
@@ -3866,6 +3868,51 @@ else{
       });
   }
 
+  @HostListener('scroll', ['$event'])
+  scrollHandlerForForwardList(event: any){
+    debugger;
+    const element = event.target; // get the scrolled element
+    const scrollPosition = element.scrollHeight - element.scrollTop;
+    const isScrollAtBottom = scrollPosition >= element.scrollHeight - element.clientHeight;
+    if (isScrollAtBottom && !this.chatHeadScrolled && this.scrollChatHeadsResponseCount != 0) {
+      this.chatHeadScrolled = true;
+      // this.chatHeadsLoadingIcon = true;
+      this.forwardMessagePageNumber++;
+      this.getNextForwardChatHeads();
+    }
+  }
+  getNextForwardChatHeads(){
+    debugger
+    this._chatService
+    .getAllChatUsers(this.senderId, this.forwardMessagePageNumber, '')
+    .subscribe((response) => {
+      //this.forwardUsersList = response;
+
+      const combinedArray = [...this.forwardUsersList, ...response];
+
+      this.forwardUsersList = combinedArray;
+      // this.chatHeadsLoadingIcon = false;
+      this.cd.detectChanges();
+      this.chatHeadScrolled = false;
+
+      this.scrollChatHeadsResponseCount = response.length;
+
+      const chatList = this.chatForwardHeadsScrollList.nativeElement;
+      const chatListHeight = chatList.scrollHeight;
+      this.chatForwardHeadsScrollList.nativeElement.scrollTop =
+        this.chatForwardHeadsScrollList.nativeElement.clientHeight;
+      const scrollOptions = {
+        duration: 300,
+        easing: 'ease-in-out',
+      };
+      chatList.scrollTo({
+        top: this.chatForwardHeadsScrollList.nativeElement.scrollTop,
+        left: 0,
+        ...scrollOptions,
+      });
+
+    });
+  }
   chatHeadsSearch() {
     this.chatHeadsPageNumber = 1;
     if (this.searchString.length > 2 || this.searchString == '') {

@@ -3379,6 +3379,7 @@
         </button>
       </div>
       <div class="modal-body">
+        <div #chatForwardHeadsScrollList (scroll)="scrollHandlerForForwardList($event)" class="forwardListScroll">
         <div
           *ngFor="let item of forwardUsersList"
           class="d-flex justify-content-between pb-3"
@@ -3398,6 +3399,7 @@
             {{ "Send" | translate }}
           </button>
         </div>
+      </div>
         <!-- <div class="text-center">
           <button
             type="button"

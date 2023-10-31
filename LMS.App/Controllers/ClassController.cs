@@ -289,11 +289,11 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
-        [Route("classAndCoursesGlobalSearch")]
+        [Route("classGlobalSearch")]
         [HttpGet]
-        public async Task<IActionResult> ClassAndCoursesGlobalSearch(string searchString, int pageNumber, int pageSize)
+        public async Task<IActionResult> ClassGlobalSearch(string searchString, int pageNumber, int pageSize)
         {
-            var user = await _classService.ClassAndCoursesGlobalSearch(searchString, pageNumber, pageSize);
+            var user = await _classService.ClassGlobalSearch(searchString, pageNumber, pageSize);
             return Ok(user);
         }
 

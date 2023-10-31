@@ -1325,5 +1325,24 @@ namespace LMS.Services
         }
 
 
+
+
+        public async Task<IEnumerable<GlobalSearchViewModel>> CoursesGlobalSearch(string searchString, int pageNumber, int pageSize)
+        {
+
+            var courseIds = await _courseTagRepository.GetAll().Where(x => x.CourseTagValue.Contains(searchString)).Select(x => x.CourseId).ToListAsync();
+            var courses = await _courseRepository.GetAll().Where(x => x.CourseName.Contains(searchString) || courseIds.Contains(x.CourseId)).Select(x => new GlobalSearchViewModel
+            {
+                Id = x.CourseId,
+                Name = x.CourseName,
+                SchoolName = x.School.SchoolName,
+                Type = (int)PostAuthorTypeEnum.Course,
+                Avatar = x.Avatar
+            }).ToListAsync();
+
+            var result = courses.Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderBy(x => x.Type).ToList();
+            return result;
+        }
+
     }
 }
