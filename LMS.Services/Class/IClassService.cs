@@ -44,7 +44,7 @@ namespace LMS.Services
         Task<int> GetStudents(Guid classId);
         Task<ClassInfoForCertificateViewModel> GetClassInfoForCertificate(Guid classId);
         Task EnableDisableClass(Guid classId);
-        Task<IEnumerable<GlobalSearchViewModel>> ClassAndCoursesGlobalSearch(string searchString, int pageNumber, int pageSize);
+        Task<IEnumerable<GlobalSearchViewModel>> ClassGlobalSearch(string searchString, int pageNumber, int pageSize);
         Task<IEnumerable<PostDetailsViewModel>> GetSliderReelsByClassId(Guid classId, string loginUserId, Guid lastReelId, ScrollTypesEnum scrollType);
 
         Task EnableDisableComments(Guid classId, bool isHideComments);

@@ -862,8 +862,11 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
           if (item.type == 1 && !item.isPost) {
             this.globalSearchField = "School";
           }
-          if ((item.type == 2 || item.type == 3) && !item.isPost) {
-            this.globalSearchField = "ClassAndCourse";
+          if(item.type == 2 && !item.isPost){
+            this.globalSearchField = "Class"
+          }
+          if (item.type == 3 && !item.isPost) {
+            this.globalSearchField = "Course";
           }
           if (item.isPost) {
             this.globalSearchField = "Posts";

@@ -51,3 +51,7 @@ hr {
   right: 62px;
   cursor: pointer;
 }
+.forwardListScroll{
+  overflow-y: scroll;
+  height: 500px;
+}

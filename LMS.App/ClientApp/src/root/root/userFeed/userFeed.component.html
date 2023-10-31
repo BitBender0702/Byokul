@@ -3164,8 +3164,11 @@
       </div>
       <div *ngFor="let key of getObjectKeys(globalSearchResult)">
         <ng-container *ngIf="key !== 'Posts'">
-          <h4 *ngIf="key == 'ClassAndCourse'" class="fw_600">
-            {{ "Classes&Courses" | translate }}
+          <h4 *ngIf="key == 'Class'" class="fw_600">
+            {{ "Classes" | translate }}
+          </h4>
+          <h4 *ngIf="key == 'Course'" class="fw_600">
+            {{ "Courses" | translate }}
           </h4>
           <h4 *ngIf="key == 'User'" class="fw_600">
             {{ "People" | translate }}
@@ -3284,8 +3287,14 @@
           >{{ "ShowMore" | translate }}</a
         >
         <a
-          *ngIf="key == 'ClassAndCourse' && globalSearchResult[key].length == 5"
+          *ngIf="key == 'Class' && globalSearchResult[key].length == 5"
           [routerLink]="['/user/globalSearch', searchString, 3]"
+          class="show-more-button show_more"
+          >{{ "ShowMore" | translate }}</a
+        >
+        <a
+          *ngIf="key == 'Course' && globalSearchResult[key].length == 5"
+          [routerLink]="['/user/globalSearch', searchString, 4]"
           class="show-more-button show_more"
           >{{ "ShowMore" | translate }}</a
         >
@@ -3319,7 +3328,7 @@
         </li>
         <a
           *ngIf="globalSearchResult.Posts.length == 5"
-          [routerLink]="['/user/globalSearch', searchString, 4]"
+          [routerLink]="['/user/globalSearch', searchString, 5]"
           class="show-more-button show_more"
         >
           {{ "ShowMore" | translate }}
