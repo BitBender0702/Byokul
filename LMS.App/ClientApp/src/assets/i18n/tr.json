@@ -634,7 +634,8 @@
   "CourseCreatedSuccessfully": "Course created successfully",
   "SelectThumbnailOrVideoToStream": "Lütfen yayınlanacak bir küçük resim veya video seçin",
   "Buy": "Satın almak",
-  "CropImage": "Görüntüyü kırp"
+  "CropImage": "Görüntüyü kırp",
+  "DoYouWantToEndLiveStream":"Canlı Yayını Bitirmek İstiyor musunuz?"
 
 
 
