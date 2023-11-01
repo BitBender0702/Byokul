@@ -640,7 +640,8 @@
   "CourseCreatedSuccessfully": "Course created successfully",
   "SelectThumbnailOrVideoToStream": "Please select a thumbnail or video to stream",
   "Buy": "Buy",
-  "CropImage": "Crop Image"
+  "CropImage": "Crop Image",
+  "DoYouWantToEndLiveStream":"Do You Want To End Live Stream?"
 
 
 
