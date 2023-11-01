@@ -880,7 +880,7 @@ namespace LMS.Services
     .OrderBy(x =>
     {
         var match = Regex.Match(x.FileName, @"_index(\d+)$");
-        return match.Success ? int.Parse(match.Groups[1].Value) : int.MaxValue; 
+        return match.Success ? int.Parse(match.Groups[1].Value) : int.MaxValue;
     }).ToList();
 
             foreach (var isCompressed in attachmentList)
@@ -1330,7 +1330,7 @@ namespace LMS.Services
                                     parentId = user.Id;
                                 }
                             }
-                            
+
                         }
                         if (!string.IsNullOrEmpty(parentName))
                         {
@@ -1457,11 +1457,11 @@ namespace LMS.Services
                         schoolName = "";
                         parentId = school.SchoolId.ToString();
                     }
-                        
+
                 }
                 if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
                 {
-                    var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassId == post.ParentId ).FirstOrDefaultAsync();
+                    var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassId == post.ParentId).FirstOrDefaultAsync();
                     parentName = classes.ClassName;
                     parentImageUrl = classes.Avatar;
                     postAuthorType = (int)PostAuthorTypeEnum.Class;
@@ -1470,7 +1470,7 @@ namespace LMS.Services
                 }
                 if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
                 {
-                    var course = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CourseId == post.ParentId  ).FirstOrDefaultAsync();
+                    var course = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CourseId == post.ParentId).FirstOrDefaultAsync();
                     parentName = course.CourseName;
                     parentImageUrl = course.Avatar;
                     postAuthorType = (int)PostAuthorTypeEnum.Course;
@@ -1744,7 +1744,7 @@ namespace LMS.Services
             //    x.ParentId,
             //    x.PostAuthorType
             //}).Take(5).ToListAsync();
-          
+
             var userBannedUser = await _userRepository.GetAll().Where(x => x.IsBan).ToListAsync();
             var schoolBannedUser = await _schoolRepository.GetAll().Where(x => x.IsBan || x.IsDisableByOwner || x.IsDeleted).ToListAsync();
             var classBannedUser = await _classRepository.GetAll().Where(x => x.IsDeleted || x.IsDisableByOwner || x.IsEnable).ToListAsync();
@@ -1762,8 +1762,7 @@ namespace LMS.Services
 
             var posts = await _postRepository.GetAll()
                             .Where(x =>
-                                !bannedUserIds.Contains(x.ParentId.ToString()) &&
-                                x.Tags.Any(t => t.PostTagValue.Contains(searchString)))
+                                !bannedUserIds.Contains(x.ParentId.ToString()) && (x.Tags.Any(t => t.PostTagValue.Contains(searchString)) || x.Title.Contains(searchString)))
                             .Select(x => new
                             {
                                 x.Id,
@@ -1791,7 +1790,7 @@ namespace LMS.Services
                     Id = post.PostType == 1 ? post.Id : postAttachment.Id,
                     Name = post.Title,
                     SchoolName = null,
-                    Type = post.PostType,
+                    PostType = post.PostType,
                     Avatar = avatar,
                     IsPost = true
                 });

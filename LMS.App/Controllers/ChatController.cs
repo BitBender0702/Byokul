@@ -81,7 +81,11 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> SetUserPinned(Guid senderId, Guid receiverId,ChatType chatType)
         {
             var response = await _chatService.SetParticularUserPinned(senderId, receiverId, chatType);
-            return Ok(response);
+            if (response)
+            {
+                return Ok(new { Success = true, Message = Constants.UserPinnedSuccessfully });
+            }
+            return Ok(new { Success = true, Message = Constants.UserUnPinnedSuccessfully });
         }
 
         [Route("removeChatAttachment")]

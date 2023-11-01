@@ -69,6 +69,7 @@ export class SharePostComponent implements OnInit {
     if(this.post.postId != undefined){
       this.addFbMetaTags(this.post.title,this.post.description,this.post.image,`${this.apiUrl}/user/post/` + this.post.postId,"profile");
       this.addTwitterMetaTags(this.post.title,this.post.description,this.post.image);
+      
       this.websiteUrl = `${this.apiUrl}/user/post/` + this.post.postId;
     }
 

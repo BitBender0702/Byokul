@@ -3313,12 +3313,12 @@
                   class="rounded-circle img_style"
                 />
               </span>
-              <ng-container *ngIf="item.type === 1">
+              <ng-container *ngIf="item.postType === 1">
                 <a class="routeLink" [routerLink]="['/user/post', item.id]">
                   {{ item.name }}
                 </a>
               </ng-container>
-              <ng-container *ngIf="item.type === 3">
+              <ng-container *ngIf="item.postType === 3">
                 <a class="routeLink" [routerLink]="['/user/reels', item.id]">
                   {{ item.name }}
                 </a>

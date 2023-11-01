@@ -152,7 +152,7 @@
                       [src]="item.avatar"
                       class="rounded-circle me-3 img_style"
                     />
-                    <a *ngIf="item.type == 1"
+                    <a *ngIf="item.postType == 1"
                       class="routeLink"
                       [routerLink]="[
                         '/user/post',
@@ -160,7 +160,7 @@
                       ]"
                       >{{ item.name }}</a
                     >
-                    <a *ngIf="item.type == 3"
+                    <a *ngIf="item.postType == 3"
                     class="routeLink"
                     [routerLink]="[
                       '/user/reels',
