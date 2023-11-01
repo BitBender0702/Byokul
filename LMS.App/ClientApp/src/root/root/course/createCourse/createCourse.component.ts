@@ -19,6 +19,7 @@ import { CurrencyEnum } from 'src/root/Enums/CurrencyEnum';
 import { UploadTypeEnum } from 'src/root/Enums/uploadTypeEnum';
 import { uploadClassOrCourseThumbail } from '../../root.component';
 import { thumbnailUploadResponse } from '../../class/createClass/createClass.component';
+import { environment } from 'src/environments/environment.prod';
 
 
 export const ownedCourseResponse =new Subject<{courseId: string, courseAvatar : string,courseName:string,schoolName:string, action:string}>(); 
@@ -35,6 +36,9 @@ export const ownedCourseResponse =new Subject<{courseId: string, courseAvatar : 
 })
 
 export class CreateCourseComponent extends MultilingualComponent implements OnInit, OnDestroy {
+  get apiUrl(): string {
+    return environment.apiUrl;
+  }
   private _courseService;
   languages:any;
   students:any;
@@ -265,9 +269,16 @@ captureTeacherId(event: any) {
 }
 
   copyMessage(inputElement:any){
-    inputElement.select();
+    const tempInput = document.createElement("input");
+    const encodedSchoolName = encodeURIComponent(this.selectedSchool.schoolName.split(" ").join("").toLowerCase());
+    const encodedCourseName = encodeURIComponent(this.courseName.split(" ").join("").toLowerCase());
+    var url = `${this.apiUrl}/profile/course/` + encodedSchoolName + "/" + encodedCourseName;
+    tempInput.value = url;
+    document.body.appendChild(tempInput);
+    tempInput.select();
     document.execCommand('copy');
-    inputElement.setSelectionRange(0, 0);
+    document.body.removeChild(tempInput);
+
     const translatedInfoSummary = this.translateService.instant('Success');
     const translatedMessage = this.translateService.instant('CopiedToClipboard');
     this.messageService.add({severity:'success', summary:translatedInfoSummary,life: 3000, detail:translatedMessage});
