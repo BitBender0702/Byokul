@@ -959,13 +959,18 @@ namespace LMS.Services.Chat
             string SenderCol = chatHeadObject.SenderId == SenderId.ToString() ? "User1" : "User2";
 
             if (SenderCol == "User1")
+            {
+
                 chatHeadObject.IsPinnedUser1 = chatHeadObject.IsPinnedUser1 == false ? true : false;
+                _chatHeadRepository.Save();
+                return chatHeadObject.IsPinnedUser1;
+            }
             else
+            {
                 chatHeadObject.IsPinnedUser2 = chatHeadObject.IsPinnedUser2 == false ? true : false;
-
-            _chatHeadRepository.Save();
-
-            return chatHeadObject.IsPinnedUser2;
+                _chatHeadRepository.Save();
+                return chatHeadObject.IsPinnedUser2;
+            }
 
         }
 

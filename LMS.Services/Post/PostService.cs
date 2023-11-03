@@ -1820,7 +1820,7 @@ namespace LMS.Services
                     Id = post.PostType == 1 ? post.Id : postAttachment.Id,
                     Name = post.Title,
                     SchoolName = null,
-                    Type = post.PostType,
+                    PostType = post.PostType,
                     Avatar = avatar,
                     IsPost = true
                 });

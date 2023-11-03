@@ -11,9 +11,11 @@ namespace LMS.Common.ViewModels.Common
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string? SchoolName { get; set; }
-        public int Type { get; set; }
+        public int? Type { get; set; }
         public string Avatar { get; set; }
         public bool IsPost { get; set; }
         public int? Gender { get; set; }
+        public int? PostType { get; set; }
+
     }
 }

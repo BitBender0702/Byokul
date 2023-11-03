@@ -81,7 +81,8 @@ namespace LMS.Common.ViewModels.Post
         public static string ClassCourseUnSavedSuccessully = "Class/course unSaved successully";
         public static string EnabledLiveStreamSuccessully = "Live Stream Enabled Successully";
         public static string LiveStreamEnableFailed = "Live Stream Enable Failed";
-
+        public static string UserPinnedSuccessfully = "User pinned successfully";
+        public static string UserUnPinnedSuccessfully = "User unpinned successfully";
         public static string LiveStreamEnableFailed2 = "Live Stream Enable Failed";
         public static string StatesDoesnotExist = "No state exists for this country";
 
