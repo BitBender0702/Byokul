@@ -93,15 +93,23 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> RemoveChatAttachment(string fileUrl)
         {
             var response = await _blobService.DeleteFile(fileUrl, ContainerName);
-            return Ok(response);
+            if (response)
+            {
+                return Ok(new { Success = true, Message = Constants.ChatAttachmentRemoved });
+            }
+            return Ok(new { Success = true, Message = Constants.ChatAttachmentDoesNotRemoved });
         }
 
         [Route("removeUnreadMessageCount")]
         [HttpPost]
         public async Task<IActionResult> RemoveUnreadMessageCount(Guid senderId, Guid receiverId, ChatType chatType)
         {
-            await _chatService.RemoveUnreadMessageCount(senderId, receiverId, chatType);
-            return Ok();
+            var response = await _chatService.RemoveUnreadMessageCount(senderId, receiverId, chatType);
+            if (response)
+            {
+                return Ok(new { Success = true, Message = Constants.UnreadMessageRemoved});
+            }
+            return Ok(new { Success = true, Message = Constants.UnreadMessageCanNotRemoved });
         }
 
         [Route("getComments")]

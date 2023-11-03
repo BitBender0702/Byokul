@@ -478,10 +478,10 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
       this.commentViewModel.id = response.id;
       this._signalRService.sendToGroup(this.commentViewModel);
-      if(this.post.parentId != this.userId){
+      if(this.post.createdBy != this.userId){
         var translatedMessage = this.translateService.instant('commented your post');
       var notificationContent = translatedMessage;
-      this._notificationService.initializeNotificationViewModel(this.post.parentId, NotificationType.CommentSent, notificationContent, this.userId, this.post.id, this.post.postType, null, null).subscribe((response) => {
+      this._notificationService.initializeNotificationViewModel(this.post.createdBy, NotificationType.CommentSent, notificationContent, this.userId, this.post.id, this.post.postType, null, null).subscribe((response) => {
         debugger;
       });
       }
