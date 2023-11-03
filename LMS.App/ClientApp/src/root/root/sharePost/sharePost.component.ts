@@ -53,6 +53,8 @@ export class SharePostComponent implements OnInit {
     from!: string;
     isShareProfile!: boolean;
 
+    reelId!:string;
+
 
   constructor(private bsModalService: BsModalService,private elementRef: ElementRef,private meta: Meta,private options: ModalOptions,public messageService: MessageService,postService: PostService,signalrService:SignalrService,private router: Router) {
     this._postService = postService;
@@ -69,8 +71,10 @@ export class SharePostComponent implements OnInit {
     if(this.post.postId != undefined){
       this.addFbMetaTags(this.post.title,this.post.description,this.post.image,`${this.apiUrl}/user/post/` + this.post.postId,"profile");
       this.addTwitterMetaTags(this.post.title,this.post.description,this.post.image);
-      
-      this.websiteUrl = `${this.apiUrl}/user/post/` + this.post.postId;
+      if(this.postType==3){
+        this.websiteUrl = `${this.apiUrl}/user/reels/` + this.reelId;
+      }
+      else this.websiteUrl = `${this.apiUrl}/user/post/` + this.post.postId;
     }
 
     if(this.post.className != undefined){
