@@ -710,13 +710,59 @@ namespace LMS.Services
 
             var classIds = classList.Select(x => x.ClassId).ToList();
 
-            if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Name))
+            if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Name) || filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Live) || filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Scheduled))
             {
-                var classFilterByName = _classRepository.GetAll().Where(x => classIds.Contains((Guid)x.ClassId)).OrderBy(x => x.ClassName).ToList();
-                classes.AddRange(classFilterByName);
-            }
+                var classListForThisFilterationType = await _classRepository.GetAll().ToListAsync();
+                if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Live) && !filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Scheduled))
+                {
 
-            else
+                    //var posts = _postRepository.GetAll().AsEnumerable().Where(x => classIds.Any(classId => classId == x.ParentId) && x.IsLive).ToList();
+                    var posts = _postRepository.GetAll()
+                    .AsEnumerable()
+                    .Where(x => classIds.Any(classId => classId == x.ParentId) && (x.IsLive ?? false))
+                    .ToList();
+
+                    var classFilterByLive = classListForThisFilterationType.AsEnumerable().Where(x => posts.Any(y => y.ParentId == x.ClassId)).ToList();
+                    classListForThisFilterationType = classFilterByLive;
+                    //classes.AddRange(classFilterByLive);
+                }
+
+
+                if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Scheduled) && !filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Live))
+                {
+                    var posts = _postRepository.GetAll()
+                   .AsEnumerable()
+                   .Where(x => classIds.Any(classId => classId == x.ParentId) && (x.IsPostSchedule ?? false))
+                   .ToList();
+
+                    var classFilterBySchedule = classListForThisFilterationType.AsEnumerable().Where(x => posts.Any(y => y.ParentId == x.ClassId)).ToList();
+                    classListForThisFilterationType = classFilterBySchedule;
+                   // classes.AddRange(classFilterBySchedule);
+
+                    
+                }
+                if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Scheduled) && filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Live))
+                {
+                    var posts = _postRepository.GetAll()
+                    .AsEnumerable()
+                   .Where(x => classIds.Any(classId => classId == x.ParentId) && (x.IsLive ?? false) && (x.IsPostSchedule ?? false))
+                   .ToList();
+
+                    var classFilterByBothLiveAndSchedule = classListForThisFilterationType.AsEnumerable().Where(x => posts.Any(y => y.ParentId == x.ClassId)).OrderBy(x => x.ClassName).ToList();
+                    classListForThisFilterationType = classFilterByBothLiveAndSchedule;
+                  //  classes.AddRange(classFilterByBothLiveAndSchedule);
+                }
+
+                if(filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Name))
+                {
+                    var classFilterByName = classListForThisFilterationType.Where(x => classIds.Contains((Guid)x.ClassId)).OrderBy(x => x.ClassName).ToList();
+                    classListForThisFilterationType = classFilterByName;
+                   // classes.AddRange(classFilterByName);
+                }
+                classes.AddRange(classListForThisFilterationType);
+            }
+          
+           else
             {
 
                 if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.TopRated))
@@ -1680,7 +1726,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolClasses(Guid? schoolId, string userId, int pageNumber)
         {
-            var filters = await _userClassCourseFilterRepository.GetAll().Include(x => x.ClassCourseFilter).Where(x => x.SchoolId == schoolId && x.IsActive && x.ClassCourseFilterType == ClassCourseFilterEnum.Class).ToListAsync();
+            var filters = await _userClassCourseFilterRepository.GetAll().Include(x => x.ClassCourseFilter).Where(x => x.SchoolId == schoolId && x.IsActive && x.UserId==userId && x.ClassCourseFilterType == ClassCourseFilterEnum.Class).ToListAsync();
 
             int pageSize = 4;
             var classes = await GetClassesBySchoolId(schoolId, userId, pageNumber, pageSize, filters);
@@ -1852,7 +1898,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolCourses(Guid? schoolId, string userId, int pageNumber)
         {
-            var filters = await _userClassCourseFilterRepository.GetAll().Include(x => x.ClassCourseFilter).Where(x => x.SchoolId == schoolId && x.IsActive && x.ClassCourseFilterType == ClassCourseFilterEnum.Course).ToListAsync();
+            var filters = await _userClassCourseFilterRepository.GetAll().Include(x => x.ClassCourseFilter).Where(x => x.SchoolId == schoolId && x.IsActive && x.UserId == userId && x.ClassCourseFilterType == ClassCourseFilterEnum.Course).ToListAsync();
 
             int pageSize = 4;
             var courses = await GetCoursesBySchoolId(schoolId, userId, pageNumber, pageSize, filters);
