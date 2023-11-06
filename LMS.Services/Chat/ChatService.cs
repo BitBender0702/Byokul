@@ -693,7 +693,8 @@ namespace LMS.Services.Chat
                 IsVerified = GetSchoolInfo(x.ChatTypeId).IsVarified,
                 IsUserVerified = GetUserInfo(x.SenderId).IsVarified,
                 Gender=x.Sender.Gender,
-                SchoolId = GetSchoolInfo(x.ChatTypeId).SchoolId
+                SchoolId = GetSchoolInfo(x.ChatTypeId).SchoolId,
+                UserName = GetUserInfo(x.SenderId).FirstName+" "+ GetUserInfo(x.SenderId).LastName
             }).ToList();
             var thirdSchools = third.Where(x => x.School.OwnerId == userId.ToString()).ToList();
             users = users.Concat(thirdSchools).ToList();
@@ -710,7 +711,8 @@ namespace LMS.Services.Chat
                 IsVerified = GetSchoolInfo(x.ChatTypeId).IsVarified,
                 IsUserVerified = GetUserInfo(x.ReceiverId).IsVarified,
                 Gender=x.Receiver.Gender,
-                SchoolId = GetSchoolInfo(x.ChatTypeId).SchoolId
+                SchoolId = GetSchoolInfo(x.ChatTypeId).SchoolId,
+                UserName = GetUserInfo(x.ReceiverId).FirstName + " " + GetUserInfo(x.ReceiverId).LastName
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
             var fourthSchools = fourth.Where(x => x.School.OwnerId == userId.ToString()).ToList();
@@ -730,7 +732,8 @@ namespace LMS.Services.Chat
                 UnreadMessageCount = x.UnreadMessageCount,
                 IsUserVerified = GetUserInfo(x.SenderId).IsVarified,
                 Gender = x.Sender.Gender,
-                SchoolId = GetClassInfo(x.ChatTypeId).SchoolId
+                SchoolId = GetClassInfo(x.ChatTypeId).SchoolId,
+                UserName = GetUserInfo(x.SenderId).FirstName + " " + GetUserInfo(x.SenderId).LastName
             }).ToList();
             var fifthClassess = five.Where(x => x.Class.CreatedById == userId.ToString()).ToList();
             users = users.Concat(fifthClassess).ToList();
@@ -746,7 +749,8 @@ namespace LMS.Services.Chat
                 ChatTypeId = x.ChatTypeId,
                 IsUserVerified = GetUserInfo(x.ReceiverId).IsVarified,
                 Gender = x.Receiver.Gender,
-                SchoolId = GetClassInfo(x.ChatTypeId).SchoolId
+                SchoolId = GetClassInfo(x.ChatTypeId).SchoolId,
+                UserName = GetUserInfo(x.ReceiverId).FirstName + " " + GetUserInfo(x.ReceiverId).LastName
 
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
@@ -765,7 +769,9 @@ namespace LMS.Services.Chat
                 IsUserVerified = GetUserInfo(x.SenderId).IsVarified,
                 UnreadMessageCount = x.UnreadMessageCount,
                 Gender = x.Sender.Gender,
-                SchoolId = GetCourseInfo(x.ChatTypeId).SchoolId
+                SchoolId = GetCourseInfo(x.ChatTypeId).SchoolId,
+                UserName = GetUserInfo(x.SenderId).FirstName + " " + GetUserInfo(x.SenderId).LastName
+
             }).ToList();
             var seventhCourses = seven.Where(x => x.Course.CreatedById == userId.ToString()).ToList();
             users = users.Concat(seventhCourses).ToList();
@@ -781,7 +787,8 @@ namespace LMS.Services.Chat
                 ChatTypeId = x.ChatTypeId,
                 IsUserVerified = GetUserInfo(x.ReceiverId).IsVarified,
                 Gender = x.Receiver.Gender,
-                SchoolId = GetCourseInfo(x.ChatTypeId).SchoolId
+                SchoolId = GetCourseInfo(x.ChatTypeId).SchoolId,
+                UserName = GetUserInfo(x.ReceiverId).FirstName + " " + GetUserInfo(x.ReceiverId).LastName
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
             var eightCourses = eight.Where(x => x.Course.CreatedById == userId.ToString()).ToList();
@@ -816,22 +823,22 @@ namespace LMS.Services.Chat
                 if (chatUser.ChatType == ChatType.School)
                 {
                     chatUser.ProfileURL = chatUser.School.Avatar;
-                    chatUser.UserName = chatUser.School.SchoolName;
+                    //chatUser.UserName = chatUser.School.SchoolName;
                 }
                 else if (chatUser.ChatType == ChatType.Class)
                 {
                     chatUser.ProfileURL = chatUser.Class.Avatar;
-                    chatUser.UserName = chatUser.Class.ClassName;
+                    //chatUser.UserName = chatUser.Class.ClassName;
                 }
                 else if (chatUser.ChatType == ChatType.Course)
                 {
                     chatUser.ProfileURL = chatUser.Course.Avatar;
-                    chatUser.UserName = chatUser.Course.CourseName;
+                    //chatUser.UserName = chatUser.Course.CourseName;
                 }
                 else
                 {
                     chatUser.ProfileURL = receiverUser.Avatar;
-                    chatUser.UserName = receiverUser.FirstName + " " + receiverUser.LastName;
+                    //chatUser.UserName = receiverUser.FirstName + " " + receiverUser.LastName;
                 }
             }
             users = users.OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.Time).ToList();
