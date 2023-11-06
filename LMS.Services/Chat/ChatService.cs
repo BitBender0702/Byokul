@@ -974,7 +974,7 @@ namespace LMS.Services.Chat
 
         }
 
-        public async Task RemoveUnreadMessageCount(Guid SenderId, Guid ReceiverId, ChatType chatType)
+        public async Task<bool> RemoveUnreadMessageCount(Guid SenderId, Guid ReceiverId, ChatType chatType)
         {
             var result = await _chatHeadRepository.GetAll().Where(x => /*(x.SenderId == SenderId.ToString() && x.ReceiverId == ReceiverId.ToString() && x.ChatType == chatType) || (*/x.SenderId == ReceiverId.ToString() && x.ReceiverId == SenderId.ToString() && x.ChatType == chatType )/*)*/.FirstOrDefaultAsync();
             if (result != null)
@@ -984,8 +984,13 @@ namespace LMS.Services.Chat
                     result.UnreadMessageCount = 0;
                     _chatHeadRepository.Update(result);
                     _chatHeadRepository.Save();
+                    return true;
                 }
+                return false;
             }
+            return false;
+
+
         }
 
         public async Task RemoveUnreadMessageCount(Guid SenderId, Guid ReceiverId, ChatType chatType, Guid chatHeadId)

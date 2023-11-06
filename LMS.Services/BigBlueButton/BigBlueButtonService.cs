@@ -47,11 +47,11 @@ namespace LMS.Services.BigBlueButton
                     isMicroPhoneOpen = true;
                 }
 
-                string createChecksum = "createname=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ALWAYS_ACCEPT" + "&moderatorPW=" + moderatorPW + "&lockSettingsDisableCam=true" + "&lockSettingsDisableMic=true" + "&userdata-bbb_auto_join_audio=true" + "&userdata-bbb_skip_check_audio=true" + "&userdata-bbb_skip_video_preview=true" + "&userdata-bbb_listen_only_mode=false" + "&userdata-bbb_auto_swap_layout=true" + "&disabledFeatures=presentation" + secretKey;
+                string createChecksum = "createname=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ALWAYS_ACCEPT" + "&moderatorPW=" + moderatorPW + "&lockSettingsDisableCam=true" + "&lockSettingsDisableMic=true" + "&userdata-bbb_auto_join_audio=true" + "&userdata-bbb_skip_check_audio=true" + "&userdata-bbb_skip_video_preview=false" + "&userdata-bbb_listen_only_mode=false" + "&userdata-bbb_auto_swap_layout=true" + "&disabledFeatures=presentation" + secretKey;
 
                 string checksum = Hash(createChecksum);
 
-                string finalurl = "create?name=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ALWAYS_ACCEPT" + "&moderatorPW=" + moderatorPW + "&lockSettingsDisableCam=true" + "&lockSettingsDisableMic=true" + "&userdata-bbb_auto_join_audio=true" + "&userdata-bbb_skip_check_audio=true" + "&userdata-bbb_skip_video_preview=true" + "&userdata-bbb_listen_only_mode=false" + "&userdata-bbb_auto_swap_layout=true" + "&disabledFeatures=presentation" + "&checksum=" + checksum;
+                string finalurl = "create?name=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ALWAYS_ACCEPT" + "&moderatorPW=" + moderatorPW + "&lockSettingsDisableCam=true" + "&lockSettingsDisableMic=true" + "&userdata-bbb_auto_join_audio=true" + "&userdata-bbb_skip_check_audio=true" + "&userdata-bbb_skip_video_preview=false" + "&userdata-bbb_listen_only_mode=false" + "&userdata-bbb_auto_swap_layout=true" + "&disabledFeatures=presentation" + "&checksum=" + checksum;
 
                 var clients = new HttpClient();
                 clients.BaseAddress = new Uri(baseUrl);
@@ -70,10 +70,10 @@ namespace LMS.Services.BigBlueButton
                 //response.StreamUrl = Uri.EscapeDataString(response.StreamUrl);
 
                 string fullName = Uri.EscapeDataString(newMeetingViewModel.ModeratorName);
-                string joinChecksum = "joinfullName=" + fullName + "&meetingID=" + meetingId + "&password=" + moderatorPW + "&redirect=true" + "&lockSettingsDisableCam=true" + "&lockSettingsDisableMic=true" + "&userdata-bbb_auto_join_audio=true" + "&userdata-bbb_skip_check_audio=true" + "&userdata-bbb_skip_video_preview=true" + "&userdata-bbb_listen_only_mode=false" + "&userdata-bbb_auto_swap_layout=true" + "&disabledFeatures=presentation" + secretKey;
+                string joinChecksum = "joinfullName=" + fullName + "&meetingID=" + meetingId + "&password=" + moderatorPW + "&redirect=true" + "&lockSettingsDisableCam=true" + "&lockSettingsDisableMic=true" + "&userdata-bbb_auto_join_audio=true" + "&userdata-bbb_skip_check_audio=true" + "&userdata-bbb_skip_video_preview=false" + "&userdata-bbb_listen_only_mode=false" + "&userdata-bbb_auto_swap_layout=true" + "&disabledFeatures=presentation" + secretKey;
 
                 string joinchecksum = Hash(joinChecksum);
-                string joinModeratorUrl = "join?fullName=" + fullName + "&meetingID=" + meetingId + "&password=" + moderatorPW + "&redirect=true" + "&lockSettingsDisableCam=true" + "&lockSettingsDisableMic=true" + "&userdata-bbb_auto_join_audio=true" + "&userdata-bbb_skip_check_audio=true" + "&userdata-bbb_skip_video_preview=true" + "&userdata-bbb_listen_only_mode=false" + "&userdata-bbb_auto_swap_layout=true" + "&disabledFeatures=presentation" + "&checksum=" + joinchecksum;
+                string joinModeratorUrl = "join?fullName=" + fullName + "&meetingID=" + meetingId + "&password=" + moderatorPW + "&redirect=true" + "&lockSettingsDisableCam=true" + "&lockSettingsDisableMic=true" + "&userdata-bbb_auto_join_audio=true" + "&userdata-bbb_skip_check_audio=true" + "&userdata-bbb_skip_video_preview=false" + "&userdata-bbb_listen_only_mode=false" + "&userdata-bbb_auto_swap_layout=true" + "&disabledFeatures=presentation" + "&checksum=" + joinchecksum;
 
                 string joinFinalUrl = baseUrl + joinModeratorUrl;
                 result.StreamUrl = joinFinalUrl;
@@ -192,12 +192,12 @@ namespace LMS.Services.BigBlueButton
 
                 //string joinChecksum = "joinfullName=" + model.Name + "&meetingID=" + model.MeetingId + "&role=VIEWER" + "&redirect=true" + secretKey;
 
-                string joinChecksum = "joinfullName=" + model.Name + "&meetingID=" + model.MeetingId + "&waitModerator=false" + "&password=" + result.attendeePW + "&redirect=true" + "&lockSettingsDisableCam=true" + "&lockSettingsDisableMic=true" + "&userdata-bbb_auto_join_audio=true" + "&userdata-bbb_skip_check_audio=true" + "&userdata-bbb_skip_video_preview=true" + "&userdata-bbb_listen_only_mode=false" + "&userdata-bbb_auto_swap_layout=true" + "&disabledFeatures=presentation" + secretKey;
+                string joinChecksum = "joinfullName=" + model.Name + "&meetingID=" + model.MeetingId + "&waitModerator=false" + "&password=" + result.attendeePW + "&redirect=true" + "&lockSettingsDisableCam=true" + "&lockSettingsDisableMic=true" + "&userdata-bbb_auto_join_audio=true" + "&userdata-bbb_skip_check_audio=true" + "&userdata-bbb_skip_video_preview=false" + "&userdata-bbb_listen_only_mode=false" + "&userdata-bbb_auto_swap_layout=true" + "&disabledFeatures=presentation" + secretKey;
 
 
                 string joinchecksum = Hash(joinChecksum);
 
-                string joinAttendeeUrl = "join?fullName=" + model.Name + "&meetingID=" + model.MeetingId + "&waitModerator=false" + "&password=" + result.attendeePW + "&redirect=true" +"&lockSettingsDisableCam=true" + "&lockSettingsDisableMic=true" + "&userdata-bbb_auto_join_audio=true" + "&userdata-bbb_skip_check_audio=true" + "&userdata-bbb_skip_video_preview=true" + "&userdata-bbb_listen_only_mode=false" + "&userdata-bbb_auto_swap_layout=true" + "&disabledFeatures=presentation" + "&checksum=" + joinchecksum;
+                string joinAttendeeUrl = "join?fullName=" + model.Name + "&meetingID=" + model.MeetingId + "&waitModerator=false" + "&password=" + result.attendeePW + "&redirect=true" +"&lockSettingsDisableCam=true" + "&lockSettingsDisableMic=true" + "&userdata-bbb_auto_join_audio=true" + "&userdata-bbb_skip_check_audio=true" + "&userdata-bbb_skip_video_preview=false" + "&userdata-bbb_listen_only_mode=false" + "&userdata-bbb_auto_swap_layout=true" + "&disabledFeatures=presentation" + "&checksum=" + joinchecksum;
 
                 string joinFinalUrl = baseUrl + joinAttendeeUrl;
                 var post = _postRepository.GetById(model.PostId);

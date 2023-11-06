@@ -1410,11 +1410,11 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
       this.commentViewModel.id = response.id;
       this._signalRService.sendToGroup(this.commentViewModel);
-      if(reel.parentId != this.userId){
-        var translatedMessage = this.translateService.instant('commented in your reel');
-        var notificationContent = translatedMessage;
-        this._notificationService.initializeNotificationViewModel(reel.createdBy, NotificationType.CommentSent, notificationContent, this.userId, reel.id, reel.postType, null, null,null,null).subscribe((response) => {
-        });
+      if(reel.createdBy != this.sender.id){
+      var translatedMessage = this.translateService.instant('commented your reel');
+      var notificationContent = translatedMessage;
+      this._notificationService.initializeNotificationViewModel(reel.createdBy, NotificationType.CommentSent, notificationContent, this.sender.id, reel.id, reel.postType,null,this.reel.postAttachments[0].id).subscribe((response) => {
+      });
       }
     });
   }

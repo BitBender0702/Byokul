@@ -320,6 +320,13 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
       this.commentViewModel.id = response.id;
       this._signalRService.sendToGroup(this.commentViewModel);
+      if(this.reels.post.createdBy != this.sender.id){
+        var translatedMessage = this.translateService.instant('commented your reel');
+      var notificationContent = translatedMessage;
+      this._notificationService.initializeNotificationViewModel(this.reels.post.createdBy, NotificationType.CommentSent, notificationContent, this.sender.id, this.reels.post.id, this.reels.post.postType,null,this.reels.id).subscribe((response) => {
+        debugger;
+      });
+    }
     });
   }
 
