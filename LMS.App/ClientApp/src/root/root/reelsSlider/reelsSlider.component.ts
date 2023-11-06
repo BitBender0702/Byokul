@@ -1266,7 +1266,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   openSharePostModal(post: any, postType: number, title: string, description: string): void {
-    
+    debugger
     if (post?.name == Constant.Private || post?.serviceType == Constant.Paid) {
       sharePostResponse.next({});
     }
@@ -1283,7 +1283,8 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         postType: postType,
         title: title,
         description: description,
-        image: image
+        image: image,
+        reelId:post.postAttachments[0].id
       };
       this.bsModalService.show(SharePostComponent, { initialState });
     }
@@ -1412,7 +1413,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       if(reel.parentId != this.userId){
         var translatedMessage = this.translateService.instant('commented in your reel');
         var notificationContent = translatedMessage;
-        this._notificationService.initializeNotificationViewModel(reel.parentId, NotificationType.CommentSent, notificationContent, this.userId, reel.id, reel.postType, null, null,null,null).subscribe((response) => {
+        this._notificationService.initializeNotificationViewModel(reel.createdBy, NotificationType.CommentSent, notificationContent, this.userId, reel.id, reel.postType, null, null,null,null).subscribe((response) => {
         });
       }
     });
