@@ -1,4 +1,3 @@
-<!-- <div *ngIf="isDataLoaded"> -->
 <div
   appBsModal
   bsModal
@@ -48,23 +47,6 @@
             <label class="font_10">{{ "OfficialName" | translate }}</label>
             <div class="form-group">
               <span class="p-fluid">
-                <!-- <p-autoComplete
-                formControlName="userId"
-                [showEmptyMessage]="true"
-                [emptyMessage]="'NoResultFound' | translate"
-                [forceSelection]="true"
-                [size]="200"
-                (onSelect)="captureUserId($event)"
-                (onUnselect)="removeLanguage($event)"
-                placeholder="{{ 'TypeLanguageToAdd' | translate }}"
-                class="form-control w-100"
-                [suggestions]="filteredLanguages"
-                (completeMethod)="filterLanguages($event)"
-                field="name"
-                [multiple]="true"
-              >
-              </p-autoComplete> -->
-
                 <p-autoComplete
                   class="form-control w-100"
                   formControlName="user"
@@ -105,33 +87,6 @@
                 style="right: 8%"
                 src="../../../assets/images/Unlock.svg"
               />
-              <!-- <div class="custom-language-select">
-                  <p-multiSelect
-                    defaultLabel="{{ 'SelectSchools' | translate }}"
-                    [panelStyle]="{ width: '100%' }"
-                    [filter]="false"
-                    [showToggleAll]="true"
-                    [options]="schoolList"
-                    optionLabel="schoolName"
-                    optionValue="schoolId"
-                    name="languageSelect[]"
-                    class="form-control"
-                    multiple
-                    id="languageSelect"
-                    [(ngModel)]="selectedSchools"
-                    (onChange)="hideUnhideClassCourse($event)"
-                    (onPanelHide)="getClassesAndCourses($event)"
-                  >
-                    <ng-template pTemplate="header">
-                      <div
-                        style="position: absolute; left: 48px"
-                        class="checkbox-all-text"
-                      >
-                        {{ "SelectAll" | translate }}
-                      </div>
-                    </ng-template>
-                  </p-multiSelect>
-                </div> -->
             </div>
             <br />
             <div *ngFor="let permission of permissions">
@@ -264,21 +219,8 @@
             value="{{ 'UpdateOfficial' | translate }}"
           />
         </div>
-
-        <!-- <small
-            class="p-error"
-            style="color: orange"
-            class="text-center d-block"
-            *ngIf="
-              isSubmitted && languageForm.controls.languages.errors
-            "
-          >
-            {{ "SelectAtleastOneLanguage" | translate }}
-          </small> -->
       </div>
     </div>
   </div>
 </div>
-<!-- </div> -->
-
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

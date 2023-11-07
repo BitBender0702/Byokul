@@ -62,7 +62,6 @@ export class AdminHomeComponent extends MultilingualComponent implements OnInit,
     }
 
     hideSidebar(){
-      // this._authService.loginAdminState$.next(false);
     }
     
   }

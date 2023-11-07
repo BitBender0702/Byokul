@@ -84,21 +84,17 @@ export class UserService{
     }
 
     getMyFeed(postType:number,pageNumber:number,searchString:string):Observable<any>{
-        //return this.http.get(`${this.apiUrl}/users/myFeed`);
         let queryParams = new HttpParams().append("postType",postType).append("pageNumber",pageNumber).append("searchString",searchString);
         return this.http.get(`${this.apiUrl}/users/myFeed`, {params:queryParams, headers: this.headers});
 
     }
 
     getGlobalFeed(postType:number, pageNumber:number,searchString:string):Observable<any>{
-        //return this.http.get(`${this.apiUrl}/users/globalFeed`);
         let queryParams = new HttpParams().append("postType",postType).append("pageNumber",pageNumber).append("searchString",searchString);
         return this.http.get(`${this.apiUrl}/users/globalFeed`, {params:queryParams, headers: this.headers});
-
     }
 
     saveUserPreference(preferenceString:string): Observable<any> {
-        debugger
         return this.http.post(`${this.apiUrl}/users/saveUserPreference` + '?preferenceString=' + preferenceString,'',{headers: this.headers});
     }
 
@@ -123,17 +119,13 @@ export class UserService{
     }
 
     getFollowersNotificationSettings(followersIds:any):Observable<any>{
-        debugger
         return this.http.get(`${this.apiUrl}/notifications/getFollowersNotificationSettings` + '?followersIds=' + followersIds, {headers: this.headers});
     }
     
     getCertificatePdf(certificateName:string,from:number){
         let queryParams = new HttpParams().append("certificateName",certificateName).append("from",from);
         return this.http.get(`${this.apiUrl}/users/getCertificatePdf`, {params:queryParams,headers: this.headers}
-        );
-        
-
-        
+        );  
     }
 
     getUserByEmail(email:string):Observable<any>{
@@ -149,7 +141,6 @@ export class UserService{
     }   
 
     getStateList(countryName:string):Observable<any>{
-        debugger
         return this.http.post(`${this.apiUrl}/users/getStates` + '?countryName=' + countryName,'',{headers: this.headers});
     }   
 
@@ -168,10 +159,7 @@ export class UserService{
     globalSearch(searchString:string,pageNumber:number,pageSize:number){
         let queryParams = new HttpParams().append("searchString",searchString).append("pageNumber",pageNumber).append("pageSize",pageSize);
         return this.http.get(`${this.apiUrl}/users/globalSearch`, {params:queryParams,headers: this.headers}
-        );
-        
-
-        
+        ); 
     }
 
     usersGlobalSearch(searchString:string,pageNumber:number,pageSize:number){
@@ -181,12 +169,6 @@ export class UserService{
     }
 
     saveUserCertificates(addCertificates:any):Observable<any>{
-        debugger
-        for(var pair in addCertificates.entries())
-        {
-            console.log(pair[0]);
-            console.log(pair[1]);
-        }
         return this.http.post(`${this.apiUrl}/users/saveUserCertificates`,addCertificates,{headers: this.headers});
     }
 
@@ -201,21 +183,18 @@ export class UserService{
     }
         
     GetSliderReelsByUserId(userId:string,postId:string,scrollType:number){
-        debugger
         let queryParams = new HttpParams().append("userId",userId).append("postId",postId).append("scrollType",scrollType);
         return this.http.get(`${this.apiUrl}/users/getSliderReelsByUserId`, {params:queryParams,headers: this.headers}
         );
     }
 
     getMyFeedSliderReels(userId:string,postId:string,scrollType:number){
-        debugger
         let queryParams = new HttpParams().append("userId",userId).append("postId",postId).append("scrollType",scrollType);
         return this.http.get(`${this.apiUrl}/users/getMyFeedSliderReels`, {params:queryParams,headers: this.headers}
         );
     }
 
     getGlobalFeedSliderReels(userId:string,postId:string,scrollType:number){
-        debugger
         let queryParams = new HttpParams().append("userId",userId).append("postId",postId).append("scrollType",scrollType);
         return this.http.get(`${this.apiUrl}/users/getGlobalFeedSliderReels`, {params:queryParams,headers: this.headers}
         );
@@ -223,7 +202,6 @@ export class UserService{
 
     
     getUserPermissions(userId:string):Observable<any>{
-        debugger
         return this.http.get(`${this.apiUrl}/users/getUserPermissions` + '?userId=' + userId,{headers: this.headers});
     }
 
@@ -234,8 +212,6 @@ export class UserService{
     checkAllNotificationSettings(userId:string):Observable<any>{
         return this.http.post(`${this.apiUrl}/users/checkAllNotificationSettings`+ '?userId=' + userId,'',{headers: this.headers});
     }
-
-
 
     getUserBannedFollowers(userId:string,pageNumber:number,searchString:string):Observable<any>{
         let queryParams = new HttpParams().append("userId",userId).append("pageNumber",pageNumber).append("searchString",searchString);
@@ -249,7 +225,6 @@ export class UserService{
     }
 
     isUserBanned(userId:string,id:string, from: PostAuthorTypeEnum): Observable<any> {
-        debugger;
         let queryParams = new HttpParams().append("userId",userId).append("id",id).append("from",from);
         return this.http.post(`${this.apiUrl}/users/isUserBanned`,null, {params:queryParams,headers: this.headers});
     }

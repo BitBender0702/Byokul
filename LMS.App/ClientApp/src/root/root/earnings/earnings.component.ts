@@ -2,15 +2,12 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SchoolService } from 'src/root/service/school.service';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
 import { PaymentService } from 'src/root/service/payment.service';
-import { debug } from 'console';
 import { DatePipe } from '@angular/common';
 import { PayoutViewModel } from 'src/root/interfaces/payment/payoutViewModel';
 import { UserService } from 'src/root/service/user.service';
 import { TransactionParamViewModel } from 'src/root/interfaces/payment/transactionParamViewModel';
-import { TransactionTypeEnum } from 'src/root/Enums/transactionTypeEnum';
 import { Subscription } from 'rxjs';
 import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 
@@ -24,7 +21,6 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
 
     isOpenSidebar:boolean = false;
     isOpenSearch:boolean = false;
-
     private _paymentService;
     private _userService;
     transactionDetails:any;
@@ -134,16 +130,6 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
         });
       }
       notifyMessageAndNotificationCount.next({});
-
-    //   window.onclick = (event) => {
-    //     this.cd.detectChanges();
-    //     var filterDropdown = document.getElementById('dropdown-earningFilter');
-    //     if (event.target == filterDropdown) {
-    //      if (filterDropdown != null) {
-    //       this.dropdownMenu.nativeElement.style.display = "none";
-    //      }
-    //    } 
-    // }
   }
 
   @HostListener('document:click', ['$event'])
@@ -183,9 +169,7 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
     }
 
     initialClassCourseDetails(transactionParamViewModel:TransactionParamViewModel){
-      debugger
       this._paymentService.classCourseTransactionDetails(transactionParamViewModel).subscribe((response) => {
-        debugger
         this.classCourseDetails = response.classCourseTransactions;
         this.loadingIcon = false;
         this.isSubmitted = false;
@@ -254,11 +238,6 @@ this.dropdownMenu.nativeElement.style.position = position;
 this.dropdownMenu.nativeElement.style.right = right;
 this.dropdownMenu.nativeElement.style.top = top;
 this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' : 'none';
-      // this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' : 'none';
-
-      //this.dropdownMenu.nativeElement.classList.toggle('showD', display === 'none');
-
-      
     }
 
     hideFilterDropdown(){
@@ -344,9 +323,6 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
   getTransactionDetails(){
     this.transactionParamViewModel.pageNumber = this.pageNumber;
     this.transactionParamViewModel.searchString = this.searchString;
-    // this.transactionParamViewModel.StartDate = this.startDate;
-    // this.transactionParamViewModel.endDate = this.endDate;
-
     this._paymentService.transactionDetails(this.transactionParamViewModel).subscribe((response) => {
       this.transactionDetails.transactions =[...this.transactionDetails.transactions, ...response.transactions];
       this.scrollLoadingIcon = false;
@@ -358,9 +334,6 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
   getWithdrawDetails(){
     this.transactionParamViewModel.pageNumber = this.withdrawPageNumber;
     this.transactionParamViewModel.searchString = this.searchString;
-    //this.transactionParamViewModel.StartDate = this.startDate;
-    //this.transactionParamViewModel.endDate = this.endDate;
-
     this._paymentService.withdrawDetails(this.transactionParamViewModel).subscribe((response) => {
       this.withdrawDetails.transactions =[...this.withdrawDetails.transactions, ...response.transactions];
       this.scrollLoadingIcon = false;
@@ -372,9 +345,6 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
   getAllTransactionDetails(){
     this.transactionParamViewModel.pageNumber = this.allTransactionPageNumber;
     this.transactionParamViewModel.searchString = this.searchString;
-    // this.transactionParamViewModel.StartDate = this.startDate;
-    // this.transactionParamViewModel.endDate = this.endDate;
-
     this._paymentService.allTransactionDetails(this.transactionParamViewModel).subscribe((response) => {
       this.allTransactionDetails.transactions =[...this.allTransactionDetails.transactions, ...response.transactions];
       this.scrollLoadingIcon = false;
@@ -387,9 +357,6 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
     debugger
     this.transactionParamViewModel.pageNumber = this.classCoursePageNumber;
     this.transactionParamViewModel.searchString = this.searchString;
-    // this.transactionParamViewModel.StartDate = this.startDate;
-    // this.transactionParamViewModel.endDate = this.endDate;
-
     this._paymentService.classCourseTransactionDetails(this.transactionParamViewModel).subscribe((response) => {
       debugger
       this.classCourseDetails.transactions =[...this.classCourseDetails, ...response.classCourseTransactions];
@@ -408,50 +375,26 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
     this.isApplieDateFilter = true;
     var dates = this.filterDateForm.value;
     this.dropdownMenu.nativeElement.style.display = 'none';
-
     this.transactionParamViewModel.searchString = this.searchString;
     this.transactionParamViewModel.startDate = new Date(dates.startDate.getTime() - dates.startDate.getTimezoneOffset() * 60000);
-    // const utcStartDate = new Date(dates.startDate.getTime() - dates.startDate.getTimezoneOffset() * 60000);
     this.transactionParamViewModel.endDate = new Date(dates.endDate.getTime() - dates.endDate.getTimezoneOffset() * 60000);
-    //this.transactionParamViewModel.TransactionType = this.isOpenOwnedSchoolTab ? TransactionTypeEnum.OwnedSchoolPayment : this.isOpenWithdrawTab ? TransactionTypeEnum.Withdraw : null;
-
-
    if(this.isOpenOwnedSchoolTab){
     this.transactionParamViewModel.pageNumber = 1;
     this.initialTransactionDetails(this.transactionParamViewModel);
-    // this._paymentService.transactionDetails(this.transactionParamViewModel).subscribe((response) => {
-    //   this.transactionDetails = response;
-    //   this.isSubmitted = false;
-    // });
    }
 
    if(this.isOpenWithdrawTab){
     this.transactionParamViewModel.pageNumber = 1;
     this.initialWithdrawDetails(this.transactionParamViewModel);
-
-    // this._paymentService.withdrawDetails(this.transactionParamViewModel).subscribe((response) => {
-    //   this.withdrawDetails = response;
-    //   this.isSubmitted = false;
-    // });
    }
    if(this.isOpenClassCourseTab){
     this.transactionParamViewModel.pageNumber = 1;
     this.initialClassCourseDetails(this.transactionParamViewModel);
-
-    // this._paymentService.withdrawDetails(this.transactionParamViewModel).subscribe((response) => {
-    //   this.withdrawDetails = response;
-    //   this.isSubmitted = false;
-    // });
    }
 
    if(this.isOpenAllTab){
     this.transactionParamViewModel.pageNumber = 1;
     this.initialAllTransactionDetails(this.transactionParamViewModel);
-
-    // this._paymentService.allTransactionDetails(this.transactionParamViewModel).subscribe((response) => {
-    //   this.allTransactionDetails = response;
-    //   this.isSubmitted = false;
-    // });
    }
   }
 
@@ -531,17 +474,12 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
       this.loadingIcon = true;
       this.transactionParamViewModel.pageNumber = 1;
       var dates = this.filterDateForm.value;
-      // if(this.isApplieDateFilter){
-        // if(dates.startDate != dates.endDate){
-        var startDate = new Date(dates.startDate.getTime() - dates.startDate.getTimezoneOffset() * 60000);
-        var endDate = new Date(dates.endDate.getTime() - dates.endDate.getTimezoneOffset() * 60000);
-
-        if(startDate.getTime() != endDate.getTime()){
-          this.transactionDetails.startDate = startDate;
-          this.transactionDetails.endDate = endDate;
-        }
-      // }
-      //this.transactionParamViewModel.TransactionType = TransactionTypeEnum.OwnedSchoolPayment;
+      var startDate = new Date(dates.startDate.getTime() - dates.startDate.getTimezoneOffset() * 60000);
+      var endDate = new Date(dates.endDate.getTime() - dates.endDate.getTimezoneOffset() * 60000);
+      if(startDate.getTime() != endDate.getTime()){
+        this.transactionDetails.startDate = startDate;
+        this.transactionDetails.endDate = endDate;
+      }
       this.initialTransactionDetails(this.transactionParamViewModel);
     }
 
@@ -555,17 +493,12 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
       this.loadingIcon = true;
       this.transactionParamViewModel.pageNumber = 1;
       var dates = this.filterDateForm.value;
-      // if(this.isApplieDateFilter){
-        // if(dates.startDate != dates.endDate){
-        var startDate = new Date(dates.startDate.getTime() - dates.startDate.getTimezoneOffset() * 60000);
-        var endDate = new Date(dates.endDate.getTime() - dates.endDate.getTimezoneOffset() * 60000);
-
-        if(startDate.getTime() != endDate.getTime()){
-          this.transactionDetails.startDate = startDate;
-          this.transactionDetails.endDate = endDate;
-        }
-      // }
-      //this.transactionParamViewModel.TransactionType = TransactionTypeEnum.OwnedSchoolPayment;
+      var startDate = new Date(dates.startDate.getTime() - dates.startDate.getTimezoneOffset() * 60000);
+      var endDate = new Date(dates.endDate.getTime() - dates.endDate.getTimezoneOffset() * 60000);
+      if(startDate.getTime() != endDate.getTime()){
+        this.transactionDetails.startDate = startDate;
+        this.transactionDetails.endDate = endDate;
+      }
       this.initialClassCourseDetails(this.transactionParamViewModel);
     }
 
@@ -577,22 +510,13 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
       this.isOpenClassCourseTab = false;
       this.transactionParamViewModel.pageNumber = 1;
       var dates = this.filterDateForm.value;
-      // if(dates.startDate != dates.endDate){
-        var startDate = new Date(dates.startDate.getTime() - dates.startDate.getTimezoneOffset() * 60000);
-        var endDate = new Date(dates.endDate.getTime() - dates.endDate.getTimezoneOffset() * 60000);
-
-        if(startDate.getTime() != endDate.getTime()){
-           this.transactionDetails.startDate = startDate;
-           this.transactionDetails.endDate = endDate;
-        }
-      // }
-
-      //this.transactionParamViewModel.TransactionType = TransactionTypeEnum.OwnedSchoolPayment;
+      var startDate = new Date(dates.startDate.getTime() - dates.startDate.getTimezoneOffset() * 60000);
+      var endDate = new Date(dates.endDate.getTime() - dates.endDate.getTimezoneOffset() * 60000);
+      if(startDate.getTime() != endDate.getTime()){
+        this.transactionDetails.startDate = startDate;
+        this.transactionDetails.endDate = endDate;
+      }
       this.initialWithdrawDetails(this.transactionParamViewModel);
-      // this._paymentService.withdrawDetails().subscribe((response) => {
-      //   this.withdrawDetails = response;
-      //   this.loadingIcon = false;
-      // });
     }
 
     isAllTab(){
@@ -603,21 +527,12 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
       this.isOpenClassCourseTab = false;
       this.transactionParamViewModel.pageNumber = 1;
       var dates = this.filterDateForm.value;
-      // if(this.isApplieDateFilter){
-        // if(dates.startDate != dates.endDate){
-        var startDate = new Date(dates.startDate.getTime() - dates.startDate.getTimezoneOffset() * 60000);
-        var endDate = new Date(dates.endDate.getTime() - dates.endDate.getTimezoneOffset() * 60000);
-
-        if(startDate.getTime() != endDate.getTime()){
-          this.transactionDetails.startDate = startDate;
-          this.transactionDetails.endDate = endDate;
-        }
-      // }
-      //this.transactionParamViewModel.TransactionType = TransactionTypeEnum.OwnedSchoolPayment;
+      var startDate = new Date(dates.startDate.getTime() - dates.startDate.getTimezoneOffset() * 60000);
+      var endDate = new Date(dates.endDate.getTime() - dates.endDate.getTimezoneOffset() * 60000);
+      if(startDate.getTime() != endDate.getTime()){
+        this.transactionDetails.startDate = startDate;
+        this.transactionDetails.endDate = endDate;
+      }
       this.initialAllTransactionDetails(this.transactionParamViewModel);
-      // this._paymentService.allTransactionDetails(this.transactionParamViewModel).subscribe((response) => {
-      //   this.allTransactionDetails = response;
-      //   this.loadingIcon = false;
-      // });
     }
 }

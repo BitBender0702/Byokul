@@ -6,9 +6,7 @@ import { AuthService } from 'src/root/service/auth.service';
 import { ForgetPasswordModel } from 'src/root/interfaces/forget-password';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { BehaviorSubject, finalize } from 'rxjs';
-
 export const forgotPassResponse =new BehaviorSubject <boolean>(false);  
-
 
 
 @Component({
@@ -19,15 +17,12 @@ export const forgotPassResponse =new BehaviorSubject <boolean>(false);
 
 export class ForgetPasswordComponent extends MultilingualComponent implements OnInit {
     invalidForgetPassword!: boolean;
-
     forgotPasswordForm!:FormGroup;
     EMAIL_PATTERN = '[a-zA-Z0-9]+?(\\.[a-zA-Z0-9]+)*@[a-zA-Z]+\\.[a-zA-Z]{2,3}';
     isSubmitted: boolean = false;
     user: any = {};
     loadingIcon:boolean = false;
     isResetEmailSent!:boolean;
-
-    
     credentials: ForgetPasswordModel = {email:''};
     private _authService;
     constructor(injector: Injector,private fb: FormBuilder,private router: Router, authService:AuthService) { 

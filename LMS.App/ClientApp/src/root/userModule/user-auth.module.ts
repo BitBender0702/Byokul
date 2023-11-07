@@ -7,14 +7,12 @@ import { ChangePasswordComponent } from './user-auth/component/change-password/c
 import { ForgetPasswordComponent } from './user-auth/component/forget-password/forget-password.component';
 import { RegisterComponent } from './user-auth/component/register/register.component';
 import { AuthGuard } from '../service/auth.guard';
-import { StudentsAuthGuard } from './services/students-auth.guard';
 import { ResetPasswordComponent } from '../root/sharedModule/reset-password.component';
 import { UserAuthComponent } from './user-auth.component';
 import { TranslateLoader,TranslateModule, } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient,HttpClientModule } from '@angular/common/http';
 import { SharedModule } from '../root/sharedModule/shared.module';
-import { LandingComponent } from './user-auth/component/landing/landing.component';
 import { LogoutComponent } from './user-auth/component/logout/logout.component';
 import { ConfirmEmailComponent } from './user-auth/component/confirmEmail/confirmEmail.component';
 import { ToastModule } from 'primeng/toast';
@@ -46,11 +44,6 @@ import { SetPasswordComponent } from './user-auth/component/set-password/set-pas
           redirectTo: 'login',
           pathMatch: 'full',
         },
-        //  {
-        //   path: 'landing',
-        //   component: LandingComponent,
-        // },
-
         {
           path: 'login',
           component: LoginComponent,

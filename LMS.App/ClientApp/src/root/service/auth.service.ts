@@ -10,10 +10,8 @@ import { LoginModel } from "../interfaces/login";
 import { RegisterModel } from "../interfaces/register";
 import { ForgetPasswordModel } from "../interfaces/forget-password";
 import jwt_decode from 'jwt-decode';
-import { RolesEnum } from "../RolesEnum/rolesEnum";
 import { ResetPasswordModel } from "../interfaces/reset-password";
 import { environment } from "src/environments/environment";
-import { Subject } from "@microsoft/signalr";
 import { SetPasswordViewModel } from "../interfaces/set-password";
 import { ResendEmailModel } from "../interfaces/resendEmailModel";
 
@@ -34,10 +32,8 @@ export class AuthService{
       return environment.apiUrl;
     }
 
-
     constructor(private router: Router, private http: HttpClient) { 
         this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.authToken);
-
     }
 
     loginUser(credentials:LoginModel): Observable<any> {
@@ -67,7 +63,6 @@ export class AuthService{
     }
 
     getBigBlueButton(): Observable<any> {
-        
         const headers = { 'content-type': 'application/json'} 
         return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/bigbluebutton/api/join?${`shi-vex-mpo-m9j`}`, '', {headers: this.headers});
     }
@@ -91,7 +86,6 @@ export class AuthService{
         }
     }
     redirectAfterTokenExpired(){
-      debugger
       const helper = new JwtHelperService();
         const token = localStorage.getItem("jwt");
         if(!token){
@@ -126,11 +120,9 @@ export class AuthService{
             check = false;
           }
         return check;
-    
       }
 
     confirmEmail(token:string,email:string):Observable<any>{
-      
       let queryParams = new HttpParams().append("token",token).append("email",email);
       return this.http.get(`${this.apiUrl}/auth/confirmEmail`, {params:queryParams, headers:this.headers});
     }

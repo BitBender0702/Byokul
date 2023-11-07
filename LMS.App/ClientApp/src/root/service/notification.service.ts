@@ -44,13 +44,7 @@ export class NotificationService{
         return this.http.get(`${this.apiUrl}/notifications/getNotifications`, {params:queryParams,headers: this.headers})
     }
 
-
-
-
-
-
     removeUnreadNotifications():Observable<any>{
-      debugger
       return this.http.post(`${this.apiUrl}/notifications/removeUnreadNotifications`,'', {headers: this.headers});
     }
 
@@ -59,9 +53,7 @@ export class NotificationService{
     }
 
     initializeNotificationViewModel(userid:string,notificationType:NotificationType,notificationContent:string,loginUserId:string,postId?:string | null,postType?:number,post?:any,reelId?:string | null,chatType?:number | null,chatTypeId?:string| null):Observable<any>{
-      debugger
         this._userService.getUser(loginUserId).subscribe((response) => {
-          debugger
           this.notificationViewModel = {
             id: Constant.defaultGuid,
             userId: userid,
@@ -78,29 +70,13 @@ export class NotificationService{
             chatTypeId:chatTypeId
           }
 
-          // this.notificationViewModel2 = {
-          //   id: Constant.defaultGuid,
-          //   userId: userid,
-          //   actionDoneBy: loginUserId,
-          //   avatar: response.avatar,
-          //   isRead:false,
-          //   notificationContent:`${response.firstName + ' ' + response.lastName + ' ' + notificationContent}`,
-          //   notificationType:notificationType,
-          //   postId: postId,
-          //   postType:postType,
-          //   //post:post,
-          //   // reelId:reelId,
-          //   // chatType:chatType,
-          //   // chatTypeId:chatTypeId
-          // }
-
           if(notificationType == NotificationType.CertificateSent){
             this.notificationViewModel.notificationContent = notificationContent;
           }
           this._signalrService.sendNotification(this.notificationViewModel);
         });
      return new Observable<void>();
-      }
+  }
 
 
   getUserFollowersIds(userId:string):Observable<any>{

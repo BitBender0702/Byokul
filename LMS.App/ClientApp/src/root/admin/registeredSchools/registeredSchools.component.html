@@ -163,7 +163,6 @@
                 <td>
                   {{school.founded | ChangeTimeZonePipe | date : "MMMM" | translate}}
                   {{school.founded | ChangeTimeZonePipe| date:"d, y"}}
-                  <!-- {{ school.founded | date : "MMMM d, y" }} -->
                 </td>
                 <td>{{ school.specialization?.name }}</td>
                 <td>
@@ -178,8 +177,6 @@
                   {{ school.createdOn| ChangeTimeZonePipe | date : "MMMM" | translate}}
                   {{school.createdOn| ChangeTimeZonePipe| date:"d, y"}}
                   {{ "at" | translate }} {{ school.createdOn| ChangeTimeZonePipe | date : "H:mm a" }}
-                  <!-- {{ school.createdOn | date : "MMMM d, y" }} at
-                  {{ school.createdOn | date : "H:mm" }} -->
                 </td>
                 <td>{{ school.createdBy }}</td>
                 <td>

@@ -13,20 +13,18 @@ import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotifica
   })
 
 export class MyEarningsComponent implements OnInit {
-
     isOpenSidebar:boolean = false;
     isOpenSearch:boolean = false;
     hamburgerCountSubscription!: Subscription;
     hamburgerCount:number = 0;
 
-    constructor(private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
 
+    constructor(private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
     }
   
     ngOnInit(): void {
       if (!this.hamburgerCountSubscription) {
         this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-          debugger
           this.hamburgerCount = response.hamburgerCount;
         });
       }
@@ -39,14 +37,13 @@ export class MyEarningsComponent implements OnInit {
   
 
     openSearch(){
-        this.isOpenSearch = true;
+      this.isOpenSearch = true;
     }
 
     closeSearch(){
-        this.isOpenSearch = false;
+      this.isOpenSearch = false;
     }
  
-
     openSidebar(){
       OpenSideBar.next({isOpenSideBar:true})
     }

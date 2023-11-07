@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
@@ -10,47 +10,34 @@ import { CreateSchoolComponent } from './root/school/createSchool/createSchool.c
 import { SchoolProfileComponent } from './root/school/schoolProfile/schoolProfile.component';
 import { ClassProfileComponent } from './root/class/classProfile/classProfile.component';
 import { UserProfileComponent } from './root/user/userProfile/userProfile.component';
-
-
 import {MultiSelectModule} from 'primeng/multiselect';
 import { ButtonModule } from 'primeng/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { VideoPlayerComponent } from './root/videoPlayer/video-player.component';
-
-
 import { TranslateLoader,TranslateModule, } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
-import { MultilingualComponent } from './root/sharedModule/Multilingual/multilingual.component';
-
 import { SideBarComponent } from './user-template/side-bar/side-bar.component';
 import { CreatePostComponent } from './root/createPost/createPost.component';
-
 import {StepsModule} from 'primeng/steps';
 import { ToastModule } from "primeng/toast";
 import { CreateClassComponent } from './root/class/createClass/createClass.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { CreateCourseComponent } from './root/course/createCourse/createCourse.component';
 import { SharedModule } from './root/sharedModule/shared.module';
-
 import { PreloadAllModules } from '@angular/router'; 
 import { CommonModule, DatePipe } from '@angular/common';
 import { MyEarningsComponent } from './root/myEarnings/myEarnings.component';
 import { ReelsViewComponent } from './root/reels/reelsView.component';
 import { BlockUIModule } from 'ng-block-ui';
 import { ChipsModule } from 'primeng/chips';
-
 import { MatDialogModule } from '@angular/material/dialog';
 import { UserFollowersComponent } from './root/user/userFollowers/userFollowers.component';
 import { SchoolFollowersComponent } from './root/school/schoolFollowers/schoolFollowers.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { ModalDirective } from 'ngx-bootstrap/modal';
 import { CalendarModule } from 'primeng/calendar';
-
 import { ChatComponent } from './root/chat/chat.component';
-import { AdminModule } from './admin/admin.module';
 import { PostViewComponent } from './root/postView/postView.component';
 import { CourseProfileComponent } from './root/course/courseProfile/courseProfile.component';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
@@ -73,10 +60,6 @@ import { GlobalSearchComponent } from './root/globalSearch/globalSearch.componen
 import { PickerModule } from '@ctrl/ngx-emoji-mart'
 import { StudentListComponent } from './root/students/studentList.component';
 import { ChatVideoComponent } from './root/chatVideo/chatVideo.component';
-import { registerLocaleData } from '@angular/common';
-import localeTr from '@angular/common/locales/tr';
-import localeEs from '@angular/common/locales/es';
-import localeAr from '@angular/common/locales/ar';
 import { FaqComponent } from './root/faq/faq.component';
 import { AboutUsComponent } from './root/aboutUs/aboutUs.component';
 import { PrivecyPolicyComponent } from './root/privacyPolicy/privacyPolicy.component';
@@ -93,7 +76,6 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
 import {LazyLoadImageModule} from 'ng-lazyload-image'
 import { VideoJsComponent } from './root/videojs/videojs.component';
 import { UploadCertificateComponent } from './root/UploadCertificates/uploadCertificate.component';
-
 import { DialogModule } from "primeng/dialog";
 import { SidebarModule } from 'primeng/sidebar';
 import { TooltipModule } from 'primeng/tooltip';
@@ -110,21 +92,9 @@ import { AppContactComponent } from './root/FlutterStaticPages/contact/contact.c
 import { AppDeliveryAndReturnComponent } from './root/FlutterStaticPages/deliveryAndReturn/deliveryAndReturn.component';
 import { AppDsaForStudentsComponent } from './root/FlutterStaticPages/dsaForStudents/dsaForStudents.component';
 import { AppDsaForSchoolComponent } from './root/FlutterStaticPages/dsaForSchool/dsaForSchool.component';
-
-
 export const options: Partial<IConfig> = {
   thousandSeparator: "'"
 };
-
-
-
-// import { MetaModule } from '@ngx-meta/core';
-// import { PickerComponent } from '@ctrl/ngx-emoji-mart';
-
-// import { AdminSideBarComponent } from './admin/admin-template/side-bar/adminSide-bar.component';
-// registerLocaleData(localeEs, 'es');
-// registerLocaleData(localeTr, 'tr');
-// registerLocaleData(localeAr, 'ar');
 
 const routes: Routes = [
 
@@ -196,9 +166,6 @@ const routes: Routes = [
   {
     path: 'appDsaForStudents/:lang',component:AppDsaForStudentsComponent
   },
-  
-
-
 ];
 
 @NgModule({
@@ -261,10 +228,6 @@ const routes: Routes = [
     AppDeliveryAndReturnComponent,
     AppDsaForSchoolComponent,
     AppDsaForStudentsComponent
-
-
-
-
   ],
   imports: [
     CommonModule,
@@ -298,9 +261,6 @@ const routes: Routes = [
     DialogModule,
     SidebarModule,
     TooltipModule,
-    // MetaModule.forRoot(),
-    // PickerComponent,
-    // PdfJsViewerModule,
     TranslateModule.forRoot({
       loader:{
         provide:TranslateLoader,
@@ -313,7 +273,6 @@ const routes: Routes = [
       preloadingStrategy: PreloadAllModules
     })
   ],
-    
   ],
 
   exports: [RouterModule,SharedModule,ModalModule],

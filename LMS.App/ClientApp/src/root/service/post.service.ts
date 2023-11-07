@@ -3,7 +3,6 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
-import { LikeUnlikePost } from "../interfaces/post/likeUnlikePost";
 import { JoinMeetingModel } from "../interfaces/bigBlueButton/joinMeeting";
 import { BigBlueButtonService } from "./bigBlueButton";
 import { UserService } from "./user.service";
@@ -20,7 +19,6 @@ export class PostService{
         return environment.apiUrl;
       }
     constructor(private router: Router, private http: HttpClient, bigBlueButtonService:BigBlueButtonService, userService:UserService) { 
-        debugger
         this._bigBlueButtonService = bigBlueButtonService;
         this._userService = userService;
         this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
@@ -34,11 +32,9 @@ export class PostService{
 
     getClass(classId:string):Observable<any>{
         return this.http.get(`${this.apiUrl}/class/getBasicClassInfo` + '?classId=' + classId,{headers: this.headers});
-
     }
 
     getUser(userId:string):Observable<any>{
-        debugger
         var token = localStorage.getItem("jwt")?? '';
         this.headers = new HttpHeaders().set("Authorization", "Bearer " + token);
         return this.http.get(`${this.apiUrl}/users/getBasicUserInfo` + '?userId=' + userId,{headers: this.headers});
@@ -46,7 +42,6 @@ export class PostService{
 
     getCourse(courseId:string):Observable<any>{
         return this.http.get(`${this.apiUrl}/course/getBasicCourseInfo` + '?courseId=' + courseId,{headers: this.headers});
-
     }
 
     createPost(credentials:any): Observable<any> {
@@ -123,19 +118,16 @@ export class PostService{
     }
 
     GetSavedSliderReelsByUserId(userId:string,postId:string,scrollType:number){
-        debugger
         let queryParams = new HttpParams().append("userId",userId).append("postId",postId).append("scrollType",scrollType);
         return this.http.get(`${this.apiUrl}/posts/getSavedSliderReelsByUserId`, {params:queryParams,headers: this.headers}
         );
     }
     GetSharedSliderReelsByUserId(userId:string,postId:string,scrollType:number){
-        debugger
         let queryParams = new HttpParams().append("userId",userId).append("postId",postId).append("scrollType",scrollType);
         return this.http.get(`${this.apiUrl}/posts/getSharedSliderReelsByUserId`, {params:queryParams,headers: this.headers}
         );
     }
     GetLikedSliderReelsByUserId(userId:string,postId:string,scrollType:number){
-        debugger
         let queryParams = new HttpParams().append("userId",userId).append("postId",postId).append("scrollType",scrollType);
         return this.http.get(`${this.apiUrl}/posts/getLikedSliderReelsByUserId`, {params:queryParams,headers: this.headers}
         );
@@ -170,7 +162,6 @@ export class PostService{
     }
 
     deletePost(id:string):Observable<any>{
-        debugger
         this.token = localStorage.getItem("jwt")?? '';
         this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         return this.http.post(`${this.apiUrl}/posts/deletePost` + '?id=' + id, '',{headers: this.headers});
@@ -181,7 +172,6 @@ export class PostService{
         this.joinMeetingViewModel.name = name;
         this.joinMeetingViewModel.meetingId = meetingId;
         this._bigBlueButtonService.joinMeeting(this.joinMeetingViewModel).subscribe((response) => {
-         debugger
          const fullNameIndex = response.url.indexOf('fullName='); // find the index of "fullName="
          const newUrl = response.url.slice(fullNameIndex);
          this.router.navigate(
@@ -225,13 +215,11 @@ export class PostService{
       }
 
     updateCommentThrottling(postId:string, noOfComments:number):Observable<any>{
-        debugger
       let queryParams = new HttpParams().append("postId",postId).append("noOfComments",noOfComments);
       return this.http.post(`${this.apiUrl}/posts/updateCommentThrottling`,null, {params:queryParams,headers: this.headers});    
     }
 
     saveStreamAsPost(postId:string):Observable<any>{
-        debugger
       return this.http.post(`${this.apiUrl}/posts/saveStreamAsPost` + '?postId=' + postId, '',{headers: this.headers});
     }
 

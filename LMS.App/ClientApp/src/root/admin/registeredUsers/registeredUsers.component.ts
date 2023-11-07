@@ -12,8 +12,6 @@ import { MultilingualComponent, changeLanguage } from 'src/root/root/sharedModul
 import { Subject, Subscription } from 'rxjs';
 import { AuthService } from 'src/root/service/auth.service';
 import { SignalrService } from 'src/root/service/signalr.service';
-
-
 export const banUnbanUserProgression = new Subject<{userId: string}>();
 
 
@@ -26,7 +24,6 @@ export class RegisteredUsersComponent extends MultilingualComponent implements O
 
   private _adminService;
   private _signalRService;
-
   private _authService;
   isSubmitted: boolean = false;
   registeredUsers!:RegisteredUsers[];
@@ -108,7 +105,6 @@ export class RegisteredUsersComponent extends MultilingualComponent implements O
         this._adminService.banUnbanUser(this.banUnbanUser).subscribe((response) => {
           this.InitializeBanUnbanUser();
           this.ngOnInit();
-          debugger
           this._signalRService.logoutBanUser(this.userIdForLogout)
         });  
 
@@ -121,10 +117,7 @@ export class RegisteredUsersComponent extends MultilingualComponent implements O
         }
         else{
           this.verifyUsers.isVerify = false;
-
         }
-
-        
       }
 
       verifyUser(){
@@ -133,15 +126,11 @@ export class RegisteredUsersComponent extends MultilingualComponent implements O
           this.InitializeVerifyUser();
           this.ngOnInit();
         }); 
-
       }
      
       viewUserProfile(userId:string){
         window.location.href=`user/userProfile/${userId}`;
-
       }
-
-      // Rest of your component code...
     
       search(event: any) {
         this.table.filterGlobal(event.target.value, 'contains');

@@ -39,7 +39,6 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
   classDeletedOrNot!:boolean
 
   
-  // constructor(injector: Injector,private fb: FormBuilder,private http: HttpClient,adminService: AdminService,authService: AuthService, signalRService: SignalrService) {
   constructor(injector: Injector,private fb: FormBuilder,signalRService: SignalrService,private http: HttpClient,adminService: AdminService,authService: AuthService,classService:ClassService,private translateService: TranslateService,public messageService: MessageService) {
     super(injector);
     this._adminService = adminService;
@@ -54,7 +53,6 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
     this._authService.loginAdminState$.next(true);
     this.translate.use(this.selectedLanguage ?? '');
         this._adminService.getRegClasses().subscribe((response) => {
-          debugger
           this.registeredClasses = response;
           this.cloned = response.slice(0);
           this.loadingIcon = false;
@@ -102,11 +100,6 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
       deleteClass(){
         this.loadingIcon=true;
         this._classService.deleteClass(this.classId).subscribe((response) => {
-          //ownedClassResponse.next({ classId: this.class.classId, classAvatar: "", className: "", schoolName: "", action: "delete" });
-          // const translatedSuccessSummary = this.translateService.instant('Success');
-          // const translatedMessage = this.translateService.instant('SchoolRestoredSuccessfully');
-          // this.messageService.add({ severity: 'success', summary: translatedSuccessSummary, life: 3000, detail: translatedMessage });
-          // this.loadingIcon = false;
           this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Class deleted successfully' });
           this.loadingIcon = false;
          this.ngOnInit()
@@ -116,11 +109,6 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
       restoreClass(){
         this.loadingIcon = true;
         this._classService.restoreClass(this.classId).subscribe((response) => {
-          //ownedClassResponse.next({ classId: this.class.classId, classAvatar: "", className: "", schoolName: "", action: "delete" });
-          // const translatedSuccessSummary = this.translateService.instant('Success');
-          // const translatedMessage = this.translateService.instant('SchoolRestoredSuccessfully');
-          // this.messageService.add({ severity: 'success', summary: translatedSuccessSummary, life: 3000, detail: translatedMessage });
-          // this.loadingIcon = false;
           this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Class Restored successfully' });
           this.loadingIcon = false;
           this.ngOnInit()
@@ -139,7 +127,6 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
         this._adminService.enableDisableClass(this.enableDisableClass).subscribe((response) => {
           this.InitializeEnableDisableClass();
           this.ngOnInit();
-          debugger;
           this._signalRService.reloadClassCourseProfile(this.classIdForReload)
         });  
 
@@ -147,7 +134,6 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
      
       viewClassProfile(classId:string){
         window.location.href=`user/classProfile/${classId}`;
-
       }
 
       search(event: any) {

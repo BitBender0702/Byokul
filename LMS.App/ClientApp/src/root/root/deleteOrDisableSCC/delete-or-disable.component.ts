@@ -1,6 +1,5 @@
 import { Component, Injector, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { MultilingualComponent, changeLanguage } from "../sharedModule/Multilingual/multilingual.component";
 import { Subscription } from "rxjs";
@@ -14,7 +13,7 @@ import { Subscription } from "rxjs";
 
 export class DeleteOrDisableComponent extends MultilingualComponent implements OnInit, OnDestroy {
 
-    constructor(private translateService: TranslateService, private route: ActivatedRoute, public messageService: MessageService, injector: Injector) {
+    constructor(private route: ActivatedRoute, public messageService: MessageService, injector: Injector) {
         super(injector);
     }
 
@@ -22,22 +21,16 @@ export class DeleteOrDisableComponent extends MultilingualComponent implements O
     schoolDisabled: boolean = false;
     schoolDisabledAndDeleted:boolean=false;
     schoolBanByAdmin:boolean=false;
-
     classDeleted: boolean = false;
     classDisabled: boolean = false;
     classDisabledAndDeleted:boolean=false;
     classDisabledByAdmin:boolean=false;
-
     courseDeleted: boolean = false;
     courseDisabled: boolean = false;
     courseDisabledByAdmin: boolean = false;
-
     courseDisabledAndDeleted:boolean=false;
-
     userBan:boolean = false;
     userId=''
-    
-  
     schoolName:string=''
     className:string=''
     courseName:string=''
@@ -71,15 +64,6 @@ export class DeleteOrDisableComponent extends MultilingualComponent implements O
             this.userId = userId;
         });
 
-        // if(this.schoolName != undefined && this.disabledOrDeleted == "disabled"){
-        //     this.schoolDisabled = true;
-        // }
-
-        // if(this.schoolName != undefined && this.disabledOrDeleted == "deleted"){
-        //     this.schoolDeleted = true;
-        // }
-
-
         if(this.schoolName != undefined && this.isDeleted=="false" && this.isDisabled=="true"){
             this.schoolDisabled = true;
         }
@@ -95,16 +79,6 @@ export class DeleteOrDisableComponent extends MultilingualComponent implements O
         if(this.schoolName != undefined && this.isDeleted=="true" && this.isDisabled=="true"){
             this.schoolDisabledAndDeleted = true;
         }
-
-
-
-        // if(this.className != undefined && this.disabledOrDeleted == "disabled"){
-        //     this.classDisabled = true;
-        // }
-
-        // if(this.className != undefined && this.disabledOrDeleted == "deleted"){
-        //     this.classDeleted = true;
-        // }
 
         if(this.className != undefined && this.isDeleted=="false" && this.isDisabled=="true"){
             this.classDisabled = true;
@@ -124,19 +98,8 @@ export class DeleteOrDisableComponent extends MultilingualComponent implements O
 
         if(this.userId != undefined && this.isDeleted=="true" && this.isDisabled=="true"){
             this.userBan = true
-         }
+        }
 
-
-
-
-        // if(this.courseName != undefined && this.disabledOrDeleted == "disabled"){
-        //     this.courseDisabled = true;
-        // }
-
-        // if(this.courseName != undefined && this.disabledOrDeleted == "deleted"){
-        //     this.courseDeleted = true;
-        // }
-       
         if(this.courseName != undefined && this.isDeleted=="false" && this.isDisabled=="true"){
             this.courseDisabled = true;
         }
@@ -157,7 +120,7 @@ export class DeleteOrDisableComponent extends MultilingualComponent implements O
             this.changeLanguageSubscription = changeLanguage.subscribe(response => {
               this.translate.use(response.language);
             })
-          }
+        }
     }
 
     ngOnDestroy(): void {

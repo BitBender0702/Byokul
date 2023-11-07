@@ -37,7 +37,7 @@ export class DSAForSchoolComponent extends MultilingualComponent implements OnIn
     }
   }
 
-    back(): void {
-       window.history.back();
-    }
+  back(): void {
+    window.history.back();
+  }
 }

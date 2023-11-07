@@ -2,8 +2,6 @@ import { Component, OnInit,Injector, ViewChild, OnDestroy } from '@angular/core'
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from "@angular/common/http";
 import { AdminService } from 'src/root/service/admin/admin.service';
-import { EnableDisableClassCourse } from 'src/root/interfaces/admin/enableDisableClassCourse';
-import { RegisteredCourses } from 'src/root/interfaces/admin/registeredCourses';
 import { Table } from 'primeng/table';
 import { OpenAdminSideBar } from '../admin-template/side-bar/adminSide-bar.component';
 import { MultilingualComponent, changeLanguage } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
@@ -55,7 +53,6 @@ export class SchoolTransactionsComponent extends MultilingualComponent implement
     this.translate.use(this.selectedLanguage ?? '');
     
     this._adminService.getAllSchoolTransactions().subscribe((response) => {
-      debugger
         this.schoolTransactions = response;
         this.cloned = response.slice(0);
         this.loadingIcon = false;
@@ -74,7 +71,6 @@ export class SchoolTransactionsComponent extends MultilingualComponent implement
           this.changeLanguageSubscription.unsubscribe();
         }
       }
-
 
       search(event: any) {
         this.table.filterGlobal(event.target.value, 'contains');
@@ -95,7 +91,6 @@ export class SchoolTransactionsComponent extends MultilingualComponent implement
 
       cancelSubscription(){
         this._iyizicoService.cancelSubscription(this.cancelSchoolSubscriptionId).subscribe((response: any) => {
-          debugger
           if(response.errorMessage == Constant.Success){
             var message = "Subscription cenceled successfully"
             this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: message });
@@ -112,7 +107,6 @@ export class SchoolTransactionsComponent extends MultilingualComponent implement
 
       reFundPayment(){
         this._iyizicoService.refundPayment(this.refundPaymentId,SchoolClassCourseEnum.School).subscribe((response: any) => {
-        debugger
         if(response.errorMessage == Constant.Success){
           var message = "Refunded successfully"
           this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: message });
@@ -140,9 +134,7 @@ export class SchoolTransactionsComponent extends MultilingualComponent implement
         const workbook = XLSX.utils.book_new();
         const worksheet = XLSX.utils.json_to_sheet(flattenedData);
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    
         const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    
         const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
         const fileName = 'SchoolTransactions.xlsx';
         const link = document.createElement('a');

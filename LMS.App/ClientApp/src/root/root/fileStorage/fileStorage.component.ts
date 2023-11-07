@@ -1,6 +1,6 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Subject, Subscription } from 'rxjs';
@@ -16,16 +16,12 @@ import { UserService } from 'src/root/service/user.service';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
 import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 import { postProgressNotification, postUploadOnBlob } from '../root.component';
-
-
 import { TranslateService } from '@ngx-translate/core';
 import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommentLikeUnlike } from 'src/root/interfaces/chat/commentsLike';
 import { NotificationService } from 'src/root/service/notification.service';
 import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
-
-
 export const fileStorageResponse = new Subject<{ fileStorageResponse: any; availableSpace: number }>();
 
 @Component({
@@ -130,7 +126,6 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   }
 
   ngOnInit(): void {
-    debugger
     this.loadingIcon = true;
     this.isFirstPage = true;
     var selectedLang = localStorage.getItem('selectedLanguage');
@@ -181,7 +176,6 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
 
     if (!this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-        debugger
         this.hamburgerCount = response.hamburgerCount;
       });
     }
@@ -191,7 +185,6 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
 
     if (!this.fileStorageResponseSubscription) {
       this.fileStorageResponseSubscription = fileStorageResponse.subscribe(result => {
-        debugger
         this.isSubmitted = false;
         this.loadingIcon = false;
         this.files = result.fileStorageResponse.concat(this.files);
@@ -206,7 +199,6 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     }
     if(!this.commentDeletdResponseSubscription){
       commentDeleteResponse.subscribe(response =>{
-        debugger;
         let indexOfComment = this.fileComments.findIndex((x:any) => x.id == response.commentId)
         this.fileComments.splice(indexOfComment, 1)
       })
@@ -249,7 +241,6 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
         this.isOwner = false;
       }
     }
-    debugger;
   }
 
   getClassTeachers(classId: string) {
@@ -285,7 +276,6 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
       this.isFoldersEmpty = false;
       this.totalFolderRecords = this.folders.length;
       this._schoolService.getSchool(this.schoolId).subscribe((response: any) => {
-        debugger
         this.availableSpace = response.availableStorageSpace;
 
 
@@ -384,38 +374,9 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
         });
       }
     });
-
-    //   this.loadingIcon = true;
-    //   this.saveFolderForm.controls.parentId.setValue(this.parentId);
-    //   if(this.parentFolderId == ""){
-    //     this.saveFolderForm.controls.parentFolderId.setValue(null);
-    //   }
-    //   else{
-    //     this.saveFolderForm.controls.parentFolderId.setValue(this.parentFolderId);
-    //   }
-    //   var formValues = this.saveFolderForm.value;
-    //   this._fileStorageService.saveFolder(formValues).subscribe((response: any) => {
-    //     this.closeFoldersModal();
-    //   this.isSubmitted = false;
-    //   this.folders.unshift(response);
-    //   this.getFoldersSelectedPage();
-    //   this.totalFolderRecords = this.folders.length;
-    //   this.loadingIcon = false;
-    //   this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Folder added successfully',});
-    // });
   }
 
-  // handleFiles(event: any) {
-  //   debugger;
-  //   var selectedFiles = event.target.files;
-  //   this.isSubmitted = false;
-  //   for (let i = 0; i < selectedFiles.length; i++) {
-  //     this.saveFileViewModel.files.push(selectedFiles[i]);
-  //   }
-  // }
-
   handleFiles(event: any) {
-    debugger;
     var selectedFiles = event.target.files;
     this.isSubmitted = false;
 
@@ -456,29 +417,18 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   }
 
   saveFiles() {
-    debugger
     this.isSubmitted = true;
     if (!this.filesForm.valid) {
       return;
     }
-    // this.loadingIcon = true;
     this.progressBarValue = 0;
     this.cd.detectChanges();
-    // for (var i = 0; i < this.saveFileViewModel.files.length; i++) {
-    //   this.fileSize += this.saveFileViewModel.files[i].size;
-    //   this.filesToUpload.append(
-    //     'files',
-    //     this.saveFileViewModel.files[i]
-    //   );
-    // }
-
     this.filesToUpload.append('parentId', this.parentId);
     if (this.parentFolderId != "") {
       this.filesToUpload.append('folderId', this.parentFolderId);
     }
 
     for (const file of this.saveFileViewModel.files) {
-      // Add the size of the current file to the totalSize variable
       this.totalUploadFilesSize += file.size;
     }
 
@@ -488,7 +438,6 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     else {
       this.loadingIcon = true;
       setTimeout(() => {
-        debugger
         this.closeFilesModal();
         this.loadingIcon = false;
         postProgressNotification.next({ from: Constant.FileStorage });
@@ -496,25 +445,6 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     }
 
     postUploadOnBlob.next({ postToUpload: this.filesToUpload, combineFiles: this.saveFileViewModel.files, videos: null, images: null, attachment: null, type: 4, reel: null, uploadedUrls: [], schoolId: this.schoolId });
-
-    // this._fileStorageService.saveFiles(this.filesToUpload).subscribe(response => {
-    //     this.isSubmitted = false;
-    //     this.loadingIcon = false;
-    //     this.files = response.concat(this.files);
-    //     this.getFilesSelectedPage();
-    //     this.totalFolderRecords = this.files.length;
-    //     this.saveFileViewModel.files = [];
-    //     this.filesToUpload.set('files', '');
-    //     this.messageService.add({
-    //       severity: 'success',
-    //       summary: 'Success',
-    //       life: 3000,
-    //       detail: 'Files added successfully',
-    //     });
-
-    //     this.closeFilesModal();
-    //   });
-
   }
 
   private closeFoldersModal(): void {
@@ -578,7 +508,6 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   }
 
   downloadFile(fileUrl: string, fileName: string) {
-    debugger
     const link = document.createElement('a');
     link.href = fileUrl;
     link.download = fileName;
@@ -806,7 +735,6 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   fileFolderIdForDelete:string = '';
   forFile:boolean = false;
   openFileDeleteModel(fileId:string, issFrom:string){
-    debugger;
     if(issFrom == "file"){
       this.forFile = true;
     } else{
@@ -826,22 +754,11 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
 
 
   deleteComment(item:any){
-    debugger;
-    // this.initializeCommentLikeUnlike();
-    // this.commentLikeUnlike.userId = item.userId;
-    // this.commentLikeUnlike.commentId = item.id;
-    // this.commentLikeUnlike.groupName = item.groupName;
-    // if(this.userId == item.userId){
-    //   this._signalrService.notifyCommentDelete(this.commentLikeUnlike);
-    //   let indexOfComment = this.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId);
-    //   this.post.comments.splice(indexOfComment, 1);
-    // }
     const initialState = { item : item, from : "deleteComment" };
     this.bsModalService.show(DeleteConfirmationComponent, { initialState });
   }
 
   likeUnlikeComments(commentId: string, _isLike: boolean, _isCommentLikedByCurrentUser: boolean, _likeCount: number) {
-    debugger;
     var comment: any[] = this.fileComments;
     var isCommentLiked = comment.find(x => x.id == commentId);
     this.initializeCommentLikeUnlike();
@@ -861,19 +778,13 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
       this.commentLikeUnlike.isLike = true;
       this.commentLikeUnlike.likeCount = isCommentLiked.likeCount;
     }
-    // if(this.sender.id != isCommentLiked.user.id){
       this._signalRService.notifyCommentLike(this.commentLikeUnlike);
-      debugger;
       if(isCommentLiked.user.id != this.sender.id && this.commentLikeUnlike.isLike){
-        debugger;
         var translatedMessage = this.translateService.instant('liked your comment');
         var notificationContent = translatedMessage;
         this._notificationService.initializeNotificationViewModel(isCommentLiked.user.id, NotificationType.CommentSent, notificationContent, this.sender.id, this.files.id, this.files, null, null).subscribe((response) => {
       });
     }
-
-    // }
-    // this._signalRService.sendNotification();
   }
 
   openSearchBox(){
@@ -890,7 +801,5 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     }
 
   }
-
   commentLikeUnlike!: CommentLikeUnlike;
-
 }

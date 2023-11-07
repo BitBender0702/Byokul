@@ -19,9 +19,6 @@ export class SchoolResolverService implements Resolve<any> {
         return of('No data');
       })
     );
-
-    
   }
 
-  
 }

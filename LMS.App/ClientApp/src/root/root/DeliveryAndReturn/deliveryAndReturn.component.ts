@@ -37,7 +37,7 @@ export class DeliveryAndReturnComponent extends MultilingualComponent implements
     }
   }
 
-    back(): void {
-       window.history.back();
-    }
+  back(): void {
+    window.history.back();
+  }
 }

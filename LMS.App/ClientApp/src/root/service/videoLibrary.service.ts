@@ -1,10 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core"; 
-import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
-
-
 
 @Injectable({providedIn: 'root'})
 
@@ -14,7 +11,7 @@ export class VideoLibraryService{
     get apiUrl(): string {
         return environment.apiUrl;
       }
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(private http: HttpClient) {
     this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
     }
 

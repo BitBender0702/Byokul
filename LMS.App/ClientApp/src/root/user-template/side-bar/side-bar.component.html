@@ -1,4 +1,3 @@
-<!-- <div  [ngClass]="{'sidemenu d-xl-block d-block':isOpenSidebar === true,'sidemenu d-xl-block d-none':isOpenSidebar === false}" id="side-bar"> -->
 <div *ngIf="!isUserBanned">
   <p-sidebar [(visible)]="isOpenSidebar" [hidden]="true"></p-sidebar>
 <p-button
@@ -603,20 +602,6 @@
             >English</label
           >
         </div>
-        <!-- <div class="language-btn">
-          <input
-            [attr.checked]="selectedLanguage == 'ar' ? true : null"
-            (click)="switchLanguage('ar')"
-            type="radio"
-            class="btn-check"
-            name="btnradio"
-            id="lang2"
-            autocomplete="off"
-          />
-          <label class="btn btn-outline-primary font_12 rounded-8" for="lang2"
-            >اللغة العربية</label
-          >
-        </div> -->
         <div class="language-btn">
           <input
             [attr.checked]="selectedLanguage == 'tr' ? true : null"
@@ -631,20 +616,6 @@
             >Türkçe</label
           >
         </div>
-        <!-- <div class="language-btn">
-          <input
-            [attr.checked]="selectedLanguage == 'sp' ? true : null"
-            (click)="switchLanguage('sp')"
-            type="radio"
-            class="btn-check"
-            name="btnradio"
-            id="lang4"
-            autocomplete="off"
-          />
-          <label class="btn btn-outline-primary font_12 rounded-8" for="lang4"
-            >Spanish</label
-          >
-        </div> -->
       </div>
       <div class="footer-menu">
         <div class="footer-menu__menu">
@@ -678,7 +649,6 @@
             >{{ "DistanceSalesAgreementForStudents" | translate }}</a
           >
         </div>
-        <!-- <img src="../../../assets/images/logo_band_colored.svg" /> -->
       </div>
     </div>
   </div>
