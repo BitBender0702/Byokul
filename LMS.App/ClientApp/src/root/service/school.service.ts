@@ -4,7 +4,6 @@ import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { FollowUnfollow } from "../interfaces/FollowUnfollow";
 
-
 @Injectable({providedIn: 'root'})
 
 export class SchoolService{
@@ -47,7 +46,6 @@ export class SchoolService{
     }
 
     getSchoolById(schoolName:string):Observable<any>{
-        debugger
         this.token = localStorage.getItem("jwt")?? '';
         this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         const encodedSchoolName = encodeURIComponent(schoolName);
@@ -116,19 +114,16 @@ export class SchoolService{
     }
 
     getSchoolClassCourseList(schoolId:any,pageNumber:number):Observable<any>{
-        // return this.http.get(`${this.apiUrl}/school/getSchoolClassCourse` + '?schoolId=' + schoolId);
         let queryParams = new HttpParams().append("schoolId",schoolId).append("pageNumber",pageNumber);
         return this.http.get(`${this.apiUrl}/school/getSchoolClassCourse`, {params:queryParams,headers: this.headers});
     }
 
     getSchoolClassesList(schoolId:any,pageNumber:number):Observable<any>{
-        // return this.http.get(`${this.apiUrl}/school/getSchoolClassCourse` + '?schoolId=' + schoolId);
         let queryParams = new HttpParams().append("schoolId",schoolId).append("pageNumber",pageNumber);
         return this.http.get(`${this.apiUrl}/school/getSchoolClasses`, {params:queryParams,headers: this.headers});
     }
 
     getSchoolCoursesList(schoolId:any,pageNumber:number):Observable<any>{
-        // return this.http.get(`${this.apiUrl}/school/getSchoolClassCourse` + '?schoolId=' + schoolId);
         let queryParams = new HttpParams().append("schoolId",schoolId).append("pageNumber",pageNumber);
         return this.http.get(`${this.apiUrl}/school/getSchoolCourses`, {params:queryParams,headers: this.headers});
     }
@@ -193,7 +188,6 @@ export class SchoolService{
     }
 
     enableDisableSchool(schoolId:string):Observable<any>{
-        debugger
         return this.http.post(`${this.apiUrl}/school/enableDisableSchool`+ '?schoolId=' + schoolId,'',{headers: this.headers});
     }
 
@@ -209,7 +203,6 @@ export class SchoolService{
     }
 
     GetSliderReelsBySchoolId(schoolId:string,postId:string,scrollType:number){
-        debugger
         let queryParams = new HttpParams().append("schoolId",schoolId).append("postId",postId).append("scrollType",scrollType);
         return this.http.get(`${this.apiUrl}/school/getSliderReelsBySchoolId`, {params:queryParams,headers: this.headers}
         );
@@ -234,12 +227,6 @@ export class SchoolService{
         let queryParams = new HttpParams().append("schoolId",schoolId).append("filesSizeInGigabyte",filesSizeInGb);
         return this.http.get(`${this.apiUrl}/school/isAvailableStorageSpace`, {params:queryParams,headers: this.headers})
     }
-
-
-    // getBannedUser(schoolId:string):Observable<any>{
-    //     let queryParams = new HttpParams().append("schoolId",schoolId);
-    //     return this.http.get(`${this.apiUrl}/school/getBannedUser`, {params:queryParams,headers: this.headers})
-    // }
 
     getBannedUser(schoolId:string,pageNumber:number,searchString:string):Observable<any>{
         let queryParams = new HttpParams().append("schoolId",schoolId).append("pageNumber",pageNumber).append("searchString",searchString);

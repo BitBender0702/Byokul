@@ -554,19 +554,6 @@
                           [src]="item.school?.avatar"
                           class="rounded-circle ms-2 image_style"
                       /></span>
-                      <!-- <span
-                        *ngIf="
-                          item.course == null && item.class?.avatar != 'null'
-                        "
-                        ><img
-                          [routerLink]="[
-                            '/profile/class',
-                            item.class?.school.schoolName,
-                            item.class?.className
-                          ]"
-                          [src]="item.class?.avatar"
-                          class="rounded-circle ms-2 image_style"
-                      /></span> -->
                     </span>
                     <span
                       class="followe_report d-inline-flex align-items-center"
@@ -671,9 +658,6 @@
               </li>
             </ul>
           </div>
-            <!-- <div class="wht_newbox followers_box earning-transactions">
-              <ul class="list-unstyled before-none mb-0"></ul>
-            </div> -->
           </div>
           <div
             class="tab-pane fade show"

@@ -183,9 +183,6 @@
                   /></a>
                 </td>
                 <td>
-                  <!-- {{ course.createdOn | date : "MMMM d, y" }} at
-                  {{ course.createdOn | date : "H:mm" }} -->
-
                   {{ course.createdOn| ChangeTimeZonePipe | date : "MMMM" | translate}}
                   {{course.createdOn| ChangeTimeZonePipe | date:"d, y"}}
                   {{ "at" | translate }} {{ course.createdOn| ChangeTimeZonePipe | date : "H:mm a" }}
@@ -332,9 +329,6 @@
     </div>
   </div>
 </div>
-
-
-
 
 <div
 class="modal fade edit-school-modal delete-modal"

@@ -11,7 +11,7 @@ import { MultilingualComponent } from '../sharedModule/Multilingual/multilingual
 
 export class FaqComponent extends MultilingualComponent {
 
-    back(): void {
-       window.history.back();
-    }
+  back(): void {
+    window.history.back();
+  }
 }

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { SchoolService } from 'src/root/service/school.service';
 import { TeacherService } from 'src/root/service/teacher.service';
@@ -39,8 +39,6 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
   changeLanguageSubscription!: Subscription;
   disabled: boolean = true;
   createTeacherForm!: FormGroup;
-
-  // here from permissions
   schoolList: any;
   classList: any;
   courseList: any;
@@ -71,7 +69,6 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
   }
 
   ngOnInit(): void {
-    debugger
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
     this.translate.use(this.selectedLanguage ?? '');
 
@@ -81,32 +78,16 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
     this.isEdit = this.officialInfo.isEdit;
     this.schoolName = this.officialInfo.schoolName;
 
-    //get school followers
-
     this._schoolService.getAllSchoolFollowers(this.schoolId).subscribe((response: any) => {
-      debugger
       this.schoolFollowers = response;
     });
 
     this.selectedSchools.push(this.schoolId);
-
-    // this._schoolService.getUserAllSchools(this.userId).subscribe((schoolList) => {    
-    //   this.schoolList = schoolList;
-    //   // this.loadingIcon = false;
-    // });
-
-    // getClassesAndCourses(event:any){
-    //   if(this.selectedSchools.length > 0 && !this.allSchoolSelected){
-    //      if(this.selectedSchools != undefined){
-    //       var a = this.selectedSchools;
     this._schoolService.getSchoolClassCourseForOfficials(this.schoolId).subscribe((result) => {
       debugger
       this.classList = result.classes;
       this.courseList = result.courses;
     });
-    //   }
-    // }
-    // }
 
     this._teacherService.getAllPermissions().subscribe((permissions) => {
       this.permissions = permissions;
@@ -139,14 +120,11 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
 
 
       this._teacherService.getTeacherPermissions(this.userId, this.schoolId).subscribe((permissions) => {
-        debugger
         this.selectedClasses = permissions.classIds;
         this.selectedCourses = permissions.courseIds;
         this.schoolPermissions = permissions.schoolPermissionIds
         this.classPermissions = permissions.classPermissionIds;
         this.coursePermissions = permissions.coursePermissionIds;
-
-
         setTimeout(() => {
           for (const permission of this.permissions) {
             permission.isSelectedSchoolPermission = this.schoolPermissions.includes(permission.id);
@@ -157,7 +135,6 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
       });
       this.cd.detectChanges();
     }
-
   }
 
   ngOnDestroy(): void {
@@ -167,7 +144,6 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
   }
 
   close(): void {
-    debugger
     this.bsModalService.hide();
   }
 
@@ -188,7 +164,6 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
   }
 
   filterUsers(event: any) {
-    debugger
     let filtered: any[] = [];
     let query = event.query;
     for (let i = 0; i < this.schoolFollowers.length; i++) {
@@ -283,7 +258,6 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
     } else{
       this.classPermissions.push(permissionId);
     }
-    debugger
   }
 
   getCoursePermissions(permissionId: string) {
@@ -296,18 +270,12 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
   }
 
   addOfficial() {
-    debugger
     this.isSubmitted = true;
     if (!this.createTeacherForm.valid) {
       return;
     }
     this.loadingIcon = true;
     var teacherInfo = this.createTeacherForm.value;
-    // this.addTeacherViewmodel.firstName = teacherInfo.firstName;
-    // this.addTeacherViewmodel.lastName = teacherInfo.lastName;
-    // this.addTeacherViewmodel.email = teacherInfo.email;
-    // this.addTeacherViewmodel.gender = Number(teacherInfo.gender);
-    // this.addTeacherViewmodel.isAllSchoolSelected = this.allSchoolSelected;
     this.addOfficialViewmodel.userId = teacherInfo.user.userId;
     this.addOfficialViewmodel.ownerId = this.loginUserId;
     this.addOfficialViewmodel.schoolId = this.schoolId;
@@ -369,7 +337,6 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
     }
     if (this.isEdit) {
       this._teacherService.updateOfficial(this.addOfficialViewmodel).subscribe((result) => {
-        debugger
         this.bsModalService.hide();
         this.loadingIcon = false;
         addTeacherResponse.next({ isEdit: true });
@@ -378,7 +345,6 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
     }
     else {
       this._teacherService.addOfficial(this.addOfficialViewmodel).subscribe((result) => {
-        debugger
         this.bsModalService.hide();
         this.loadingIcon = false;
         var userInfo = this.schoolFollowers.find((x: { userId: string; }) => x.userId == this.addOfficialViewmodel.userId);
@@ -386,7 +352,6 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
         var notificationContent = "has added you as Teacher."
         var postId = Constant.defaultGuid;
         this.initializeNotificationViewModel(this.addOfficialViewmodel.userId, NotificationType.TeacherAdded, notificationContent, postId);
-        debugger;
         this._signalrService.addTeacher(result.teacherId);
       });
 
@@ -394,10 +359,9 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
   }
 
   initializeNotificationViewModel(userid: string, notificationType: NotificationType, notificationContent: string, postId: string, postType?: number, post?: any) {
-    debugger
     this._userService.getUser(this.loginUserId).subscribe((response) => {
       this.notificationViewModel = {
-        id: '00000000-0000-0000-0000-000000000000',
+        id: Constant.defaultGuid,
         userId: userid,
         actionDoneBy: this.loginUserId,
         avatar: response.avatar,
@@ -409,12 +373,9 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
         post: post,
         followersIds: null
       }
-      debugger;
       this._signalrService.sendNotification(this.notificationViewModel);
     });
   }
-
-
 
 }
 

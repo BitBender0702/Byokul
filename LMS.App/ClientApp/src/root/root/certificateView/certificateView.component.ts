@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Observable } from 'rxjs';
 import { UserService } from 'src/root/service/user.service';
 
 @Component({
@@ -20,11 +19,9 @@ import { UserService } from 'src/root/service/user.service';
     isDataLoaded:boolean = false;
     pdfSrc!: Uint8Array;
     from!:number;
-
     URL!:string;
     image!:Blob;
     imageURL!:SafeUrl;
-
     certi:any;
     private _userService;
     response!:any;

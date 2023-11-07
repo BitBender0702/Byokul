@@ -177,12 +177,10 @@
                   {{ class.className }}
                 </td>
                 <td>
-                  <!-- {{ class.startDate | date : "MMMM d, y" }} -->
                   {{ class.startDate| ChangeTimeZonePipe | date : "MMMM" | translate}}
                   {{class.startDate| ChangeTimeZonePipe| date:"d, y"}}
                 </td>
                 <td>
-                  <!-- {{ class.endDate | date : "MMMM d, y" }} -->
                   {{ class.endDate| ChangeTimeZonePipe | date : "MMMM" | translate}}
                   {{class.endDate | ChangeTimeZonePipe | date:"d, y"}}
                 </td>
@@ -204,14 +202,11 @@
                   /></a>
                 </td>
                 <td>
-                  <!-- {{ class.createdOn | date : "MMMM d, y" }}
-                  {{ "at" | translate }} {{ class.createdOn | date : "H:mm" }} -->
                   {{ class.createdOn|ChangeTimeZonePipe | date : "MMMM" | translate}}
                   {{class.createdOn| ChangeTimeZonePipe| date:"d, y"}}
                   {{ "at" | translate }} {{ class.createdOn| ChangeTimeZonePipe | date : "H:mm a" }}
                 </td>
                 <td>{{ class.createdBy }}</td>
-
                 <td>
                   <button
                     *ngIf="!class.isEnable"
@@ -238,8 +233,6 @@
                     {{ "Enable" | translate }}
                   </button>
                 </td>
-
-
                 <td>
                   <button
                     *ngIf="!class.isDeleted"
@@ -266,7 +259,6 @@
                     {{ "Restore" | translate }}
                   </button>
                 </td>
-              
               </tr>
             </ng-template>
             <ng-template pTemplate="summary">

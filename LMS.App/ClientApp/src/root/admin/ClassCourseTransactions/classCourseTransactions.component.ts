@@ -55,7 +55,6 @@ export class ClassCourseTransactionsComponent extends MultilingualComponent impl
     this.translate.use(this.selectedLanguage ?? '');
     
     this._adminService.getAllClassCourseTransactions().subscribe((response) => {
-      debugger
         this.classCourseTransactions = response;
         this.cloned = response.slice(0);
         this.loadingIcon = false;
@@ -95,7 +94,6 @@ export class ClassCourseTransactionsComponent extends MultilingualComponent impl
 
       reFundPayment(){
         this._iyizicoService.refundPayment(this.refundPaymentId,SchoolClassCourseEnum.Class).subscribe((response: any) => {
-        debugger
         if(response.errorMessage == Constant.Success){
           var message = "Refunded successfully"
           this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: message });
@@ -125,9 +123,7 @@ export class ClassCourseTransactionsComponent extends MultilingualComponent impl
         const workbook = XLSX.utils.book_new();
         const worksheet = XLSX.utils.json_to_sheet(flattenedData);
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    
         const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    
         const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
         const fileName = 'ClassAndCourseTransactions.xlsx';
         const link = document.createElement('a');

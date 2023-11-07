@@ -7,8 +7,6 @@ import { AuthenticatedResponse } from 'src/root/interfaces/auth_response';
 import { RegisterModel } from 'src/root/interfaces/register';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { BehaviorSubject, finalize, Subject } from 'rxjs';
-
-
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { UserService } from 'src/root/service/user.service';
 import { Country, State, City } from 'country-state-city';
@@ -17,10 +15,6 @@ import { Turkish } from 'flatpickr/dist/l10n/tr';
 import { Arabic } from 'flatpickr/dist/l10n/ar';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import 'flatpickr/dist/flatpickr.min.css';
-
-
-
-
 export const registrationResponse =new BehaviorSubject <boolean>(false);  
 
 
@@ -41,19 +35,10 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
     invalidRegister!: boolean;
     isSubmitted: boolean = false;
     user: any = {};
-    //EMAIL_PATTERN = '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$';
-    // EMAIL_PATTERN = '^[a-zA-Z0-9\.a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]{2,3}$';
     EMAIL_PATTERN = '[a-zA-Z0-9]+?(\\.[a-zA-Z0-9]+)*@[a-zA-Z]+\\.[a-zA-Z]{2,3}';
-
-    // PASSWORD_PATTERN = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]+$';
-    //PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
-
     PASSWORD_PATTERN = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).*';
-    // PASSWORD_PATTERN = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=[\\]{};:\'\"\\|,.<>/?])[A-Za-z\\d!@#$%^&*()_+\\-=[\\]{};:\'\"\\|,.<>/?]+$';
-
     selectedLanguage: any;
     loadingIcon:boolean = false;
-
     isConfirmPasswordDirty = false;
     isRegister!:boolean;
     currentDate!:string;
@@ -66,8 +51,6 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
     @ViewChild('passwordInput') passwordInput!: ElementRef<HTMLInputElement>;
     @ViewChild('confirmPasswordInput') confirmPasswordInput!: ElementRef<HTMLInputElement>;
     @ViewChild('dateOfBirth') dateOfBirthRef!: ElementRef;
-
-
     date = new Date();
     credentials: RegisterModel = {email:'', password:'',confirmPassword:'',firstName:'',lastName:'',gender:0,dob: ''};
     private _authService;
@@ -79,12 +62,6 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
     }
 
     ngAfterViewInit() {
-      // this.cd.detectChanges();
-      // const options = {
-      //   locale: Turkish, // Set the Turkish language for the calendar
-      //   dateFormat: 'Y-m-d', // Customize the date format if needed
-      // };
-      // flatpickr(this.licenceDateInput.nativeElement, options);
     }
 
     ngOnInit(): void {
@@ -102,12 +79,6 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
         this.cd.detectChanges();
         var selectedLanguage = localStorage.getItem("selectedLanguage");
         this.translate.use(selectedLanguage ?? '');
-        // if(selectedLanguage == "en"){
-        //   var locale = null;
-        // }
-        // if(selectedLanguage == "ar"){
-        //   var locale = Arabic;
-        // }
         const currentDate = new Date().toLocaleDateString('en-US', {
           month: '2-digit',
           day: '2-digit',
@@ -137,7 +108,6 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
         countryName: this.fb.control('', [Validators.required]),
         stateName: this.fb.control('', [Validators.required]),
       }
-      // , {validator: this.dateLessThan('dob',this.currentDate)}
       );
     }
 
@@ -166,22 +136,6 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
         this.isConfirmPasswordVisible=false;
       }
 
-      // dateLessThan(from: string, currentDate:string) {
-      //   return (group: FormGroup): {[key: string]: any} => {
-      //    let f = group.controls[from];
-      //    if(f.value ==""){
-      //     return {};
-
-      //    }
-      //    if (f.value > currentDate || f.value < "1903-12-31") {
-      //      return {
-      //        dates: `Please enter valid date`
-      //      };
-      //    }
-      //    return {};
-      //   }
-      // }
-
     matchPassword(){
       if(this.password?.value!=this.confirmPassword?.value){
         return true;
@@ -190,14 +144,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
       return false
     }
 
-  //  omit_special_char(event:any)
-  //  {   
-  //     var k;  
-  //     k = event.charCode;
-  //     return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32) && !(k >= 48 && k <= 57);
-  //   }
   omit_special_char(event: any) {
-    debugger
     const regex = /[\p{L}\p{M}\s]/u;
     if (event.key && event.key.match(regex)) {
       return true;
@@ -210,7 +157,6 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
 
     register(){
       this.user = this.registrationForm.value;
-
       const str = "example-string";
       const containsHyphen = str.includes("-");
 

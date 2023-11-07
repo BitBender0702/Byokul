@@ -83,7 +83,6 @@ export class AdminSideBarComponent extends MultilingualComponent implements OnIn
 
 
   selectTab(event?:Event){
-    debugger;
     let clickedTab = event?.currentTarget as HTMLElement
     let allTabs = document.querySelectorAll('.routeLink');
     allTabs.forEach(tab => {
@@ -94,7 +93,6 @@ export class AdminSideBarComponent extends MultilingualComponent implements OnIn
   }
 
   chechFromUrl(){
-    debugger
     let allTabs = document.querySelectorAll('.routeLink');
     allTabs.forEach(tab => {
       tab.classList.remove('active');
@@ -129,15 +127,5 @@ export class AdminSideBarComponent extends MultilingualComponent implements OnIn
     if(reloadedTab == "adminHome"){
       allTabs[0].classList.add('active');
     }
-
-
-
-
-
-
-
-    // clickedTab?.classList.add('active')
   }
-
-
 }

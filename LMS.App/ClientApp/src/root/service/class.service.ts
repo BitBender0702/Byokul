@@ -144,7 +144,6 @@ export class ClassService{
     }
 
     enableDisableClass(classId:string):Observable<any>{
-        debugger
         return this.http.post(`${this.apiUrl}/class/enableDisableClass`+ '?classId=' + classId,'',{headers: this.headers});
     }
 
@@ -156,7 +155,6 @@ export class ClassService{
   
 
     GetSliderReelsByClassId(classId:string,postId:string,scrollType:number){
-        debugger
         let queryParams = new HttpParams().append("classId",classId).append("postId",postId).append("scrollType",scrollType);
         return this.http.get(`${this.apiUrl}/class/getSliderReelsByClassId`, {params:queryParams,headers: this.headers}
         );
@@ -169,12 +167,10 @@ export class ClassService{
 
 
     courseRating(classRating:any):Observable<any>{
-        debugger;
         return this.http.post(`${this.apiUrl}/class/classRating`,classRating, {headers: this.headers});
     }
 
     banUnbanStudentFromClass(banUnbanStudentFromClass:any):Observable<any>{
-        debugger;
         return this.http.post(`${this.apiUrl}/class/banUnbanStudentFromClass`,banUnbanStudentFromClass, {headers: this.headers});
     }
 

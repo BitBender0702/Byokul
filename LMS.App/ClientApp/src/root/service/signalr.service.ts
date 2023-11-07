@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { getuid } from 'process';
 import { Subject } from 'rxjs';
-import { json } from 'stream/consumers';
-import { ChartModel } from '../interfaces/chat/ChatModel';
 import { CommentLikeUnlike } from '../interfaces/chat/commentsLike';
 import { CommentViewModel } from '../interfaces/chat/commentViewModel';
 import { NotificationViewModel } from '../interfaces/notification/notificationViewModel';
-import { NotificationService } from './notification.service';
 import { CustomXhrHttpClient } from './signalr.httpclient';
 import { UserService } from './user.service';
 import { unreadChatResponse } from '../user-template/side-bar/side-bar.component';
@@ -123,14 +119,12 @@ export class SignalrService {
   }
 
   sendToUser(model: any) {
-    debugger
     this.hubConnection?.invoke('SendToUser', model)
       .catch((err) => console.error(err));
   }
 
   askServerListener() {
     this.hubConnection?.on('ReceiveMessage', (user, message) => {
-      debugger
       signalRResponse.next({
         id: user.id,
         receiver: 'test',
@@ -157,7 +151,6 @@ export class SignalrService {
     });
 
     this.hubConnection?.on('ReceiveMessageFromGroup', (model) => {
-      debugger
       commentResponse.next({
         id:model.id,
         senderAvatar: model.userAvatar,
@@ -183,7 +176,6 @@ export class SignalrService {
 
     this.hubConnection?.on('NotifyCommentDelete',
     (commentId) => {
-      debugger;
       commentDeleteResponse.next({
         commentId: commentId
       });
@@ -198,7 +190,6 @@ export class SignalrService {
 
     this.hubConnection?.on('NotifyPostViewToReceiver',
     (isAddView,userId) => {
-      debugger
       postViewResponse.next({
         isAddView:isAddView,
         userId:userId
@@ -214,14 +205,12 @@ export class SignalrService {
 
     this.hubConnection?.on('NotifyEndMeetingToReceiver',
     (response) => {
-      debugger
       endMeetingResponse.next({});         
     });
 
     
     this.hubConnection?.on('ReceiveNotification',
     (model) => {
-      debugger
       notificationResponse.next(model);
     });
 
@@ -258,18 +247,15 @@ export class SignalrService {
 
     this.hubConnection?.on('NotifyAddTeacher',
     (userId) => {
-      debugger
       notiFyTeacherResponse.next({userId: userId});
     });
 
 
     this.hubConnection?.on('LogoutBanUser', (userId)=>{
-      debugger;
       banUnbanUserProgression.next({userId: userId})
     })
 
     this.hubConnection?.on('ReloadClassCourseProfile', (reloadClassCourseProfile)=>{
-      debugger;
       disableEnableResponse.next({reloadClassCourseProfile: reloadClassCourseProfile})
     })
 
@@ -288,13 +274,11 @@ export class SignalrService {
   }
 
   notifyCommentLike(model:CommentLikeUnlike) {
-    debugger;
     this.hubConnection?.invoke('NotifyCommentLike', model)
       .catch((err) => console.error(err));
   }
 
   notifyCommentDelete(model:CommentLikeUnlike) {
-    debugger;
     this.hubConnection?.invoke('DeleteCommentById', model)
       .catch((err) => console.error(err));
   }
@@ -305,13 +289,11 @@ export class SignalrService {
   }
 
   notifyEndMeeting(groupName:string) {
-    debugger
     this.hubConnection?.invoke('NotifyEndMeeting', groupName)
       .catch((err) => console.error(err));
   }
 
   notifyPostView(groupName:string,userId:string) {
-    debugger
     this.hubConnection?.invoke('notifyPostView', groupName,userId)
   }
 
@@ -324,13 +306,11 @@ export class SignalrService {
   }
 
   notifySaveStream(groupName:string,userId:string,isSaved:boolean) {
-    debugger
     this.hubConnection?.invoke('notifySaveStream', groupName,userId,isSaved)
       .catch((err) => console.error(err));
   }
 
   notifyCommentThrotlling(groupName:string,noOfComments:number) {
-    debugger
     this.hubConnection?.invoke('notifyCommentThrotlling', groupName,noOfComments)
       .catch((err) => console.error(err));
   }
@@ -340,10 +320,8 @@ export class SignalrService {
   }
 
   sendNotification(model:NotificationViewModel){
-    debugger
     if(model.followersIds != null){
       this._userService.getFollowersNotificationSettings(JSON.stringify(model.followersIds)).subscribe((response) => {
-        debugger
         model.followersIds = model.followersIds?.filter((item: string) =>
         !response.some((obj: { userId: string }) => obj.userId === item)
       );
@@ -355,7 +333,6 @@ export class SignalrService {
     }
     else{
     this._userService.getNotificationSettings(model.userId).subscribe((response) => {
-      debugger
       this.notificationSettings = response;
       var notificationSettings: any[] = this.notificationSettings;
       var notificationInfo = notificationSettings.find(x => x.notificationType == model.notificationType);
@@ -374,12 +351,7 @@ export class SignalrService {
     }
   })
 }
-
-
-  // for testing live stream only i can remove this after testing;
-  // this.hubConnection?.invoke('SendNotification', model)
-  //       .catch((err) => console.error(err));
-  }
+}
 
   logoutBanUser(userId:string){
     this.hubConnection?.invoke('logoutBanUser', userId)
@@ -389,6 +361,5 @@ export class SignalrService {
   reloadClassCourseProfile(classCourseId:string){
     this.hubConnection?.invoke('reloadClassCourseProfile', classCourseId)
       .catch((err => console.error(err)));
-    // banUnbanUserProgression.next({userId: userId})
   }
 }

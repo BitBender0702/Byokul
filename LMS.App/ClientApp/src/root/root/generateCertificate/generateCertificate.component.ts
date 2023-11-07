@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Subject, Subscription } from 'rxjs';
 import { CertificateTemplateEnum } from 'src/root/Enums/certificateTemplateEnum';
-import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
 import { SaveStudentCertificate } from 'src/root/interfaces/student/saveStudentCertificate';
 import { ClassService } from 'src/root/service/class.service';
@@ -28,7 +27,6 @@ export const generateCertificateResponse =new Subject<{isCertificateSendToAll: b
     isStepCompleted: boolean = false;
     step: number = 0;
     loadingIcon:boolean = false;
-
     createCertificateForm1!:FormGroup;
     private _classService;
     private _courseService;
@@ -125,7 +123,6 @@ export const generateCertificateResponse =new Subject<{isCertificateSendToAll: b
 
         if (!this.hamburgerCountSubscription) {
           this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-            debugger
             this.hamburgerCount = response.hamburgerCount;
           });
         }
@@ -219,8 +216,6 @@ export const generateCertificateResponse =new Subject<{isCertificateSendToAll: b
         this.step += 1;
     }
 
-
-
     createCertificate(){
       this.loadingIcon = true;
         this.InitializeSaveStudentCertificate();
@@ -293,9 +288,7 @@ export const generateCertificateResponse =new Subject<{isCertificateSendToAll: b
           if(this.isSendCertificateToAll){
              var notificationContent = `Certificates created for ${this.classOrCourseName} students are successfully sent`;
              this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.CertificateSent,notificationContent,this.loginUserId,null,0,null,null).subscribe((response) => {});
-                    //registrationResponse.next(true); 
           }
-           
         });
     }
 

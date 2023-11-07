@@ -2,18 +2,14 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import axios from 'axios';
 import { AuthService } from 'src/root/service/auth.service';
 import { AuthenticatedResponse } from 'src/root/interfaces/auth_response';
-import { LoginModel } from 'src/root/interfaces/login';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { BehaviorSubject, finalize, Subject, Subscription } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
-import { stringify } from 'querystring';
 import { registrationResponse } from '../register/register.component';
 import { forgotPassResponse } from '../forget-password/forget-password.component';
 import { confirmEmailResponse } from '../confirmEmail/confirmEmail.component';
@@ -22,7 +18,6 @@ import { changePassResponse } from '../change-password/change-password.component
 import { setPassResponse } from '../set-password/set-password.component';
 import { TranslateService } from '@ngx-translate/core';
 import { ResendEmailModel } from 'src/root/interfaces/resendEmailModel';
-
 export const dashboardResponse =new Subject<{token:string}>(); 
 export const feedState =new BehaviorSubject <string>('myFeed');  
 declare var $: any;
@@ -62,25 +57,20 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
   
 
 
-    
     constructor(injector: Injector, public translateService: TranslateService, public messageService:MessageService,private fb: FormBuilder,private router: Router,private signalRService: SignalrService, 
       private userService: UserService,
       private http: HttpClient,authService:AuthService,private route: ActivatedRoute,private cd: ChangeDetectorRef) { 
       super(injector);
       this._authService = authService;
       this.route.queryParams.subscribe(params => {
-        debugger
         this.confirmedEmail = params['confirmedEmail'];
       });
     }
   
     ngOnInit(): void {   
-      debugger
       if(localStorage.getItem("jwt")){
         this.router.navigate([`/user/userFeed`]);
       }
-
-      
       this._authService.loginState$.next(false);
       this.selectedLanguage = localStorage.getItem("selectedLanguage");
       if(this.selectedLanguage == null || this.selectedLanguage == ""){
@@ -109,25 +99,14 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
       }
       if (!this.confirmEmailSubscription) {
         this.confirmEmailSubscription = confirmEmailResponse.subscribe(response => {
-           debugger
            this.cd.detectChanges();
            if(response != ''){
              this.isConfirmEmail = true;
-             this.loginForm.controls.email.setValue(response);    
-            //  const translatedMessage = this.translateService.instant('EmailConfirmedSuccessfully');
-            //  const translatedSummary = this.translateService.instant('Success');
-            //  this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,
-            //  });        
+             this.loginForm.controls.email.setValue(response);     
            }
            else{
              this.isConfirmEmail = false;
            }
-             // if(this.isConfirmEmail){
-             //   const translatedMessage = this.translateService.instant('EmailConfirmedSuccessfully');
-             //   const translatedSummary = this.translateService.instant('Success');
-             //   this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage});     
-             // }
-   
          });
       }
 
@@ -146,7 +125,6 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
 
     if (!this.resetPasswordSubscription) {
       this.resetPasswordSubscription = resetPassResponse.subscribe(response => {
-        debugger
         this.cd.detectChanges();
         this.isResetpassword = response;
         if(this.isResetpassword){
@@ -186,7 +164,6 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
   }
 
     ngOnDestroy(): void {
-      debugger
       if (this.confirmEmailSubscription) {
         this.confirmEmailSubscription.unsubscribe();
       }
@@ -223,7 +200,6 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
       this.user = this.loginForm.value;
       this._authService.loginUser(this.user).pipe(finalize(()=> this.loadingIcon= false)).subscribe({
         next: (response: AuthenticatedResponse) => {
-          debugger
           if(response.errorMessage == "This email is not registered"){
             this._authService.loginState$.next(false);
             this.loginForm.setErrors({ unauthenticated: true });
@@ -299,14 +275,12 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
     sendMail:ResendEmailModel = new Object as ResendEmailModel;
     invalidRegister:boolean=true;
     resendEmailToUser(){
-      debugger
       var email = localStorage.getItem("email")
         if(email){
           this.sendMail.email = email;
         }
       this._authService.resendEmail(this.sendMail).pipe(finalize(()=> this.loadingIcon = false)).subscribe({
           next: (response: AuthenticatedResponse) => {
-            debugger
           if(response.result != "success"){
           }
           else{

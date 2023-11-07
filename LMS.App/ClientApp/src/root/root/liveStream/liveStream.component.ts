@@ -120,7 +120,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   isSimpleStream:boolean=false;
 
   ngOnInit(): void {
-    debugger
     // this.loadingIcon = true;
     this.getSenderInfo();
     this.postId = this.route.snapshot.paramMap.get('postId') ?? '';
@@ -133,7 +132,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
     // this.meetingId = params.get('meetingID')?.replace("meetings","")??'';
     // this.streamPassword = params.get('password')??'';
     this._postService.getPostById(this.postId).subscribe((response) => {
-      debugger
       this.post = response;
       // this.post.streamUrl = encodeURIComponent(this.post.streamUrl);
       var isUserViewExist = this.post.views.filter((x:any) => x.userId == this.userId);
@@ -188,27 +186,9 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
           this.post.coverThumbnail = element.fileUrl;
         }
       });
-      // debugger
-      // var a = new Date();
-      // const utcDate: Date = new Date(this.postCreatedDate);
-      // const b: string = utcDate.toLocaleString();
-
-      // const currentTime: number = new Date(a).getTime();
-      // // new Date( year,month,day,hours,minutes,seconds,ms)
-      // const date : Date = new Date(this.postCreatedDate);
-
-
-      // const createdDate = new Date(date.getFullYear(), date.getMonth(), date.getDay(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime();
-      // const timeDiff = currentTime - createdDate;
-      // this.timeDifferenceInSeconds = Math.floor((timeDiff / 1000) % 60);
-      // var timeDifferenceInMinutes: number = Math.floor(timeDiff / (1000 * 60));
-
-
       var b = new Date(this.postCreatedDate);
       this.currentTime = new Date().getTime();
       this.postCreatedDate = this.postCreatedDate.getTime();
-      debugger
-
       const differenceInMilliseconds = this.currentTime - this.postCreatedDate;
       const differenceInSeconds: number = Math.floor(differenceInMilliseconds / 1000);
       var timeDifferenceInMinutes = differenceInSeconds / 60.0;
@@ -216,15 +196,11 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
 
       const timeDifferenceInMiliSeconds = Math.floor(differenceInMilliseconds / 1000);
 
-      // this.timeDifferenceInSeconds = Math.floor((differenceInMilliseconds / 1000) % 60);
-      // var timeDifferenceInMinutes = Math.floor(differenceInMilliseconds / (1000 * 60));
-
       if (this.timeDifferenceInSeconds < 60) {
         this.timeDifferenceInSeconds = 60 - this.timeDifferenceInSeconds;
       }
 
       if (this.meetingId == '') {
-        debugger
         this.isDataLoaded = true;
         this.cd.detectChanges();
 
@@ -233,70 +209,12 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
         if (postAttachment.videoLiveTime != null) {
           const videoElement1: HTMLVideoElement | null = document.getElementById('test12') as HTMLVideoElement
           if (videoElement1) {
-            debugger
             videoElement1.currentTime = postAttachment.videoLiveTime;
             this.cd.detectChanges();
           }
         }
-
-        // if (videoElement1) {
-        //   videoElement1.addEventListener('loadedmetadata', () => {
-        //     debugger
-
-
-        //     videoElement1.currentTime = 7;
-        //     // Other operations after setting currentTime
-        //   });
-        // }
-
-        // if (videoElement1) {
-        //   const setTimeAndUpdate = () => {
-        //     debugger
-        //     videoElement1.currentTime = 7;
-        //     // Other operations after setting currentTime
-        //     videoElement1.removeEventListener('timeupdate', setTimeAndUpdate);
-        //   };
-
-        //   videoElement1.addEventListener('timeupdate', setTimeAndUpdate);
-
-        //   videoElement1.play();
-        // }
-
-
-        //   const videoElement: HTMLVideoElement = this.videoPlayer.nativeElement;
-        //   var postAttachment = this.post.postAttachments.find((x: { fileType: number; }) => x.fileType == 2);
-        //   if(postAttachment.videoLiveTime != null){
-        //     // const buttonElement: HTMLDivElement = this.startButton.nativeElement;
-        //     //   buttonElement.click();
-        //       // this.startVideoTime = postAttachment.videoLiveTime;
-        //       // this.startVideoTime = 15;
-
-        //   // setTimeout(() => {
-        //     // videoElement.addEventListener('loadedmetadata', () => {
-        //     //   debugger
-        //     //   videoElement.currentTime = 15;
-        //     //   // videoElement.play();
-        //     // });
-
-        //     this.cd.detectChanges();
-        //     var video = document.getElementById("test12");
-        //     videoElement.addEventListener('loadedmetadata', () => {
-        //       debugger
-        //       videoElement.currentTime = postAttachment.videoLiveTime; 
-        //       this.cd.detectChanges();
-        //     });
-        //     // videoElement.currentTime = postAttachment.videoLiveTime;
-        //     this.cd.detectChanges();
-        //     var a = 10;
-        //     // videoElement.play();
-        //   //  }, 500);
-
-        // }
-        // }, 100);
       }
       else {
-        // setTimeout(() => {
-        //   debugger
         if (this.userId == this.post.createdBy) {
           this.streamUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(this.post.streamUrl);
         }
@@ -345,23 +263,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       }
     });
 
-
-    // var stream = history.state.stream;
-
-    // if(this.isOwner){
-    //     this.notificationViewModel = {
-    //       id:Constant.defaultGuid,
-    //       actionDoneBy: this.userId,
-    //       isRead:false,
-    //       userId:'',
-    //       avatar:'',
-    //       notificationContent:this.meetingId,
-    //       postId:this.postId,
-    //       notificationType:NotificationType.LectureStart,
-    //     }
-    //     this._signalrService.sendNotification(this.notificationViewModel);
-    // }
-
     const lastComment = {
       commentsCount: 1,
       lastCommentTime: Date.now()
@@ -377,7 +278,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
 
     if (!this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-        debugger
         this.hamburgerCount = response.hamburgerCount;
       });
     }
@@ -400,18 +300,9 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
     }
   }
 
-  // startVideo() {
-  //   debugger
-  //   const videoElement: HTMLVideoElement = this.videoPlayer.nativeElement;
-  //   videoElement.currentTime = 15;
-  //     videoElement.play();
-  // }
-
   getFollowers(parentId: string) {
-    debugger
     if (this.from == "user") {
       this._notificationService.getUserFollowersIds(parentId).subscribe((response) => {
-        debugger
         this.followersIds = response;
         var chatType = 1;
         this.sendNotifications(chatType, parentId);
@@ -419,7 +310,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
     }
     if (this.from == "school") {
       this._notificationService.getSchoolFollowersIds(parentId).subscribe((response) => {
-        debugger
         this.followersIds = response;
         var chatType = 3;
         this.sendNotifications(chatType, parentId);
@@ -427,7 +317,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
     }
     if (this.from == "class") {
       this._notificationService.getClassFollowersIds(parentId).subscribe((response) => {
-        debugger
         this.followersIds = response;
         var chatType = 4;
         this.sendNotifications(chatType, parentId);
@@ -468,25 +357,18 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   }
 
   timer(minute: any) {
-    debugger
-    // let minute = 1;
     let seconds: number = minute * 60;
     let textSec: any = "0";
     let statSec: number = 60 - (minute * 60);
-
     const prefix = minute < 10 ? "0" : "";
-
     const timer = setInterval(() => {
       seconds--;
       if (statSec != 0) statSec--;
       else statSec = 59;
-
       if (statSec < 10) {
         textSec = "0" + statSec;
       } else textSec = statSec;
-
       this.streamCountDown = `${prefix}${Math.floor(seconds / 60)}:${textSec}`;
-
       if (seconds == 0) {
         clearInterval(timer);
       }
@@ -500,7 +382,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   }
 
   sendToGroup() {
-    debugger
     this.lastCommentTime = localStorage.getItem('lastCommentTime');
     this.lastCommentTime = JSON.parse(this.lastCommentTime);
     const currentTime = Date.now();
@@ -519,13 +400,10 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
             lastCommentTime: currentTime
           };
           localStorage.setItem('lastCommentTime', JSON.stringify(lastComment));
-          // localStorage.setItem('lastCommentTime', currentTime.toString());
         } else {
           const elapsedSeconds = (currentTime - this.lastCommentTime.lastCommentTime) / 1000;
           if (elapsedSeconds < 60 && this.lastCommentTime.commentsCount <= this.post.commentsPerMinute) {
             this.isCommentsEnabled = true;
-            //  this.lastCommentTime = localStorage.getItem('lastCommentTime');
-            //  this.lastCommentTime = JSON.parse(this.lastCommentTime);
             this.lastCommentTime.commentsCount++;
             localStorage.setItem('lastCommentTime', JSON.stringify(this.lastCommentTime));
           }
@@ -643,7 +521,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       this.commentsLoadingIcon = false;
       this.scrollCommentsResponseCount = response.length;
       this.commentsScrolled = false;
-      // Scroll to the bottom of the chat list with animation
       const chatList = this.groupChatList.nativeElement;
       const chatListHeight = chatList.scrollHeight;
       this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.clientHeight;
@@ -662,7 +539,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   commentResponse() {
     if (!this.commentResponseSubscription) {
       this.commentResponseSubscription = commentResponse.subscribe(response => {
-        debugger
         var comment: any[] = this.post.comments;
         if (response.senderAvatar == "") {
           if (response.gender == "1") {
@@ -731,7 +607,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
 
   postLikeResponse() {
     postLikeResponse.subscribe(response => {
-      debugger
       if (response.isLiked) {
         if (this.currentLikedPostId != this.post.id) {
           this.post.likes.length = this.post.likes.length + 1;
@@ -765,11 +640,9 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   addViewResponse() {
     if (!this.addViewSubscription) {
       this.addViewSubscription = postViewResponse.subscribe(response => {
-      debugger
       try{
       if (response.isAddView) {
         if(this.post.views.length == 0){
-          //  this.liveUsersCount = this.liveUsersCount + 1;
            this.viewObj = {
             userId:response.userId,
             postId: this.post.id
@@ -777,15 +650,12 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
           console.log(this.viewObj);
           this.post.views.push(this.viewObj);
            this.post.views.length = this.post.views.length;
-          //  this.post.views.length = this.post.views.length;
         }
 
         
         if(this.post.views.length != 0){
-          debugger
           var isUserViewExist = this.post.views.filter((x:any) => x.userId == response.userId);
           if(isUserViewExist.length > 0){
-            debugger
             this.liveUsersCount = this.liveUsersCount + 1;
           }
           else{
@@ -799,25 +669,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
             this.post.views.length = this.post.views.length;
           }
         }
-
-        // this.liveUsersCount = this.liveUsersCount + 1;
-        // this.post.views.length = this.post.views.length + 1;
-        // if(this.currentLikedPostId!= this.post.id){
-        // this.post.likes.length = this.post.likes.length + 1;
-        // }
-        // if(this.likesLength != undefined && this.currentLikedPostId == this.post.id){
-        // this.post.views.length = this.post.views.length + 1;
-        // var viewObj = {
-        //   userId = 
-        // }
-        // var isUserViewAlready = this.post.views.find((x: { userId: string; }) => x.userId == this.userId);
-        // if(isUserViewAlready == null || this.post.views.length == 0){
-        //   this.liveUsersCount = this.liveUsersCount + 1;
-        //   this.post.views.length = this.post.views.length + 1;
-        // }
-        // this.liveUsersCount = this.liveUsersCount + 1;
-        // this.post.views.length = this.post.views.length + 1;
-        // }
       }}
       catch{}
     });
@@ -826,7 +677,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
 
   notifyCommentThrottlingResponse() {
     notifyCommentThrotllingResponse.subscribe(noOfComments => {
-      debugger
       const currentTime = Date.now();
       this.post.commentsPerMinute = noOfComments.noOfComments;
       const lastComment = {
@@ -839,12 +689,10 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
 
   endMeetingResponse() {
     endMeetingResponse.subscribe(response => {
-      debugger
       if (!this.isOwner) {
         if(this.meetingId != ''){
           this.streamEndMessage.nativeElement.click();
           setTimeout(() => {
-            debugger
             this.streamEndModalClose.nativeElement.click();
             let url = localStorage.getItem('urlBeforeLiveStream');
             if(url){
@@ -862,7 +710,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       else {
         let url = localStorage.getItem("beforeLiveStreamUrl");
         if(url){
-          // this.router
           window.location.href = url
         } else{
           window.history.back();
@@ -880,7 +727,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   liveUsersCountResponse() {
     if (!this.liveUsersCountSubscription) {
       this.liveUsersCountSubscription = liveUsersCountResponse.subscribe(response => {
-      debugger;
       if (response.isLeaveStream) {
         this.liveUsersCount = this.liveUsersCount - 1;
       }
@@ -893,8 +739,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       this.postView.postId = postId;
       this.postView.userId = this.userId;
       this._postService.postView(this.postView).subscribe((response) => {
-        // this.post.views.length = response;
-        // this.liveUsersCount = response;
         this._signalrService.notifyPostView(postId + "_group", this.userId);
       });
     }
@@ -944,7 +788,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
 
 
   endLiveStream() {
-    debugger
     if (this.meetingId != "") {
 
       var endMeetingViewModel = {
@@ -953,7 +796,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
         postId: this.postId
       }
       this._bigBlueButtonService.endMeeting(endMeetingViewModel).subscribe((response) => {
-        debugger
         this._signalrService.notifyEndMeeting(this.post.id + "_group");
       });
     }
@@ -964,7 +806,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       this._postService.saveStreamAsPost(this.post.id).subscribe((response) => {
       });
     }
-    // this.location.back();
   }
 
   toggleEmojiPicker() {
@@ -972,7 +813,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   }
 
   addEmoji(event: any) {
-    debugger
     if (this.messageToGroup != undefined) {
       var text = `${this.messageToGroup}${event.emoji.native}`;
       this.messageToGroup = text;
@@ -981,7 +821,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       var text = `${event.emoji.native}`;
       this.messageToGroup = text;
     }
-    // this.showEmojiPicker = false;
   }
 
   openSharePostModal(): void {
@@ -999,7 +838,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   }
 
   savePost(postId: string) {
-    debugger
     if (this.post.isPostSavedByCurrentUser) {
       this.post.savedPostsCount -= 1;
       this.post.isPostSavedByCurrentUser = false;
@@ -1020,7 +858,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   }
 
   selectOption(noOfComments: number): void {
-    debugger
     this.toggleDropdown();
     this.post.commentsPerMinute = noOfComments;
     this.lastCommentTime = localStorage.getItem('lastCommentTime');
@@ -1037,23 +874,20 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   }
 
   onVideoEnded() {
-    debugger
     this._signalrService.notifyEndMeeting(this.post.id + "_group");
     this._postService.saveLiveVideoTime(this.post.id, this.videoTotalTime, this.videoTotalTime).subscribe((result) => {
     });
     if (this.isOwner) {
       this._postService.saveStreamAsPost(this.post.id).subscribe((response) => {
-        debugger
       });
 
     }
   }
 
   onVideoTimeUpdate(event: any) {
-    debugger
     if (this.isOwner) {
       if (!this.isUpdateAllowed) {
-        return; // Skip execution if update is not allowed
+        return;
       }
 
       this.isUpdateAllowed = false;
@@ -1061,11 +895,7 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
         const videoElement: HTMLVideoElement = event.target as HTMLVideoElement;
         const currentTime = videoElement.currentTime;
         const roundedTime = Math.floor(currentTime);
-        // console.log('Current time:', currentTime);
         this.videoTotalTime = videoElement.duration;
-        // console.log('total duration:', duration);
-
-        // const currentTime = this.videoPlayer.currentTime;
         if (roundedTime % 5 === 0) {
           let isLogged = false;
           this._postService.saveLiveVideoTime(this.post.id, this.videoTotalTime, currentTime).subscribe((result) => {
@@ -1075,21 +905,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
         this.isUpdateAllowed = true;
       }, 1000);
     }
-    //   debugger
-    // const videoElement: HTMLVideoElement = this.videoPlayer.nativeElement;
-    // const totalDuration = videoElement.duration;
-    // // const currentTime = videoElement.currentTime;
-    // console.log('Current time:', currentTime);
-    // console.log('Total time:', totalDuration);
-    // }
-
-    // const currentTime = videoPlayer.currentTime;
-    // if (currentTime % 5 === 0) {
-    //   debugger
-    //   const file = videoPlayer.currentSrc;
-    //   const fileSize = this.getFileSize(file);
-    //   console.log('File size:', fileSize);
-    // }
   }
 
   getFileSize(url: string): Promise<number> {
@@ -1103,7 +918,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   }
 
   streamEndPopup() {
-
   }
 
   endLiveStreamIfOffline() {
@@ -1120,11 +934,9 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   }
 
   showEndMeetingDialog(){
-    debugger
     if (!this.isOwner) {
       this.streamEndMessage.nativeElement.click();
       setTimeout(() => {
-        debugger
         this.streamEndModalClose.nativeElement.click();
         let url = localStorage.getItem('urlBeforeLiveStream');
         if(url){
@@ -1146,7 +958,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
         this.fromForComments = ClassCourseEnum.Course
       }
       this._studentService.isStudentBannedFromClassCourse(this.userId, this.fromForComments, this.post.parentId).subscribe((response)=>{
-        debugger;
         if(response == true){
           this.isBanned = true;
         } else{
@@ -1158,19 +969,8 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
 
 
   deleteComment(item:any){
-    debugger;
-    // this.initializeCommentLikeUnlike();
-    // this.commentLikeUnlike.userId = item.userId;
-    // this.commentLikeUnlike.commentId = item.id;
-    // this.commentLikeUnlike.groupName = item.groupName;
-    // if(this.userId == item.userId){
-    //   this._signalrService.notifyCommentDelete(this.commentLikeUnlike);
-    //   let indexOfComment = this.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId);
-    //   this.post.comments.splice(indexOfComment, 1);
-    // }
     const initialState = { item : item, from : "deleteComment" };
     this.bsModalService.show(DeleteConfirmationComponent, { initialState });
   }
-
 
 }

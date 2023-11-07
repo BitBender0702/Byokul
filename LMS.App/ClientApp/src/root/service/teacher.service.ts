@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core"; 
-import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { AddTeacherViewModel } from "../interfaces/teacher/addTeacherViewModel";
@@ -15,7 +14,7 @@ export class TeacherService{
     get apiUrl(): string {
         return environment.apiUrl;
       }
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(private http: HttpClient) {
     this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
     }
 
@@ -28,12 +27,10 @@ export class TeacherService{
     }
 
     addOfficial(addTeacherViewModel:AddOfficialViewModel): Observable<any> {
-        debugger
         return this.http.post(`${this.apiUrl}/teachers/addTeacher`, addTeacherViewModel,{headers: this.headers});
     }
 
     updateOfficial(addTeacherViewModel:AddOfficialViewModel): Observable<any> {
-        debugger
         return this.http.post(`${this.apiUrl}/teachers/updateTeacher`, addTeacherViewModel,{headers: this.headers});
     }
 

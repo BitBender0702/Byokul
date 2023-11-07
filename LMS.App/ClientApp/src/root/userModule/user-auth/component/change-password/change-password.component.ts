@@ -5,10 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/root/service/auth.service';
 import { ChangePasswordModel } from 'src/root/interfaces/change-password';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
-import { BehaviorSubject, Subject, finalize } from 'rxjs';
+import { Subject, finalize } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
-// export const changePassResponse =new BehaviorSubject <boolean>(false);  
 export const changePassResponse =new Subject <{isPasswordChange:boolean}>();  
 
 
@@ -31,7 +30,6 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
     isCurrentPasswordVisible:boolean=false;
     isNewPasswordVisible:boolean=false;
     isRepeatPasswordVisible:boolean=false;
-
     @ViewChild('currentPasswordInput') currentPasswordInput!: ElementRef<HTMLInputElement>;
     @ViewChild('newPasswordInput') newPasswordInput!: ElementRef<HTMLInputElement>;
     @ViewChild('repeatPasswordInput') repeatPasswordInput!: ElementRef<HTMLInputElement>;
@@ -44,7 +42,6 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
         this._authService = authService;
     }
     ngOnInit(): void {
-     debugger;
       this._authService.loginState$.next(false);
       this._authService.loginAdminState$.next(false);
       const passwordValidators = [
@@ -58,7 +55,6 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
         password: this.fb.control('', [...passwordValidators]),
         confirmPassword: this.fb.control('', [...passwordValidators]),
       });
-
     }
 
     onCurrentPasswordShow(){
@@ -121,7 +117,6 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
       this.loadingIcon = true;
       this.user = this.changePasswordForm.value;
 
-      //this.user.passwordResetToken = this.route.snapshot.paramMap.get('id');
       this._authService.changePassword(this.user).pipe(finalize(()=> this.loadingIcon = false)).subscribe({
                 next: (response:any) => {
                   if(response.result != "Success"){
@@ -140,11 +135,7 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
                   else{
                     this.router.navigateByUrl("user/auth/login");
                   }
-
-
-                  
                   this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Password changed successfully...' });
-                  // changePassResponse.next(true); 
                   changePassResponse.next({isPasswordChange:true}); 
                   }
                 },

@@ -1,12 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Subject } from 'rxjs';
 import { PostService } from 'src/root/service/post.service';
-import { deleteCommentResponse, deletePostResponse } from '../postView/postView.component';
+import { deletePostResponse } from '../postView/postView.component';
 import { CommentLikeUnlike } from 'src/root/interfaces/chat/commentsLike';
 import { SignalrService, commentDeleteResponse } from 'src/root/service/signalr.service';
-
 export const deleteModalPostResponse = new Subject<{ postId: string }>();
 
 @Component({
@@ -15,13 +13,15 @@ export const deleteModalPostResponse = new Subject<{ postId: string }>();
     styleUrls: ['./delete-confirmation.component.css']
 })
 export class DeleteConfirmationComponent implements OnInit {
-
     id: any;
     item: any;
     from:any;
     loadingIcon: boolean = false;
     commentLikeUnlike!: CommentLikeUnlike;
     isDeleteComment:boolean = false;
+    userId:any;
+
+
     constructor(private bsModalService: BsModalService, public options: ModalOptions, private _postService: PostService, private cd: ChangeDetectorRef, private _signalRService: SignalrService) { }
 
     ngOnInit(): void {
@@ -33,7 +33,6 @@ export class DeleteConfirmationComponent implements OnInit {
         } else{
             this.isDeleteComment = false;
         }
-        debugger;
     }
 
     initializeCommentLikeUnlike() {
@@ -44,27 +43,22 @@ export class DeleteConfirmationComponent implements OnInit {
           isLike: false,
           groupName: ""
         }
-    
       }
 
     deleteItemById() {
-        debugger;
-        this.id = this.options.initialState?.id
-
-        this.loadingIcon = true;
-        this._postService.deletePost(this.id).subscribe((_response) => {
-            this.bsModalService.hide();
-            this.loadingIcon = false;
-            deletePostResponse.next({ postId: this.id });
-        });
-
+      this.id = this.options.initialState?.id
+      this.loadingIcon = true;
+      this._postService.deletePost(this.id).subscribe((_response) => {
+          this.bsModalService.hide();
+          this.loadingIcon = false;
+          deletePostResponse.next({ postId: this.id });
+      });
     }
 
     close() {
-        this.bsModalService.hide(this.bsModalService.config.id)
+      this.bsModalService.hide(this.bsModalService.config.id)
     }
 
-    userId:any;
     getSenderInfo() {
         var validToken = localStorage.getItem("jwt");
         if (validToken != null) {
@@ -76,7 +70,6 @@ export class DeleteConfirmationComponent implements OnInit {
       }
 
     deleteComment() {
-        debugger;
         this.initializeCommentLikeUnlike();
         this.commentLikeUnlike.userId = this.userId;
         this.commentLikeUnlike.commentId = this.item.id;

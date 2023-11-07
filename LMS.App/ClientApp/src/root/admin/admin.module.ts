@@ -4,9 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { SharedModule } from '../root/sharedModule/shared.module';
 import { AdminHomeComponent } from './adminHome/adminHome.component';
-import { AdminSideBarComponent } from './admin-template/side-bar/adminSide-bar.component';
 import { RegisteredUsersComponent } from './registeredUsers/registeredUsers.component';
-
 import {TableModule} from 'primeng/table';
 import { RegisteredSchoolsComponent } from './registeredSchools/registeredSchools.component';
 import { RegisteredClassesComponent } from './registeredClasses/registeredClasses.component';
@@ -16,13 +14,10 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AuthGuard } from '../service/auth.guard';
 import { InputTextModule } from 'primeng/inputtext';
-import { SideBarComponent } from '../user-template/side-bar/side-bar.component';
 import { SchoolTransactionsComponent } from './SchoolTransactions/schoolTransactions.component';
-import { ClassCourseModalComponent } from '../root/ClassCourseModal/classCourseModal.component';
 import { ClassCourseTransactionsComponent } from './ClassCourseTransactions/classCourseTransactions.component';
 import { ToastModule } from 'primeng/toast';
 import { ChangeTimeZonePipe } from './ChangeTimeZonePipeAdmin';
-// import { ChangePasswordForAdminComponent } from './change-password-for-admin/change-password-for-admin.component';
 
 const routes: Routes = [
   {
@@ -72,10 +67,7 @@ const routes: Routes = [
     RegisteredCoursesComponent,
     SchoolTransactionsComponent,
     ClassCourseTransactionsComponent,
-    ChangeTimeZonePipe
-  
-    // ChangePasswordForAdminComponent
-    
+    ChangeTimeZonePipe    
   ],
   imports: [
     SharedModule,

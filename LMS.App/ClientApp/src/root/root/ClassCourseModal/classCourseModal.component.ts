@@ -43,8 +43,6 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     private _userService;
     private _classService;
     private _courseService;
-
-
     reels:any;
     isOpenSidebar:boolean = false;
     isDataLoaded:boolean = false;
@@ -54,15 +52,12 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     messageToGroup!:string;
     userId!:string;
     user:any;
-    // private _signalRService;
-    // private _userService;
     currentLikedPostId!:string;
     likesLength!:number;
     isLiked!:boolean;
     likeUnlikePost!: LikeUnlikePost;
     postView!:PostView;
     loginUserId!:string;
-
     postAttachmentId:any;
     commentViewModel!: CommentViewModel;
     commentLikeCount!:number;
@@ -72,11 +67,9 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     commentLikeUnlike!:CommentLikeUnlike;
     commentResponseSubscription!:Subscription;
     commentDeletdResponseSubscription!: Subscription
-
     courseCertificateForm!:FormGroup;
     courseCertificateInfo:any;
     @ViewChild('openCourseOwnCertificate') openCourseOwnCertificate!: ElementRef;
-
     @ViewChild('groupChatList') groupChatList!: ElementRef;
 
     constructor(private bsModalService: BsModalService,classService:ClassService,courseService:CourseService,chatService:ChatService,schoolService: SchoolService,public options: ModalOptions,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute) { 
@@ -86,11 +79,9 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
         this._userService = userService;
         this._classService = classService;
         this._courseService = courseService;
-  
       }
 
      ngOnInit(): void {
-      debugger
          this.classCourseDetails = this.options.initialState;
          this.getLoginUserId();
          this.gender = localStorage.getItem("gender")??'';
@@ -98,16 +89,13 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
           this.isDataLoaded = true;
           this.classCourseDetails.classCourseItem.comments = response;
           });
-
           this._signalRService.createGroupName(this.classCourseDetails.classCourseItem.id);
-
           var validToken = localStorage.getItem("jwt");
           if (validToken != null) {
           let jwtData = validToken.split('.')[1]
           let decodedJwtJsonData = window.atob(jwtData)
           let decodedJwtData = JSON.parse(decodedJwtJsonData);
           this.userId = decodedJwtData.jti;
-
         this._userService.getUser(this.userId).subscribe((response) => {
           this.sender = response;
         });
@@ -129,10 +117,7 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
           else{
             reqComment.likeCount = reqComment.likeCount - 1;
           }
-          
-
         });
-        
       }
       if(!this.commentDeletdResponseSubscription){
         commentDeleteResponse.subscribe(response =>{
@@ -142,33 +127,12 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
       }
      }
 
-     deleteComment(item:any){
-      debugger;
-      // this.initializeCommentLikeUnlike();
-      // this.commentLikeUnlike.userId = this.userId;
-      // this.commentLikeUnlike.commentId = item.id;
-      // this.commentLikeUnlike.groupName = item.groupName;
-      // if(this.userId == item.userId){
-      //   this._signalRService.notifyCommentDelete(this.commentLikeUnlike);
-      //   let indexOfComment = this.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId)
-      //   this.post.comments.splice(indexOfComment, 1)
-      // }
+     deleteComment(item:any){     
       const initialState = { item : item, from : "deleteComment" };
       this.bsModalService.show(DeleteConfirmationComponent, { initialState });
-      // if(!this.deleteCommentResponseSubscription){
-      //   deleteCommentResponse.subscribe(response =>{
-      //     debugger;
-      //     setTimeout(() => {
-      //       let indexOfComment = this.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId)
-      //       this.post.comments.splice(indexOfComment, 1)
-      //     }, 0);
-      //   })
-      // }
-  
     }
 
     getLoginUserId(){
-      debugger
       var validToken = localStorage.getItem("jwt");
       if (validToken != null) {
         let jwtData = validToken.split('.')[1]
@@ -205,7 +169,6 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
       
   likeUnlikeClassCourse(Id: string, isLike: boolean, type: number) {
     this.currentLikedClassCourseId = Id;
-
         if (this.classCourseDetails.classCourseItem.type == 1) {
           var likes: any[] = this.classCourseDetails.classCourseItem.classLikes;
           var isLiked = likes.filter((x) => x.userId == this.userId && x.classId == Id);
@@ -247,7 +210,6 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
         } else {
           this.classCourseDetails.classCourseItem.courseLikes = result.response;
         }
-
         this.InitializeLikeUnlikeClassCourse();
       });
   }
@@ -277,12 +239,10 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
    else{
     isCommentLiked.isCommentLikedByCurrentUser = true;
     isCommentLiked.likeCount = isCommentLiked.likeCount + 1;
-
     this.commentLikeUnlike.isLike = true;
     this.commentLikeUnlike.likeCount = isCommentLiked.likeCount;
    }
    this.signalRService.notifyCommentLike(this.commentLikeUnlike);
-  
   }
 
   initializeCommentLikeUnlike(){
@@ -293,7 +253,6 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
       isLike:false,
       groupName:""
     }
-
   }
 
   sendToGroup(){
@@ -371,7 +330,6 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
 
 
   showCommentsDiv(id:string,type:number,isShowComments:boolean){
-    debugger
     if(isShowComments){
       this.classCourseDetails.classCourseItem.isCommentsDisabled = false;
     }
@@ -394,7 +352,6 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
   }
 
   openPaymentModal(classCourseItem:any) {
-    debugger
     var classDetails = { "id": classCourseItem.id, "name": classCourseItem.name, "avatar": classCourseItem.avatar, "type": classCourseItem.type, "amount": classCourseItem.price, "currency": classCourseItem.currency }
     const initialState = {
       paymentDetails: classDetails

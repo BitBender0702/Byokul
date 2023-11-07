@@ -11,7 +11,6 @@ import { Subscription } from 'rxjs';
   })
 
 export class ContactComponent extends MultilingualComponent implements OnInit, OnDestroy {
-
   selectedLanguage:any;
   changeLanguageSubscription!:Subscription;
   constructor(injector: Injector) { 
@@ -21,7 +20,6 @@ export class ContactComponent extends MultilingualComponent implements OnInit, O
   ngOnInit(): void {
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
     this.translate.use(this.selectedLanguage?? '');
-    
 
     if(!this.changeLanguageSubscription){
       this.changeLanguageSubscription = changeLanguage.subscribe(response => {
@@ -37,7 +35,7 @@ export class ContactComponent extends MultilingualComponent implements OnInit, O
     }
   }
 
-    back(): void {
-       window.history.back();
-    }
+  back(): void {
+    window.history.back();
+  }
 }

@@ -8,7 +8,6 @@ export class AzureBlobStorageService {
   private blobServiceClient: BlobServiceClient;
 
   constructor() {
-    debugger
     const connectionString = 'DefaultEndpointsProtocol=https;AccountName=byokulstorage;AccountKey=exYHA69x6yj0g9ET7+0ODXjs1zPYtqAqCkiwUuT7ocLG3qQOFhWKEn9Q+oS6EC6qcT+AJM+Cj8KR+ASt+3Lu5Q==;EndpointSuffix=core.windows.net';
     const anonymousCredential = new AnonymousCredential();
     const pipeline = newPipeline(anonymousCredential);
@@ -16,7 +15,6 @@ export class AzureBlobStorageService {
   }
 
   async uploadFile(containerName: string, fileName: string, file: File): Promise<void> {
-    debugger
     try {
       var client = this.blobServiceClient;
       const containerClient = this.blobServiceClient.getContainerClient(containerName);

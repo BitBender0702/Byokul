@@ -1,9 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, Injector, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { UserService } from 'src/root/service/user.service';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
 import { ActivatedRoute } from '@angular/router';
@@ -61,7 +57,6 @@ import { CourseService } from 'src/root/service/course.service';
 
         if (!this.hamburgerCountSubscription) {
           this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-            debugger
             this.hamburgerCount = response.hamburgerCount;
           });
         }
@@ -84,7 +79,6 @@ import { CourseService } from 'src/root/service/course.service';
     }
 
     getGlobalSearch(searchString:string,pageNumber:number,pageSize:number){
-      debugger
       if(this.searchType == "1"){
         this._userService.usersGlobalSearch(searchString,pageNumber,pageSize).subscribe((response) => {
           this.loadingIcon = false;
@@ -105,7 +99,6 @@ import { CourseService } from 'src/root/service/course.service';
         this.isDataLoaded = true;
         this.globalSearchResult = response;
       });
-      
     }
 
     if(this.searchType == "4"){
@@ -114,7 +107,6 @@ import { CourseService } from 'src/root/service/course.service';
         this.isDataLoaded = true;
         this.globalSearchResult = response;
       });
-      
     }
 
     if(this.searchType == "5"){
@@ -123,11 +115,9 @@ import { CourseService } from 'src/root/service/course.service';
         this.isDataLoaded = true;
         this.globalSearchResult = response;
       });
-      
     }
     }
     
-
     back(): void {
       window.history.back();
     }
@@ -160,7 +150,6 @@ import { CourseService } from 'src/root/service/course.service';
     }
 
     getNextSearchResults(){
-      debugger
       if(this.searchType == "1"){
         this._userService.usersGlobalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize).subscribe((response:any) => {
           if(response.length != 0){
@@ -213,7 +202,6 @@ import { CourseService } from 'src/root/service/course.service';
           this.postLoadingIcon = false;
           this.scrollSearchResponseCount = response.length; 
           this.scrolled = false;
-
         });
       }
       }

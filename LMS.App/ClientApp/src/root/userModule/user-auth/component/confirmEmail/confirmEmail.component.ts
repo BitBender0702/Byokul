@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { AuthService } from 'src/root/service/auth.service';
-
 export const confirmEmailResponse =new BehaviorSubject <string>('');  
 
 
@@ -32,13 +31,9 @@ loadingIcon:boolean = false;
     }
   );
   
-    // var token = this.route.snapshot.paramMap.get('token')??'';
-    // var email = this.route.snapshot.paramMap.get('email')??'';
     this._authService.confirmEmail(this.token,this.email).subscribe((response) => {
       debugger
        if(response.result == "success"){
-
-        // confirmEmailResponse.next({confirmEmail: "confirm"});
         this.router.navigate(['../login'], { relativeTo: this.route,queryParams: { confirmedEmail: true } });
         setTimeout(() => {
           confirmEmailResponse.next(this.email); 
@@ -48,8 +43,6 @@ loadingIcon:boolean = false;
         this.isDataLoaded = true;
        }
       });
-    // localStorage.removeItem("jwt");
-    // this.router.navigate(['../login'], { relativeTo: this.route });
   }
 
 }

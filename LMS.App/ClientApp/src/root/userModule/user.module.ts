@@ -10,7 +10,6 @@ import { SharedModule } from '../root/sharedModule/shared.module';
 import { CreateClassComponent } from '../root/class/createClass/createClass.component';
 import { CreateCourseComponent } from '../root/course/createCourse/createCourse.component';
 import { SchoolProfileComponent } from '../root/school/schoolProfile/schoolProfile.component';
-import { SchoolResolverService } from '../service/school-resolver.service';
 import { MyEarningsComponent } from '../root/myEarnings/myEarnings.component';
 import { LandingComponent } from './user-auth/component/landing/landing.component';
 import { UserProfileComponent } from '../root/user/userProfile/userProfile.component';
@@ -18,7 +17,6 @@ import { ClassProfileComponent } from '../root/class/classProfile/classProfile.c
 import { UserFollowersComponent } from '../root/user/userFollowers/userFollowers.component';
 import { SchoolFollowersComponent } from '../root/school/schoolFollowers/schoolFollowers.component';
 import { ReelsViewComponent } from '../root/reels/reelsView.component';
-
 import { ChatComponent } from '../root/chat/chat.component';
 import { CourseProfileComponent } from '../root/course/courseProfile/courseProfile.component';
 import { UserFeedComponent } from '../root/userFeed/userFeed.component';
@@ -30,13 +28,10 @@ import { AuthGuard } from '../service/auth.guard';
 import { EarningsComponent } from '../root/earnings/earnings.component';
 import { FileStorageComponent } from '../root/fileStorage/fileStorage.component';
 import { UserFollowingsComponent } from '../root/user/userFollowings/userFollowings.component';
-import { Subject } from 'rxjs';
 import { GlobalSearchComponent } from '../root/globalSearch/globalSearch.component';
 import { StudentListComponent } from '../root/students/studentList.component';
 import { ReelsSliderComponent } from '../root/reelsSlider/reelsSlider.component';
 import { SchoolVideoLibraryComponent } from '../root/schoolVideoLibrary/schoolVideoLibrary.component';
-import { DeleteOrDisableComponent } from '../root/deleteOrDisableSCC/delete-or-disable.component';
-
 
 const routes: Routes = [
   {
@@ -144,10 +139,6 @@ const routes: Routes = [
   {
     path: 'schoolVideoLibrary/:schoolId',component:SchoolVideoLibraryComponent, canActivate: [AuthGuard]
   },
-  
-
-
-
 ];
 
 
@@ -162,8 +153,5 @@ const routes: Routes = [
   ],
   providers: [],
   exports:[RouterModule]
- 
-  
-  
 })
 export class UserModule {}

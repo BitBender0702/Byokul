@@ -23,7 +23,7 @@ export class AppDeliveryAndReturnComponent {
   this.language = this.activatedRoute.snapshot.paramMap.get('lang')??'';
   }
 
-    back(): void {
-       window.history.back();
-    }
+  back(): void {
+    window.history.back();
+  }
 }
