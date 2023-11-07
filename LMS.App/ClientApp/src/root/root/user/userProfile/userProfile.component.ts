@@ -242,6 +242,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
   isUserBannedId: string = '';
   ngOnInit(): void {
+    debugger
     this.checkScreenSize();
     if (this.isScreenMobile) {
       this.itemsPerSlide = 2;
@@ -277,6 +278,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       this.scrolled = false;
       this.postLoadingIcon = false;
       this.isDataLoaded = true;
+      this.gender = response.gender;
       this.cd.detectChanges();
 
       // if(this.loginUserId != this.isUserBannedId){
@@ -787,7 +789,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
         localStorage.setItem('gender', decodedJwtData.gender);
 
 
-        this.gender = decodedJwtData.gender;
+        //this.gender = decodedJwtData.gender;
       }
       if (decodedJwtData.sub == this.user.email) {
         this.isOwner = true;

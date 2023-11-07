@@ -3801,7 +3801,7 @@ else{
 
   @HostListener('scroll', ['$event'])
   scrollHandler(event: any) {
-    debugger;
+    
     const element = event.target; // get the scrolled element
     const scrollPosition = element.scrollHeight - element.scrollTop;
   const isScrollAtBottom = scrollPosition >= element.scrollHeight - element.clientHeight;
@@ -3816,7 +3816,7 @@ else{
   }
 
   getNextChatHeads() {
-    debugger
+    
     this._chatService
       .getAllChatUsers(
         this.senderId,
@@ -4011,6 +4011,7 @@ else{
 
   @HostListener('scroll', ['$event'])
   scrollSchoolChatHandler(event: any) {
+    debugger
     const element = event.target;
     if (element.scrollTop === 0) {
       if (
@@ -4027,6 +4028,7 @@ else{
   }
 
   getNextSchoolChats() {
+    
     this._chatService
       .getUsersChat(
         this.chatHeadId,
@@ -4039,7 +4041,7 @@ else{
       .subscribe((response) => {
         var schoolChats = this.groupBySchoolChat(response);
         //  this.schoolInboxList[0].chats = response.concat(this.schoolInboxList[0].chats);
-        this.schoolInboxList[0].chats = schoolChats;
+        if(schoolChats!=null) this.schoolInboxList[0].chats = schoolChats;
         this.cd.detectChanges();
         this.schoolChatsLoadingIcon = false;
         this.scrollSchoolChatsResponseCount = response.length;
@@ -4180,6 +4182,7 @@ else{
 
   groupBySchoolChat(response: any) {
     debugger
+    if(response.length==0) return null;
     var schoolInboxList = this.schoolInboxList.find((x: { chatHeadId: any; }) => x.chatHeadId == response[0].chatHeadId);
     if (schoolInboxList.chats == null) {
       schoolInboxList.chats = {};

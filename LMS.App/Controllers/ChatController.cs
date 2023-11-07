@@ -33,6 +33,10 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> GetChatHead(Guid senderId, Guid receiverId,ChatType chatType, Guid? chatTypeId)
         {
             var response = await _chatService.GetChatHead(senderId, receiverId, chatType, chatTypeId);
+            if(response == null)
+            {
+                return Ok(new { Success = true, Message = Constants.ChatHeadDoesNotExist });
+            }
             return Ok(response);
         }
 
