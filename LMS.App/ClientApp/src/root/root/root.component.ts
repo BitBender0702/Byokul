@@ -869,13 +869,14 @@ fileUploadProgress: { [key: string]: number } = {};
 
     var containerName = Constant.ContainerName;
     const blobStorageName = Constant.blobStorageName;
+    const cdnHostName = Constant.cdnHostName;
     if(isThumbnail)
     {
-      var containerClient = new BlobServiceClient(`https://${blobStorageName}.blob.core.windows.net?${sasToken}`)
+      var containerClient = new BlobServiceClient(`${cdnHostName}?${sasToken}`)
       .getContainerClient("classthumbnail");
     }
     else{
-      var containerClient = new BlobServiceClient(`https://${blobStorageName}.blob.core.windows.net?${sasToken}`)
+      var containerClient = new BlobServiceClient(`${cdnHostName}?${sasToken}`)
       .getContainerClient("userposts");
     }
 
