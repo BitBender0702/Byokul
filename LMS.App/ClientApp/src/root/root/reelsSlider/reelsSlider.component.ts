@@ -836,18 +836,18 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
   onSlideUp() {
     debugger
-    if (this.from == "user") {
-      this._userService.GetSliderReelsByUserId(this.userId, this.firstPostId, 1).subscribe((response: any) => {
-        debugger
-        this.reels.unshift(...response);
-        this.lastPostId = this.reels[this.reels.length - 1].id;
-        this.firstPostId = this.reels[0].id;
-        // this.isReelLoad = true;
-        // this.cd.detectChanges();
-        // this.reels = this.reels.concat(response);
+    // if (this.from == "user") {
+    //   this._userService.GetSliderReelsByUserId(this.userId, this.firstPostId, 1).subscribe((response: any) => {
+    //     debugger
+    //     this.reels.unshift(...response);
+    //     this.lastPostId = this.reels[this.reels.length - 1].id;
+    //     this.firstPostId = this.reels[0].id;
+    //     // this.isReelLoad = true;
+    //     // this.cd.detectChanges();
+    //     // this.reels = this.reels.concat(response);
 
-      });
-    }
+    //   });
+    // }
 
     if (this.from == "saved") {
       this._postService.GetSavedSliderReelsByUserId(this.userId, this.firstPostId, 1).subscribe((response: any) => {
@@ -887,10 +887,12 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
     if (this.from == "school") {
       this._schoolService.GetSliderReelsBySchoolId(this.ownerId, this.firstPostId, 1).subscribe((response: any) => {
-        
+        // this.carouselConfig.initialSlide = 0;
         this.reels.unshift(...response);
+        // this.carouselConfig.initialSlide = this.carouselConfig.initialSlide - 1;
         this.lastPostId = this.reels[this.reels.length - 1].id;
         this.firstPostId = this.reels[0].id;
+        this.slickCarouselRef.nativeElement.slickGoTo(0);
         // this.isReelLoad = true;
         this.cd.detectChanges();
         // this.reels = this.reels.concat(response);
@@ -899,7 +901,8 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
     if (this.from == "class") {
       this._classService.GetSliderReelsByClassId(this.ownerId, this.firstPostId, 1).subscribe((response: any) => {
-        
+
+        response[0]['data-slick-index'] = -1;
         this.reels.unshift(...response);
         this.lastPostId = this.reels[this.reels.length - 1].id;
         this.firstPostId = this.reels[0].id;

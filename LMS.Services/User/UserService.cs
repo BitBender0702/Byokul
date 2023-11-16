@@ -709,7 +709,7 @@ namespace LMS.Services
                 int index = reelList.FindIndex(x => x.Id == attachment.PostId);
                 int startIndex = Math.Max(0, index - 3);
                 int totalItems = 7;
-                requiredResults = reelList.GetRange(startIndex, Math.Min(totalItems, reelList.Count - startIndex));
+                requiredResults = reelList.GetRange(index, Math.Min(totalItems, reelList.Count - index));
 
 
             }
