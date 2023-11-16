@@ -83,31 +83,3 @@ a {
 .dropdown-menu li a {
   color: black;
 }
-
-
-
-
-/* 
-.carousel .carousel-control{
-  bottom: auto;
-  width:100%;
-  height: 15%;
-  background: none;
-}
-.carousel .carousel-control.right{
- top:auto;
- bottom: 0;
- background: none;
-}
-.carousel .carousel-indicators{
-  bottom: auto;
-  top:50%;
-  left:auto;
-  right:15px;
-  margin: 0;
-  transform: translateY(-50%);
-}
-
-.carousel .carousel-inner > .carousel-item {
-  width:100%
-} */
