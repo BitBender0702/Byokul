@@ -872,14 +872,13 @@ fileUploadProgress: { [key: string]: number } = {};
     const cdnHostName = Constant.cdnHostName;
     if(isThumbnail)
     {
-      var containerClient = new BlobServiceClient(`${cdnHostName}?${sasToken}`)
+      var containerClient = new BlobServiceClient(`https://${blobStorageName}.blob.core.windows.net?${sasToken}`)
       .getContainerClient("classthumbnail");
     }
     else{
-      var containerClient = new BlobServiceClient(`${cdnHostName}?${sasToken}`)
+      var containerClient = new BlobServiceClient(`https://${blobStorageName}.blob.core.windows.net?${sasToken}`)
       .getContainerClient("userposts");
     }
-
       const response = await this.uploadToBlob(
         file,
         blobName,
