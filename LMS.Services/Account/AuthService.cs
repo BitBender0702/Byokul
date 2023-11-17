@@ -31,10 +31,11 @@ namespace LMS.Services.Account
         private readonly ICommonService _commonService;
         private IGenericRepository<UserPermission> _userPermissionRepository;
         private IGenericRepository<User> _userRepository;
+        private IGenericRepository<School> _schoolRepository;
         private readonly IMapper _mapper;
 
 
-        public AuthService(IConfiguration config, IWebHostEnvironment webHostEnvironment, SignInManager<User> signInManager, UserManager<User> userManager, DataContext context, ICommonService commonService, IGenericRepository<UserPermission> userPermissionRepository, IGenericRepository<User> userRepository, IMapper mapper)
+        public AuthService(IConfiguration config, IWebHostEnvironment webHostEnvironment, SignInManager<User> signInManager, UserManager<User> userManager, DataContext context, ICommonService commonService, IGenericRepository<UserPermission> userPermissionRepository, IGenericRepository<User> userRepository, IGenericRepository<School> schoolRepository, IMapper mapper)
         {
             _config = config;
             _webHostEnvironment = webHostEnvironment;
@@ -44,7 +45,8 @@ namespace LMS.Services.Account
             _commonService = commonService;
             _userPermissionRepository = userPermissionRepository;
             _userRepository = userRepository;
-            _mapper = mapper;
+            _schoolRepository = schoolRepository;
+            _mapper = mapper;       
         }
 
         public async Task<JwtResponseViewModel> AuthenticateUser(LoginViewModel loginViewModel)
@@ -100,6 +102,8 @@ namespace LMS.Services.Account
 
             claims.Add(new Claim("isBan", userInfo.IsBan.ToString()));
 
+            var trialSchoolCreationDate = await _schoolRepository.GetAll().Where(x => x.CreatedById == userInfo.Id).FirstOrDefaultAsync();
+            claims.Add(new Claim("trialSchoolCreationDate", trialSchoolCreationDate.CreatedOn.ToString()));
             var identity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
