@@ -14,6 +14,7 @@ export class Constant {
     public static SASToken = "?sv=2021-08-06&ss=bfqt&srt=sco&spr=https&st=2023-08-30T08%3A08%3A31Z&se=2023-08-30T09%3A08%3A31Z&sp=rwdxylacuptfi&sig=jkzrRB7dWzQMKdDTnvOBXUz1fGd%2FZD2vagyDd5oad38%3D";
     public static ContainerName = "posts";
     public static blobStorageName = "byokulstorage";
+    public static cdnHostName = "https://blobstoragebyokul.azureedge.net";
     public static Image = "image";
     public static Video = "video";
     public static Pdf = "application/pdf";
