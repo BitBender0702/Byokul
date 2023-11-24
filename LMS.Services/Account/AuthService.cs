@@ -31,10 +31,11 @@ namespace LMS.Services.Account
         private readonly ICommonService _commonService;
         private IGenericRepository<UserPermission> _userPermissionRepository;
         private IGenericRepository<User> _userRepository;
+        private IGenericRepository<School> _schoolRepository;
         private readonly IMapper _mapper;
 
 
-        public AuthService(IConfiguration config, IWebHostEnvironment webHostEnvironment, SignInManager<User> signInManager, UserManager<User> userManager, DataContext context, ICommonService commonService, IGenericRepository<UserPermission> userPermissionRepository, IGenericRepository<User> userRepository, IMapper mapper)
+        public AuthService(IConfiguration config, IWebHostEnvironment webHostEnvironment, SignInManager<User> signInManager, UserManager<User> userManager, DataContext context, ICommonService commonService, IGenericRepository<UserPermission> userPermissionRepository, IGenericRepository<User> userRepository, IGenericRepository<School> schoolRepository, IMapper mapper)
         {
             _config = config;
             _webHostEnvironment = webHostEnvironment;
@@ -44,6 +45,7 @@ namespace LMS.Services.Account
             _commonService = commonService;
             _userPermissionRepository = userPermissionRepository;
             _userRepository = userRepository;
+            _schoolRepository = schoolRepository;
             _mapper = mapper;
         }
 
@@ -99,6 +101,17 @@ namespace LMS.Services.Account
             }
 
             claims.Add(new Claim("isBan", userInfo.IsBan.ToString()));
+
+            var trialSchoolCreationDate = await _schoolRepository.GetAll().Where(x => x.CreatedById == userInfo.Id).FirstOrDefaultAsync();
+
+            var schoolsCount = await _schoolRepository.GetAll().Where(x => x.CreatedById == userInfo.Id).CountAsync();
+
+            claims.Add(new Claim("userSchoolsCount", schoolsCount.ToString()));
+
+
+            //claims.Add(new Claim("isUserFirstSchool", schoolsCount == 1 ? true.ToString() : false.ToString()));
+
+            claims.Add(new Claim("trialSchoolCreationDate", trialSchoolCreationDate == null ? "" : trialSchoolCreationDate.CreatedOn.ToString()));
 
             var identity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 

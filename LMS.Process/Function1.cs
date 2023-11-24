@@ -69,7 +69,7 @@ namespace LMS.VideoProcess
 
         public async Task VideoCompression(string blobUrl, string ffmpegFileName, string compressName, string blobName)
         {
-            CompressionAlgoAndUpload($" -i {blobUrl} -vcodec libx265 -crf 28 -tune fastdecode -preset ultrafast -threads 10 -r 23 -acodec aac {compressName}", ffmpegFileName);
+            CompressionAlgoAndUpload($" -i {blobUrl} -vcodec h264 -crf 28 -tune fastdecode -preset ultrafast -threads 10 -r 23 -acodec aac {compressName}", ffmpegFileName);
             var url = await UploadBlob(_outputContainer, compressName, blobName);
             await UpdateCompressedVideoUrl(blobName, url);
         }

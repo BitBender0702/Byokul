@@ -83,6 +83,7 @@ import { AddOfficialComponent, addTeacherResponse } from '../../addOfficial/addO
 import { userPermission } from '../../root.component';
 import { deleteModalPostResponse } from '../../delete-confirmation/delete-confirmation.component';
 import { DeleteOrDisableComponent } from '../../deleteOrDisableSCC/delete-or-disable.component';
+import { isUserSchoolOrNotResponse } from '../../freeTrial/freeTrial.component';
 
 
 @Component({
@@ -407,7 +408,8 @@ debugger
       this.noOfAppliedClassFilters = this.school.noOfAppliedClassFilters;
       this.noOfAppliedCourseFilters = this.school.noOfAppliedCourseFilters;
       this.addEventListnerOnCarousel();
-
+      
+      isUserSchoolOrNotResponse.next({isUserSchool:this.isOwner});
       this.isUserBannedId = response.schoolId
       this.checkIfUserIsBanned();
       if(response.availableStorageSpace == 0){
@@ -874,7 +876,8 @@ debugger
     });
   }
 
-
+  currentDate:Date = new Date();
+  showSubscriptionBtn: boolean = false;
   isOwnerOrNot() {
     debugger
     var validToken = localStorage.getItem('jwt');
@@ -889,6 +892,17 @@ debugger
         this.isOwner = false;
         this.isFollowedOwnerOrNot(decodedJwtData.jti);
       }
+
+     var trialSchoolCreationDate = new Date(decodedJwtData.trialSchoolCreationDate);
+     const timeDifference = this.currentDate.getTime() - trialSchoolCreationDate.getTime();
+     const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+     if(daysDifference >= 30){
+        this.showSubscriptionBtn = true;
+     }
+     else{
+      this.showSubscriptionBtn = false;
+     }
+
     }
 
     this.userPermissions = JSON.parse(localStorage.getItem('userPermissions') ?? '');

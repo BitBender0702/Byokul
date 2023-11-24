@@ -55,6 +55,7 @@ import { userPermission } from '../../root.component';
 import { deleteModalPostResponse } from '../../delete-confirmation/delete-confirmation.component';
 import { disableEnableResponse } from 'src/root/admin/registeredCourses/registeredCourses.component';
 import { UserService } from 'src/root/service/user.service';
+import { isUserSchoolOrNotResponse } from '../../freeTrial/freeTrial.component';
 
 
 export const deleteClassResponse = new BehaviorSubject<string>('');
@@ -328,7 +329,9 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this.isBanned = response.isBannedFromClassCourse;
 
       this.isUserBannedId = response.classId
-      this.checkIfUserIsBanned()
+      this.checkIfUserIsBanned();
+      isUserSchoolOrNotResponse.next({isUserSchool:this.isOwner});
+
 
 
       if (response.school.availableStorageSpace <= 0) {

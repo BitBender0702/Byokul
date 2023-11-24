@@ -258,6 +258,11 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
       let jwtData = token.split('.')[1]
       let decodedJwtJsonData = window.atob(jwtData)
       let decodedJwtData = JSON.parse(decodedJwtJsonData)
+        var freetrialInfo = {
+          trialSchoolCreationDate: decodedJwtData.trialSchoolCreationDate,
+          userSchoolsCount: decodedJwtData.userSchoolsCount
+        }
+        localStorage.setItem("freeTrialInfo", JSON.stringify(freetrialInfo));
       return decodedJwtData;
     }
     connectSignalR() : void {

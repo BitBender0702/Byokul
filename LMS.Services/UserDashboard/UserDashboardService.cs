@@ -108,7 +108,7 @@ namespace LMS.Services.UserDashboard
                 .Where(x => x.UserId == userId && !x.School.IsDeleted).ToListAsync();
 
 
-            var followedSchool = _mapper.Map<IEnumerable<SchoolViewModel>>(schoolFollowers.Select(x => x.School).ToList());
+            var followedSchool = _mapper.Map<IEnumerable<SchoolViewModel>>(schoolFollowers.Select(x => x.School).ToList()); 
             followedSchool = followedSchool.Where(x => !(OwnedSchools.Any(y => y.SchoolId == x.SchoolId))).ToList();
             model.FollowedSchools = followedSchool;
 

@@ -8,7 +8,9 @@ using Iyzipay.Request.V2;
 using Iyzipay.Request.V2.Subscription;
 using LMS.Common.Enums;
 using LMS.Common.ViewModels;
+using LMS.Common.ViewModels.Chat;
 using LMS.Common.ViewModels.Iyizico;
+using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.Stripe;
 using LMS.Common.ViewModels.Student;
 using LMS.Data.Entity;
@@ -20,6 +22,7 @@ using LMS.Services.Students;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -67,27 +70,66 @@ namespace LMS.App.Controllers
         }
 
         [HttpPost("callback")]
-        public IActionResult Callback([FromForm] ThreeDCallbackViewModel callbackModel)
+        [AllowAnonymous]
+        public IActionResult Callback([FromBody]ThreeDCallbackViewModel callbackModel)
         {
             try
             {
-                if (callbackModel.Status == Status.SUCCESS.ToString())
+                if (callbackModel.Status == "CALLBACK_THREEDS")
                 {
                     Iyzipay.Options options = new Iyzipay.Options
                     {
-                        ApiKey = "sandbox-aMqc85z6hayNJmHSoZXAGxdvruaYwkWi",
-                        SecretKey = "sandbox-zkMyw4uHeLFDt9CTltscujK6dVk6Piem",
+                        ApiKey = "sandbox-ErjSK6FUTbZa2utyEJ2R2nVqKofoDipU",
+                        SecretKey = "sandbox-lducaaS6qCX2hBmzvijo95MpFgU5GIOB",
+                        BaseUrl = "https://sandbox-api.iyzipay.com"
+                    };
+
+                    CreateThreedsPaymentRequest request = new CreateThreedsPaymentRequest();
+
+                    request.ConversationId = callbackModel.PaymentConversationId.ToString();
+                    request.PaymentId = callbackModel.PaymentId.ToString();
+
+
+
+                    //if (!string.IsNullOrEmpty(callbackModel.ConversationData))
+                    //{
+                    //    request.ConversationData = callbackModel.ConversationData;
+                    //}
+
+                    ThreedsPayment threedsPayment = ThreedsPayment.Create(request, options);
+
+                    if (threedsPayment.Status == Status.SUCCESS.ToString())
+                    {
+
+
+
+
+                        _iyizicoService.CloseIyizicoThreeDAuthWindow(request.ConversationId);
+                        return base.Content("<div>Payment successful.</div>", "text/html");
+                    }
+                    if (threedsPayment.Status == Status.FAILURE.ToString())
+                    {
+                        _iyizicoService.CloseIyizicoThreeDAuthWindow(request.ConversationId);
+                        return base.Content("<div>Your payment has failed. Please try again.</div>", "text/html");
+                    }
+                }
+                if (callbackModel.Status == "SUCCESS")
+                {
+                    Iyzipay.Options options = new Iyzipay.Options
+                    {
+                        ApiKey = "sandbox-ErjSK6FUTbZa2utyEJ2R2nVqKofoDipU",
+                        SecretKey = "sandbox-lducaaS6qCX2hBmzvijo95MpFgU5GIOB",
                         BaseUrl = "https://sandbox-api.iyzipay.com"
                     };
                     CreateThreedsPaymentRequest request = new CreateThreedsPaymentRequest();
 
-                    request.ConversationId = callbackModel.ConversationId.ToString();
-                    request.PaymentId = callbackModel.PaymentId;
+                    request.ConversationId = callbackModel.PaymentConversationId.ToString();
+                    request.PaymentId = callbackModel.PaymentId.ToString();
 
-                    if (!string.IsNullOrEmpty(callbackModel.ConversationData))
-                    {
-                        request.ConversationData = callbackModel.ConversationData;
-                    }
+                    //if (!string.IsNullOrEmpty(callbackModel.ConversationData))
+                    //{
+                    //    request.ConversationData = callbackModel.ConversationData;
+                    //}
 
                     ThreedsPayment threedsPayment = ThreedsPayment.Create(request, options);
 
@@ -298,10 +340,47 @@ namespace LMS.App.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUserSavedCards()
         {
-            var email = User.Identity.Name;
+            //var email = User.Identity.Name;
+            var email = "john2Doe11@gmail.com";
             var response = await _iyizicoService.GetUserSavedCards(email);
-            return Ok(new { errorMessage = response });
+            if (response.CardDetails.Count > 0)
+            {
+                return Ok(new { Success = true,Message = Common.ViewModels.Post.Constants.SavedCardRetrieveSuccessfully, Data = response });
+            }
+            return Ok(new { Success = true, Message = Common.ViewModels.Post.Constants.CardsNotExist, Data = response });
         }
+
+        [Route("createCard")]
+        [HttpPost]
+        public async Task<IActionResult> CreateCard(CardInformation cardInfo)
+        {
+            var response = await _iyizicoService.CreateCard(cardInfo);
+            if (response)
+            {
+                return Ok(new { Success = true, Message = Common.ViewModels.Post.Constants.CardsCreatedSuccessfully });
+            }
+            return Ok(new { Success = true, Message = Common.ViewModels.Post.Constants.InvalidCard });
+        }
+
+        [Route("removeCard")]
+        [HttpPost]
+        public async Task<IActionResult> RemoveCard(string cardUserKey,string cardToken)
+        {
+            var response = await _iyizicoService.RemoveCard(cardUserKey, cardToken);
+            if (response)
+            {
+                return Ok(new { Success = true, Message = Common.ViewModels.Post.Constants.CardsRemovedSuccessfully });
+            }
+            return Ok(new { Success = true, Message = Common.ViewModels.Post.Constants.InvalidCard });
+        }
+
+        //[Route("retrieveCard")]
+        //[HttpPost]
+        //public async Task<IActionResult> RetrieveCards()
+        //{
+        //    await _iyizicoService.RetrieveCards();
+        //    return Ok();
+        //}
 
     }
 }

@@ -29,6 +29,11 @@ namespace LMS.Services.Iyizico
         Task<string> RefundPayment(string paymentId, LMS.Common.Enums.SchoolClassCourseEnum type);
         Task<string> BuySchoolSubscription(BuySchoolSubscriptionViewModel model, string userId, Guid schoolId);
         Task<CardList> GetUserSavedCards(string email);
+        Task<bool> CreateCard(CardInformation cardInfo);
+        Task<bool> RemoveCard(string cardUserKey, string cardToken);
+        //Task<CardList> RetrieveCards();
+
+
 
 
 

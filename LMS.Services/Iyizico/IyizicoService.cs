@@ -28,6 +28,7 @@ using Microsoft.AspNetCore.SignalR;
 using System.Reflection.Metadata;
 using Hangfire;
 using LMS.Data.Entity.Iyizico;
+using Org.BouncyCastle.Crypto.Macs;
 
 namespace LMS.Services.FileStorage
 {
@@ -182,7 +183,9 @@ namespace LMS.Services.FileStorage
             request.BasketId = Guid.NewGuid().ToString();
             request.PaymentChannel = PaymentChannel.WEB.ToString();
             request.PaymentGroup = PaymentGroup.PRODUCT.ToString();
-            request.CallbackUrl = "https://byokul.com/iyizico/callback";
+            request.CallbackUrl = "https://823a-223-177-183-104.ngrok-free.app/iyizico/callback";
+
+            //request.CallbackUrl = "https://byokul.com/iyizico/callback";
 
             var expMonth = model.ExpiresOn.Substring(0, Math.Min(2, model.ExpiresOn.Length));
             int lastTwoStartIndex = Math.Max(0, model.ExpiresOn.Length - 2);
@@ -932,7 +935,9 @@ namespace LMS.Services.FileStorage
             request.BasketId = Guid.NewGuid().ToString();
             request.PaymentChannel = PaymentChannel.WEB.ToString();
             request.PaymentGroup = PaymentGroup.PRODUCT.ToString();
-            request.CallbackUrl = "https://byokul.com/iyizico/callback";
+            //request.CallbackUrl = "https://byokul.com/iyizico/callback";
+            request.CallbackUrl = "https://823a-223-177-183-104.ngrok-free.app/iyizico/callback";
+
 
             var paymentCard = await GetPaymentCard(model);
             request.PaymentCard = paymentCard;
@@ -951,6 +956,16 @@ namespace LMS.Services.FileStorage
             firstBasketItem.Category2 = "Accessories";
             firstBasketItem.ItemType = BasketItemType.PHYSICAL.ToString();
             firstBasketItem.Price = model.Amount.ToString();
+
+            //create submerchant
+            var subMerchantKey = await CreateSubMerchent(model,userId);
+
+
+            var subMerchantPrice = (model.Amount * 80) / 100;
+            firstBasketItem.SubMerchantKey = subMerchantKey;
+            firstBasketItem.SubMerchantPrice = subMerchantPrice.ToString();
+
+
             basketItems.Add(firstBasketItem);
             request.BasketItems = basketItems;
 
@@ -964,6 +979,35 @@ namespace LMS.Services.FileStorage
             }
 
             return "ErrorMessage" + threedsInitialize.ErrorMessage + "Status" + threedsInitialize.Status + "ErrorCode" + threedsInitialize.ErrorCode;
+        }
+
+        public async Task<string> CreateSubMerchent(BuyClassCourseViewModel model, string userId)
+        {
+            Options options = new Options
+            {
+                ApiKey = this._config.GetValue<string>("IyzicoSettings:ApiKey"),
+                SecretKey = this._config.GetValue<string>("IyzicoSettings:SecretKey"),
+                BaseUrl = this._config.GetValue<string>("IyzicoSettings:BaseUrl")
+            };
+
+            CreateSubMerchantRequest request = new CreateSubMerchantRequest();
+            request.Locale = Locale.TR.ToString();
+            request.ConversationId = Guid.NewGuid().ToString();
+            request.SubMerchantExternalId = Guid.NewGuid().ToString();
+            request.SubMerchantType = SubMerchantType.PERSONAL.ToString();
+            request.Address = "test class";
+            request.ContactName = "Dharmendra";
+            request.ContactSurname = "Sinsinwar";
+            request.Email = "dharmendra@gmail.com";
+            request.GsmNumber = "+909129202000";
+            request.Name = "Dharam Request";
+            request.LegalCompanyTitle = "Dharam Company";
+            //request.Iban = "TR180006200119000006672315";
+            //request.IdentityNumber = "31300864726";
+            request.Currency = Currency.TRY.ToString();
+
+            SubMerchant subMerchant = SubMerchant.Create(request, options);
+            return subMerchant.SubMerchantKey;
         }
 
         public async Task saveClassCourseTransaction(BuyClassCourseViewModel model, string userId)
@@ -986,18 +1030,65 @@ namespace LMS.Services.FileStorage
 
         public async Task<PaymentCard> GetPaymentCard(BuyClassCourseViewModel model)
         {
+            Options options = new Options
+            {
+                ApiKey = this._config.GetValue<string>("IyzicoSettings:ApiKey"),
+                SecretKey = this._config.GetValue<string>("IyzicoSettings:SecretKey"),
+                BaseUrl = this._config.GetValue<string>("IyzicoSettings:BaseUrl")
+            };
+
             var expMonth = model.ExpiresOn.Substring(0, Math.Min(2, model.ExpiresOn.Length));
             int lastTwoStartIndex = Math.Max(0, model.ExpiresOn.Length - 2);
             var expYear = model.ExpiresOn.Substring(lastTwoStartIndex);
             var cardNumber = model.CardNumber.Replace("-", "");
 
             PaymentCard paymentCard = new PaymentCard();
-            paymentCard.CardHolderName = model.CardHolderName;
-            paymentCard.CardNumber = cardNumber;
-            paymentCard.ExpireMonth = expMonth;
-            paymentCard.ExpireYear = expYear;
-            paymentCard.Cvc = model.SecurityCode;
-            paymentCard.RegisterCard = 0;
+            paymentCard.CardUserKey = "Tw1LwrcYkZrPgF/g4yolJjcnlus=";
+            paymentCard.CardToken = "v7dXoSwJvYYc68nCkytSF1tmxCs=";
+            //paymentCard.CardHolderName = model.CardHolderName;
+            //paymentCard.CardNumber = cardNumber;
+            //paymentCard.ExpireMonth = expMonth;
+            //paymentCard.ExpireYear = expYear;
+            //paymentCard.Cvc = model.SecurityCode;
+
+            //if (model.IsSaveCardCheckboxSelected)
+            //{
+            //    paymentCard.RegisterCard = 1;
+            //}
+            //else
+            //{
+            //    paymentCard.RegisterCard = 0;
+            //}
+
+            //CreateCardRequest cardRequest = new CreateCardRequest();
+            //cardRequest.Locale = Locale.TR.ToString();
+            //cardRequest.ConversationId = Guid.NewGuid().ToString();
+            //cardRequest.Email = "john11@gmail.com";
+            //cardRequest.ExternalId = "";
+
+            //CardInformation cardInformation = new CardInformation();
+            //cardInformation.CardAlias = "card alias";
+            //cardInformation.CardHolderName = model.CardHolderName;
+            //cardInformation.CardNumber = model.CardNumber;
+            //cardInformation.ExpireMonth = expMonth;
+            //cardInformation.ExpireYear = expYear;
+            //cardRequest.Card = cardInformation;
+            //Iyzipay.Model.Card card = Card.Create(cardRequest, options);
+
+
+            //if (card.Status == Status.SUCCESS.ToString())
+            //{
+            //    var cardUserKey = new CardUserKey
+            //    {
+            //        Id = Guid.NewGuid(),
+            //        Email = "john11@gmail.com",
+            //        CardKey = card.CardUserKey
+            //    };
+
+            //    _cardUserKeyRepository.Insert(cardUserKey);
+            //    _cardUserKeyRepository.Save();
+            //}
+
             return paymentCard;
         }
 
@@ -1258,9 +1349,112 @@ namespace LMS.Services.FileStorage
                 CardList cardList = CardList.Retrieve(request, options);
 
                 return cardList;
+
+
             }
             return null;
         }
+
+
+        public async Task<bool> CreateCard(CardInformation cardInfo)
+        {
+            Options options = new Options
+            {
+                ApiKey = this._config.GetValue<string>("IyzicoSettings:ApiKey"),
+                SecretKey = this._config.GetValue<string>("IyzicoSettings:SecretKey"),
+                BaseUrl = this._config.GetValue<string>("IyzicoSettings:BaseUrl")
+            };
+
+            CreateCardRequest request = new CreateCardRequest();
+            request.Locale = Locale.TR.ToString();
+            request.ConversationId = Guid.NewGuid().ToString();
+            request.Email = "john2Doe11@gmail.com";
+
+            CardInformation cardInformation = new CardInformation();
+            cardInformation.CardAlias = cardInfo.CardAlias;
+            cardInformation.CardHolderName = cardInfo.CardHolderName;
+            cardInformation.CardNumber = cardInfo.CardNumber;
+            cardInformation.ExpireMonth = cardInfo.ExpireMonth;
+            cardInformation.ExpireYear = cardInfo.ExpireYear;
+
+            request.Card = cardInformation;
+
+            Card card = Card.Create(request, options);
+            //var cardUserKey = card.CardUserKey;
+
+            if (card.Status == Status.SUCCESS.ToString())
+            {
+                var cardUserKey = new CardUserKey
+                {
+                    Id = Guid.NewGuid(),
+                    Email = "john2Doe11@gmail.com",
+                    CardKey = card.CardUserKey
+                };
+
+                _cardUserKeyRepository.Insert(cardUserKey);
+                _cardUserKeyRepository.Save();
+
+                return true;
+
+            }
+
+            return false;
+
+
+
+        }
+
+        public async Task<bool> RemoveCard(string cardUserKey, string cardToken)
+        {
+            Options options = new Options
+            {
+                ApiKey = this._config.GetValue<string>("IyzicoSettings:ApiKey"),
+                SecretKey = this._config.GetValue<string>("IyzicoSettings:SecretKey"),
+                BaseUrl = this._config.GetValue<string>("IyzicoSettings:BaseUrl")
+            };
+
+            // Create a CardDeleteRequest
+            DeleteCardRequest request = new DeleteCardRequest();
+            request.Locale = Locale.TR.ToString();
+            //request.ConversationId = "123456789";
+            request.CardUserKey = cardUserKey;
+            request.CardToken = cardToken;
+
+            // Delete the card
+            Card card = Card.Delete(request, options);
+            if (card.Status == Status.SUCCESS.ToString())
+            {
+                return true;
+            }
+
+            return false;
+
+        }
+
+        //public async Task<CardList> RetrieveCards()
+        //{
+        //    Options options = new Options
+        //    {
+        //        ApiKey = this._config.GetValue<string>("IyzicoSettings:ApiKey"),
+        //        SecretKey = this._config.GetValue<string>("IyzicoSettings:SecretKey"),
+        //        BaseUrl = this._config.GetValue<string>("IyzicoSettings:BaseUrl")
+        //    };
+
+        //    var isCardUserKeyExist = _cardUserKeyRepository.GetAll().Where(x => x.Email == email).FirstOrDefault();
+        //    if (isCardUserKeyExist != null)
+        //    {
+        //        RetrieveCardListRequest request = new RetrieveCardListRequest();
+        //        request.Locale = Locale.TR.ToString();
+        //        request.CardUserKey = isCardUserKeyExist.CardKey;
+
+        //        CardList cardList = CardList.Retrieve(request, options);
+
+        //        return cardList;
+        //    }
+
+
+        //}
+
 
 
     }

@@ -33,6 +33,14 @@
           >
             {{ "GoLive" | translate }}
           </button>
+          <!--<button
+          *ngIf="isOwner && showSubscriptionBtn"
+          (click)="openPostModal(false)"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+        >
+          {{ "BuySubscription" | translate }}
+        </button>-->
           <button
             *ngIf="isOwner || hasPostPermission"
             (click)="openPostModal(false)"

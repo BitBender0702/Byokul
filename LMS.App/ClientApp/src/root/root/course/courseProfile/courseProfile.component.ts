@@ -56,6 +56,7 @@ import { userPermission } from '../../root.component';
 import { deleteModalPostResponse } from '../../delete-confirmation/delete-confirmation.component';
 import { disableEnableResponse } from 'src/root/admin/registeredCourses/registeredCourses.component';
 import { UserService } from 'src/root/service/user.service';
+import { isUserSchoolOrNotResponse } from '../../freeTrial/freeTrial.component';
 
 
 @Component({
@@ -264,6 +265,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this.isUserBannedId = response.courseId
 
       this.checkIfUserIsBanned();
+      isUserSchoolOrNotResponse.next({isUserSchool:this.isOwner});
 
 
       this.isAllowedForFileStorage = response.isFileStorageAccessible;

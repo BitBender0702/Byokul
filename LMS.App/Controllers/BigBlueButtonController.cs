@@ -1,22 +1,14 @@
-﻿using BigBlueButtonAPI.Core;
-using LMS.Common.ViewModels.BigBlueButton;
+﻿using LMS.Common.ViewModels.BigBlueButton;
 using LMS.Services.BigBlueButton;
 using LMS.Services.Blob;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.IO;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Cryptography;
-using System.Text;
-using System.Xml;
 using System.Diagnostics;
-using Microsoft.AspNetCore.SignalR;
 using LMS.Services.Common;
 using LMS.Data.Entity;
 using LMS.DataAccess.Repository;
 using LMS.Common.Enums;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using LMS.Common.ViewModels.Post;
 
@@ -88,13 +80,8 @@ namespace LMS.App.Controllers
             if (obj.First().data.id == "rap-publish-ended")
             {
                 var meetingID = obj.First().data.attributes.meeting.InternalMeetingId;
-
-                //var res = _hub.Clients.All.SendAsync("transferchartdata", DataManager.GetData());
-
                 string recordingUrl = string.Format(_config["RecordingUrl"], meetingID);
-
                 string fileName = meetingID + "File.mp4";
-
                 byte[] videoData = null;
                 try
                 {
@@ -111,7 +98,6 @@ namespace LMS.App.Controllers
 
                     try
                     {
-
                         ProcessStartInfo psi = new ProcessStartInfo();
                         psi.WindowStyle = ProcessWindowStyle.Hidden;
                         psi.UseShellExecute = false;
@@ -140,7 +126,6 @@ namespace LMS.App.Controllers
 
                     var byteArray = System.IO.File.ReadAllBytes(compressVid);
                     var streams = new MemoryStream(byteArray);
-
                     string containerName = this._config.GetValue<string>("MyConfig:Container");
                     string videoUrl = await _blobService.UploadVideoAsync(streams, containerName, fileName, "mp4");
                     return Ok();
@@ -166,10 +151,7 @@ namespace LMS.App.Controllers
                 var wc = new System.Net.WebClient();
                 videoData = wc.DownloadData(recordingUrl);
                 var stream = new MemoryStream(videoData);
-
                 var compressedVideo = await _commonService.CompressVideo(fileName, videoData);
-
-
                 string containerName = this._config.GetValue<string>("MyConfig:Container");
                 string videoUrl = await _blobService.UploadVideoAsync(compressedVideo, containerName, fileName, "mp4");
                 return Ok();
@@ -185,10 +167,8 @@ namespace LMS.App.Controllers
         public async Task GetMeetingVideo(IFormFile file, string meetingIds)
         {
             var fileUrl = await _blobService.UploadFileAsync(file, this._config.GetValue<string>("Container:PostContainer"), true);
-
             int hyphenIndex = meetingIds.IndexOf('-');
             meetingIds = meetingIds.Substring(0, hyphenIndex);
-
             var post = _postRepository.GetAll().Where(x => x.InternalMeetingId == meetingIds).First();
             post.PostType = (int)PostTypeEnum.Post;
             post.IsLive = false;
@@ -196,7 +176,6 @@ namespace LMS.App.Controllers
             _postRepository.Save();
 
             var postAttachment = await _postAttachmentRepository.GetAll().Where(x => x.PostId == post.Id).FirstAsync();
-
             postAttachment.FileThumbnail = postAttachment.FileUrl;
             postAttachment.FileType = (int)FileTypeEnum.Video;
             postAttachment.FileUrl = fileUrl;

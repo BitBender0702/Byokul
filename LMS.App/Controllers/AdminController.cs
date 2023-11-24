@@ -1,6 +1,5 @@
 ﻿using LMS.Common.ViewModels.Admin;
 using LMS.Services.Admin;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.App.Controllers

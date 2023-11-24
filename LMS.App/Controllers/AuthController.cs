@@ -1,17 +1,11 @@
-﻿//using Abp.Net.Mail;
-using LMS.Common.ViewModels.Account;
-using LMS.Common.ViewModels.Chat;
+﻿using LMS.Common.ViewModels.Account;
 using LMS.Data.Entity;
 using LMS.Services.Account;
 using LMS.Services.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Configuration;
 using LMS.Common.ViewModels.Post;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
 
 namespace LMS.App.Controllers
@@ -36,7 +30,6 @@ namespace LMS.App.Controllers
             _commonService = commonService;
         }
 
-        // Login Method
         [Route("login")]
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginViewModel loginViewModel)
@@ -55,7 +48,6 @@ namespace LMS.App.Controllers
         }
 
 
-        //Register User
         [Route("register")]
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel registerViewModel)
@@ -106,7 +98,6 @@ namespace LMS.App.Controllers
             }
         }
 
-        //Confirm Email
         [HttpGet]
         [Route("confirmEmail")]
         public async Task<IActionResult> ConfirmEmail(string token, string email)
@@ -121,7 +112,6 @@ namespace LMS.App.Controllers
         }
 
 
-        // Forget Password
         [Route("forgetPassword")]
         [HttpPost]
         public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordViewModel forgetPasswordViewModel)
@@ -142,12 +132,10 @@ namespace LMS.App.Controllers
         }
         private bool IsValidEmail(string email)
         {
-            // Regular expression for basic email format validation
             string emailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
             return Regex.IsMatch(email, emailPattern);
         }
 
-        // Change password
         [Authorize]
         [Route("updatePassword")]
         [HttpPost]
