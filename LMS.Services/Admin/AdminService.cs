@@ -25,11 +25,11 @@ namespace LMS.Services
         private IGenericRepository<Class> _classRepository;
         private IGenericRepository<Course> _courseRepository;
         private IGenericRepository<SchoolTransaction> _schoolTransactionRepository;
-        private IGenericRepository<ClassCourseTransaction> _classCourseTransactionRepository;
+        private IGenericRepository<SchoolClassCourseTransaction> _schoolClassCourseTransactionRepository;
 
         private readonly IMapper _mapper;
 
-        public AdminService(IGenericRepository<User> userRepository, IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTransaction> schoolTransactionRepository, IGenericRepository<ClassCourseTransaction> classCourseTransactionRepository)
+        public AdminService(IGenericRepository<User> userRepository, IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTransaction> schoolTransactionRepository, IGenericRepository<SchoolClassCourseTransaction> schoolClassCourseTransactionRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -37,7 +37,7 @@ namespace LMS.Services
             _classRepository = classRepository;
             _courseRepository = courseRepository;
             _schoolTransactionRepository = schoolTransactionRepository;
-            _classCourseTransactionRepository = classCourseTransactionRepository;
+            _schoolClassCourseTransactionRepository = schoolClassCourseTransactionRepository;
         }
         public async Task<List<RegisteredUsersViewModel>> GetRegisteredUsers()
         {
@@ -194,7 +194,7 @@ namespace LMS.Services
         {
             try
             {
-                var schoolTransactions = await _schoolTransactionRepository.GetAll().Include(x => x.User).Include(x => x.School).Where(x => x.PaymentId != null && x.School.IsSchoolSubscribed).ToListAsync();
+                var schoolTransactions = await _schoolClassCourseTransactionRepository.GetAll().Include(x => x.User).Include(x => x.School).Where(x => x.PaymentId != null && x.SchoolId != null).ToListAsync();
                 var result =  schoolTransactions.DistinctBy(x => x.ConversationId).ToList();
                 var response = _mapper.Map<List<SchoolTransactionViewModel>>(result);
                 return response;
@@ -206,10 +206,10 @@ namespace LMS.Services
 
         }
 
-        public async Task<List<ClassCourseTransactionViewModel>> GetAllClassCourseTransactions()
+        public async Task<List<SchoolClassCourseTransactionViewModel>> GetAllClassCourseTransactions()
         {
-            var classCourseTransactions = await _classCourseTransactionRepository.GetAll().Include(x => x.User).Include(x => x.Class).ThenInclude(x => x.School).Include(x => x.Course).ThenInclude(x => x.School).Where(x => x.PaymentId != null).ToListAsync();
-            var response = _mapper.Map<List<ClassCourseTransactionViewModel>>(classCourseTransactions);
+            var classCourseTransactions = await _schoolClassCourseTransactionRepository.GetAll().Include(x => x.User).Include(x => x.Class).ThenInclude(x => x.School).Include(x => x.Course).ThenInclude(x => x.School).Where(x => x.PaymentId != null && x.SchoolId == null).ToListAsync();
+            var response = _mapper.Map<List<SchoolClassCourseTransactionViewModel>>(classCourseTransactions);
             return response;
 
         }

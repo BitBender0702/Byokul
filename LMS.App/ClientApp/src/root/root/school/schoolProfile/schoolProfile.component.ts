@@ -72,7 +72,7 @@ import flatpickr from 'flatpickr';
 import { Arabic } from 'flatpickr/dist/l10n/ar';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import { Turkish } from 'flatpickr/dist/l10n/tr';
-import { SignalrService, notiFyTeacherResponse } from 'src/root/service/signalr.service';
+import { SignalrService, notiFyTeacherResponse, paymentResponse } from 'src/root/service/signalr.service';
 export const deleteSchoolResponse = new BehaviorSubject<string>('');
 
 import { NgxMaskModule } from 'ngx-mask';
@@ -84,6 +84,8 @@ import { userPermission } from '../../root.component';
 import { deleteModalPostResponse } from '../../delete-confirmation/delete-confirmation.component';
 import { DeleteOrDisableComponent } from '../../deleteOrDisableSCC/delete-or-disable.component';
 import { isUserSchoolOrNotResponse } from '../../freeTrial/freeTrial.component';
+import { PaymentComponent, paymentStatusResponse } from '../../payment/payment.component';
+import { PaymentResponseModalComponent } from '../../paymentResponseModal/paymentResponseModal.component';
 
 
 @Component({
@@ -256,8 +258,9 @@ export class SchoolProfileComponent
   videoFileUrl: string = '';
 
   userPermissionSubscription!:Subscription;
-
+  paymentStatusSubscription!: Subscription;
   deleteModalPostSubscription!: Subscription;
+  paymentResponseSubscription!: Subscription;
   isStorageUnAvailable:boolean=false;
 
 
@@ -360,6 +363,12 @@ export class SchoolProfileComponent
     }
     if (this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription.unsubscribe();
+    }
+    if (this.paymentStatusSubscription) {
+      this.paymentStatusSubscription.unsubscribe();
+    }
+    if (this.paymentResponseSubscription) {
+      this.paymentResponseSubscription.unsubscribe();
     }
   }
   ngOnChanges(): void {
@@ -729,6 +738,31 @@ debugger
       });
     }
     notifyMessageAndNotificationCount.next({});
+
+    this.paymentStatusSubscription = paymentStatusResponse.subscribe(response => {
+      if(response.loadingIcon){
+        this.loadingIcon = true;
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('PaymentProcessingMessage');
+        this.messageService.add({ severity: 'info', summary: translatedSummary, life: 6000, detail: translatedMessage });
+      }
+      else{
+        this.loadingIcon = false;
+      }
+    });
+
+    if (!this.paymentResponseSubscription) {
+      this.paymentResponseSubscription = paymentResponse.subscribe(response => {
+        debugger
+        this.loadingIcon = false;
+        this.school.isSchoolSubscribed = true;
+        const initialState = {
+          isPaymentSuccess: response.isPaymentSuccess,
+          from: Constant.School
+        };
+        this.bsModalService.show(PaymentResponseModalComponent, { initialState });
+      });
+    }
 
   }
 
@@ -2700,6 +2734,14 @@ debugger
         this.userIsBanned = false;
       }
     })
+  }
+
+  openPaymentModal() {
+    var schoolDetails = { "id": this.school.schoolId, "name": this.school.schoolName, "avatar": this.school.avatar, "type": 1, "amount":0 }
+    const initialState = {
+      paymentDetails: schoolDetails
+    };
+    this.bsModalService.show(PaymentComponent, { initialState });
   }
 
 }

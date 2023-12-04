@@ -30,6 +30,8 @@ namespace LMS.Data.Entity
         public string? BlobSasToken { get; set; }
         public DateTime? BlobSasTokenExirationTime { get; set; }
         public bool IsResetTokenUsed { get; set; }
+        public string? IyzicoSubMerchantKey { get; set; }
+
 
 
 

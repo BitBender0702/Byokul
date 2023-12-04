@@ -449,18 +449,28 @@
               <ul class="list-unstyled before-none mb-0">
                 <li
                   class="mb-0"
-                  *ngFor="let item of allTransactionDetails?.transactions"
+                  *ngFor="let item of allTransactionDetails"
                 >
                   <div
                     class="d-flex align-items-center justify-content-between"
                   >
                     <span class="followers-name font_16 text_sec1">
-                      <img
-                        [routerLink]="['/user/userProfile', item.user?.id]"
-                        *ngIf="item.user != null"
-                        [src]="item.user?.avatar"
-                        class="rounded-circle me-2 image_style"
-                      />
+                      <img *ngIf="item.user?.avatar != null"
+                      [routerLink]="['/user/userProfile', item.user?.id]"
+                      [src]="item.user?.avatar"
+                      class="rounded-circle me-2 image_style"
+                    />
+
+                    <img *ngIf="item.user?.avatar == null && gender == '1'"
+                    [routerLink]="['/user/userProfile', item.user?.id]"
+                    src="../../../assets/images/maleProfile.jfif"
+                    class="rounded-circle me-2 image_style"
+                  />
+                  <img *ngIf="item.user?.avatar == null && (gender == '2' || gender == '3')"
+                  [routerLink]="['/user/userProfile', item.user?.id]"
+                  src="../../../assets/images/femaleProfile.jfif"
+                  class="rounded-circle me-2 image_style"
+                  />
                       <span [innerHTML]="item.message"></span>
                       <span
                         *ngIf="
@@ -495,10 +505,10 @@
                       class="followe_report d-inline-flex align-items-center"
                       ><p class="font_12 text_ltgray fw_400 me-3 mb-0"></p>
                       <p class="font_12 text_ltgray fw_400 me-3 mb-0">
-                        {{ item.createdOn | date : "dd/MM/yyyy" }}
+                        {{ item.createdOn | ChangeTimeZonePipe | date : "dd/MM/yyyy" }}
                       </p>
                       <p class="font_12 text_ltgray fw_400 mb-0">
-                        {{ item.createdOn | date : "HH:mm" }}
+                        {{ item.createdOn | ChangeTimeZonePipe | date : "HH:mm" }}
                       </p>
                     </span>
                   </div>
@@ -535,11 +545,23 @@
                     class="d-flex align-items-center justify-content-between"
                   >
                     <span class="followers-name font_16 text_sec1">
-                      <img
-                        [routerLink]="['/user/userProfile', item.user?.id]"
-                        [src]="item.user?.avatar"
-                        class="rounded-circle me-2 image_style"
-                      />
+                      <img *ngIf="item.user?.avatar != null"
+                      [routerLink]="['/user/userProfile', item.user?.id]"
+                      [src]="item.user?.avatar"
+                      class="rounded-circle me-2 image_style"
+                    />
+
+                    <img *ngIf="item.user?.avatar == null && gender == '1'"
+                    [routerLink]="['/user/userProfile', item.user?.id]"
+                    src="../../../assets/images/maleProfile.jfif"
+                    class="rounded-circle me-2 image_style"
+                  />
+                  <img *ngIf="item.user?.avatar == null && (gender == '2' || gender == '3')"
+                  [routerLink]="['/user/userProfile', item.user?.id]"
+                  src="../../../assets/images/femaleProfile.jfif"
+                  class="rounded-circle me-2 image_style"
+                  />
+
                       <span [innerHTML]="item.message"></span>
 
                       <span
@@ -559,10 +581,10 @@
                       class="followe_report d-inline-flex align-items-center"
                       ><p class="font_12 text_ltgray fw_400 me-3 mb-0"></p>
                       <p class="font_12 text_ltgray fw_400 me-3 mb-0">
-                        {{ item.createdOn | date : "dd/MM/yyyy" }}
+                        {{ item.createdOn | ChangeTimeZonePipe | date : "dd/MM/yyyy" }}
                       </p>
                       <p class="font_12 text_ltgray fw_400 mb-0">
-                        {{ item.createdOn | date : "HH:mm" }}
+                        {{ item.createdOn | ChangeTimeZonePipe | date : "HH:mm" }}
                       </p>
                     </span>
                   </div>
@@ -648,10 +670,10 @@
                     class="followe_report d-inline-flex align-items-center"
                     ><p class="font_12 text_ltgray fw_400 me-3 mb-0"></p>
                     <p class="font_12 text_ltgray fw_400 me-3 mb-0">
-                      {{ item.createdOn | date : "dd/MM/yyyy" }}
+                      {{ item.createdOn | ChangeTimeZonePipe | date : "dd/MM/yyyy" }}
                     </p>
                     <p class="font_12 text_ltgray fw_400 mb-0">
-                      {{ item.createdOn | date : "HH:mm" }}
+                      {{ item.createdOn | ChangeTimeZonePipe | date : "HH:mm" }}
                     </p>
                   </span>
                 </div>
@@ -684,10 +706,10 @@
                       class="followe_report d-inline-flex align-items-center"
                       ><p class="font_12 text_ltgray fw_400 me-3 mb-0"></p>
                       <p class="font_12 text_ltgray fw_400 me-3 mb-0">
-                        {{ item.createdOn | date : "dd/MM/yyyy" }}
+                        {{ item.createdOn | ChangeTimeZonePipe | date : "dd/MM/yyyy" }}
                       </p>
                       <p class="font_12 text_ltgray fw_400 mb-0">
-                        {{ item.createdOn | date : "HH:mm" }}
+                        {{ item.createdOn | ChangeTimeZonePipe | date : "HH:mm" }}
                       </p>
                     </span>
                   </div>

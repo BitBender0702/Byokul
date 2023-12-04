@@ -1470,7 +1470,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     const currentSlideIndex = event.currentSlide;
     const direction = event.nextSlide > event.currentSlide ? 'down' : 'up';
     if (direction === 'up') {
-      this.onSlideUp();
+      // this.onSlideUp();
     }
     if (direction === 'down') {
       this.onSlideDown();

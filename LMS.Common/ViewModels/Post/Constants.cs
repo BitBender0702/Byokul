@@ -18,6 +18,7 @@ namespace LMS.Common.ViewModels.Post
         public static string Word = "msword";
         public static string Excel = "vnd.ms-excel";
         public static string UserDoesNotExist = "User does not exist";
+        public static string RegisteredSuccessfully = "User registered successfully";
         public static string ForgetEmailSentSuccessfully = "Forget Email sent successfully";
         public static string PPT = "vnd.ms-powerpoint";
         public static string Turkey = "Turkey";
@@ -25,7 +26,7 @@ namespace LMS.Common.ViewModels.Post
         public static string IncorrectPassword = "The password you entered is incorrect";
         public static string ChatDoesNotExist = "Chat doesn't exist";
         public static string ChatExists = "Chat exists";
-        public static string EmailNotConfirmed = "email not confirm";
+        public static string EmailNotConfirmed = "Email is not confirmed";
         public static string UserNotFound = "This email is not registered";
         public static string ResetTokenExpired = "reset token expired";
         public static string FolderCantDeleted = "folder can not be deleted";
@@ -95,6 +96,13 @@ namespace LMS.Common.ViewModels.Post
         public static string CardsCreatedSuccessfully = "Cards created successfully";
         public static string InvalidCard = "Invalid card details";
         public static string CardsRemovedSuccessfully = "Cards removed successfully";
+        public static string PostSharedSuccessfully = "Post shared successfully";
+        public static string UserIdOrPostIdInCorrect = "UserId or postId incorrect";
+        public static string ClassJoinedSuccessfully = "Class joined successfully";
+        public static string CourseJoinedSuccessfully = "Course joined successfully";
+        public static string ClassIdInvalidOrStudentExist = "Invalid classId or already joined the clas";
+        public static string CourseIdInvalidOrStudentExist = "Invalid courseId or already joined the class";
+
 
 
 

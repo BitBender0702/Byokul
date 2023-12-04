@@ -18,19 +18,21 @@ namespace LMS.Services.Iyizico
     {
         //Task<BuySchoolSubscriptionViewModel> BuySchoolSubscription(BuySchoolSubscriptionViewModel model,string userId,Guid schoolId);
         Task<List<SchoolSubscriptionPlansViewModel>> GetSubscriptionPlans();
-        Task<string> BuyClassCourse(BuyClassCourseViewModel model, string userId);
+        Task<string> BuySchoolClassCourse(BuySchoolClassCourseViewModel model, string userId);
         Task UpdateSchoolTransaction(string ConversationId, string paymentId, bool isInternationalUser);
-        Task UpdateClassCourseTransaction(string ConversationId, string paymentId);
+        Task UpdateSchoolClassCourseTransaction(string ConversationId, string paymentId);
         Task<TransactionsDetailsViewModel> GetSchoolTransactionDetails(TransactionParamViewModel model, string userId);
         Task<TransactionsDetailsViewModel> GetClassCourseTransactionDetails(TransactionParamViewModel model, string userId);
+        Task<TransactionsDetailsViewModel> GetAllTransactionDetails(TransactionParamViewModel model, string userId);
         void CloseIyizicoThreeDAuthWindow(string userId);
         Task<string> CancelSubscription(Guid schoolId);
         Task<string> RenewSubscription(Guid schoolId);
         Task<string> RefundPayment(string paymentId, LMS.Common.Enums.SchoolClassCourseEnum type);
         Task<string> BuySchoolSubscription(BuySchoolSubscriptionViewModel model, string userId, Guid schoolId);
-        Task<CardList> GetUserSavedCards(string email);
-        Task<bool> CreateCard(CardInformation cardInfo);
+        Task<List<CardList>> GetUserSavedCards(string email);
+        Task<bool> CreateCard(CardInformation cardInfo, string email);
         Task<bool> RemoveCard(string cardUserKey, string cardToken);
+        Task<string> CreateSubMerchent(User user);
         //Task<CardList> RetrieveCards();
 
 

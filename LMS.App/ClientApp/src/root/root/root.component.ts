@@ -26,7 +26,6 @@ import { banUnbanUserProgression } from '../admin/registeredUsers/registeredUser
 import { thumbnailUploadResponse } from './class/createClass/createClass.component';
 // import { userPermission } from './class/classProfile/classProfile.component';
 export const userPermission = new Subject<{ userPermissions: any }>();
-
 export const deleteReelResponse = new Subject();
 export const paymentConfirmDialoge = new Subject<{ response: any }>();
 export const postProgressNotification = new Subject<{ from: string }>();
@@ -631,6 +630,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
       });
     }
 
+
     // if(!this.addPostSubscription){
     //   this.addPostSubscription = addPostResponse.subscribe((postResponse:any) => {
     //     debugger
@@ -876,6 +876,7 @@ fileUploadProgress: { [key: string]: number } = {};
       .getContainerClient("classthumbnail");
     }
     else{
+      // ${cdnHostName}?${sasToken}
       var containerClient = new BlobServiceClient(`https://${blobStorageName}.blob.core.windows.net?${sasToken}`)
       .getContainerClient("userposts");
     }

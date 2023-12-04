@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { HtmlParser, Parser } from '@angular/compiler';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { MessageService } from 'primeng/api';
 import { Subject, Subscription, subscribeOn } from 'rxjs';
+import { IyizicoService } from 'src/root/service/iyizico.service';
 import { PaymentService } from 'src/root/service/payment.service';
-import { closeIyizicoThreeDAuthWindow } from 'src/root/service/signalr.service';
-export const paymentStatusResponse =new Subject(); 
+import { close3dsPopup, closeIyizicoThreeDAuthWindow } from 'src/root/service/signalr.service';
+export const paymentStatusResponse =new Subject<{ loadingIcon: boolean}>(); 
 
 @Component({
     selector: 'payment',
@@ -18,6 +19,7 @@ export const paymentStatusResponse =new Subject();
 
   export class PaymentComponent {
     private _paymentService;
+    private _iyizicoService;
     paymentDetails:any;
     paymentForm!:FormGroup;
     isSubmitted: boolean = false;
@@ -30,13 +32,25 @@ export const paymentStatusResponse =new Subject();
     isPaymentConfirmation:boolean = false;
     paymentConfirmationHtml:any;
     paymentConfirmationWindow!:Window | null;
+    subscriptionPlans: any;
+    userSavedCardsList: any;
+    isShowCardDetailsForm: boolean = false;
+    paymentViewModel: any;
+    cardUserKey!: string;
+    cardToken!: string;
+    subscriptionPlanId!: string;
+    IsSaveCardCheckboxSelected: boolean = false;
+    isUserAcceptByOkulAgreement: boolean = false;
+    close3dsPopupSubscription!: Subscription;
     closeIyizicoWindowSubscription!: Subscription;
 
-    constructor(public messageService:MessageService,private http: HttpClient,private fb: FormBuilder,private bsModalService: BsModalService,public options: ModalOptions,paymentService:PaymentService) {
+    constructor(public messageService:MessageService,private http: HttpClient,private fb: FormBuilder,private bsModalService: BsModalService,public options: ModalOptions,paymentService:PaymentService, iyizicoService:IyizicoService, private cd: ChangeDetectorRef) {
       this._paymentService = paymentService;
+      this._iyizicoService = iyizicoService;
     }
 
     ngOnInit(): void {
+      debugger
       // this.openWindow();
       this.parentInfo = this.options.initialState;
       this.isDataLoaded = true;
@@ -44,11 +58,25 @@ export const paymentStatusResponse =new Subject();
       this.currentDate = this.getCurrentDate();
       this.InitializePaymentForm();
 
-
-      this.closeIyizicoWindowSubscription = closeIyizicoThreeDAuthWindow.subscribe((response:any) => {
+      this._iyizicoService.getUserSavedCardsList().subscribe((response) => {
         debugger
-        this.paymentConfirmationWindow?.close();
+        this.userSavedCardsList = response;
+        this.cd.detectChanges();
       });
+     
+      if(this.parentInfo.paymentDetails.type == 1){
+        this._iyizicoService.getSubscriptionPlans().subscribe((response) => {
+          debugger
+          this.subscriptionPlans = response;
+        }); 
+      }
+      else{
+        this.closeIyizicoWindowSubscription = closeIyizicoThreeDAuthWindow.subscribe((response:any) => {
+          debugger
+          this.paymentConfirmationWindow?.close();
+        });
+      }
+
       // this._paymentService.stripeWebhook().subscribe((response: any) => {
   
       //  });
@@ -67,6 +95,14 @@ export const paymentStatusResponse =new Subject();
       //     // Handle error response
       //   }
       // );
+
+      if (!this.close3dsPopupSubscription) {
+        this.close3dsPopupSubscription = close3dsPopup.subscribe(response => {
+          debugger
+         this.loadingIcon = true;
+         this.paymentConfirmationWindow?.close();
+        });
+      }
 
     }
 
@@ -152,22 +188,51 @@ export const paymentStatusResponse =new Subject();
 // }
 
     addPayment(){
-      
-      var paymentDetails =this.paymentForm.value;
+      debugger
+      this.paymentViewModel = {};
       this.isSubmitted=true;
-      if (!this.paymentForm.valid) {
-      return;
-     }
+      if(!this.isUserAcceptByOkulAgreement){
+        return;
+      }
+
+      if(this.isShowCardDetailsForm){
+        if(!this.paymentForm.valid){
+
+        }
+        var paymentDetails =this.paymentForm.value;
+        this.paymentViewModel.cardNumber = paymentDetails.cardNumber;
+        this.paymentViewModel.expiresOn = paymentDetails.expiresOn;
+        this.paymentViewModel.securityCode = paymentDetails.securityCode;
+        this.paymentViewModel.cardHolderName = paymentDetails.cardHolderName;
+      }
+
+      if(!this.isShowCardDetailsForm){
+        this.paymentViewModel.cardUserKey = this.cardUserKey;
+        this.paymentViewModel.cardToken = this.cardToken;
+      }
+
+      this.paymentViewModel.isSaveCardCheckboxSelected = this.IsSaveCardCheckboxSelected;
+      this.paymentViewModel.parentId = this.parentInfo.paymentDetails.id;
+      this.paymentViewModel.parentName = this.parentInfo.paymentDetails.name;
+      this.paymentViewModel.parentType = this.parentInfo.paymentDetails.type;
+      this.paymentViewModel.amount = this.parentInfo.paymentDetails.amount;
+      this.paymentViewModel.currency =  this.parentInfo.paymentDetails.currency;
+      this.paymentViewModel.schoolSubscriptionPlanId = this.subscriptionPlanId;
+    //   var paymentDetails =this.paymentForm.value;
+    //   // this.isSubmitted=true;
+    //   if (!this.paymentForm.valid) {
+    //   return;
+    //  }
 
      this.loadingIcon = true;
-     this._paymentService.buyClassCourse(paymentDetails).subscribe((response: any) => {
-      
+     this._paymentService.buyClassCourse(this.paymentViewModel).subscribe((response: any) => {
       this.closeModal();
-      this.loadingIcon = false;
-      // paymentStatusResponse.next(true);
+      // this.loadingIcon = false;
+      paymentStatusResponse.next({loadingIcon: true});
       //this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'We will notify when payment will be successful'});
       this.isPaymentConfirmation = true;
       this.paymentConfirmationHtml = response;
+      
       
       this.paymentConfirmationWindow = window.open("","_blank", "width=500,height=300");
       this.paymentConfirmationWindow?.document.write(response);
@@ -216,5 +281,37 @@ export const paymentStatusResponse =new Subject();
         if (charCode > 31 && (charCode < 48 || charCode > 57)) {
           event.preventDefault();
         }
+      }
+
+      getSavedCardInfo(cardUserKey:string, cardToken:string){
+        debugger
+        this.isShowCardDetailsForm = false;
+        this.cardUserKey = cardUserKey;
+        this.cardToken = cardToken;
+      }
+
+      showCardDetailsForm(){
+        debugger
+        this.isShowCardDetailsForm = true;
+        this.cd.detectChanges();
+      }
+
+      close(){
+        this.bsModalService.hide();
+      }
+
+      storeUserCard(){
+        this.IsSaveCardCheckboxSelected = !this.IsSaveCardCheckboxSelected;
+      }
+
+      byOkulAgreement(){
+        debugger
+        this.isUserAcceptByOkulAgreement = !this.isUserAcceptByOkulAgreement;
+      }
+
+      getSchoolSubscriptionPlanId(subscriptionPlanId:string, amount:number){
+        debugger
+        this.subscriptionPlanId = subscriptionPlanId;
+        this.parentInfo.paymentDetails.amount = amount;
       }
 }

@@ -707,9 +707,8 @@ namespace LMS.Services
 
                 var attachment = _postAttachmentRepository.GetById(lastPostId);
                 int index = reelList.FindIndex(x => x.Id == attachment.PostId);
-                int startIndex = Math.Max(0, index - 3);
                 int totalItems = 7;
-                requiredResults = reelList.GetRange(startIndex, Math.Min(totalItems, reelList.Count - startIndex));
+                requiredResults = reelList.GetRange(index, Math.Min(totalItems, reelList.Count - index));
 
 
             }
@@ -1207,11 +1206,10 @@ namespace LMS.Services
                         var index = keys.FindIndex(key => key == attachment.PostId);
 
                         // Define the range parameters
-                        int startIndex = Math.Max(0, index - 3);
                         int totalItems = 7;
 
                         // Get the range of items from the dictionary
-                        requiredPostIds = keys.Skip(startIndex).Take(Math.Min(totalItems, keys.Count - startIndex)).ToArray();
+                        requiredPostIds = keys.Skip(index).Take(Math.Min(totalItems, keys.Count - index)).ToArray();
 
 
                     }
@@ -1390,9 +1388,8 @@ namespace LMS.Services
                     var attachment = _postAttachmentRepository.GetById(lastPostId);
                     var posts = await _postRepository.GetAll().Where(x => x.PostType == (int)PostTypeEnum.Reel).ToListAsync();
                     int index = posts.FindIndex(x => x.Id == attachment.PostId);
-                    int startIndex = Math.Max(0, index - 3);
                     int totalItems = 7;
-                    postList = posts.GetRange(startIndex, Math.Min(totalItems, posts.Count - startIndex));
+                    postList = posts.GetRange(index, Math.Min(totalItems, posts.Count - index));
 
 
                 }
@@ -1988,9 +1985,8 @@ namespace LMS.Services
 
                 var attachment = _postAttachmentRepository.GetById(lastPostId);
                 int index = postListData.FindIndex(x => x.Id == attachment.PostId);
-                int startIndex = Math.Max(0, index - 3);
                 int totalItems = 7;
-                requiredResults = postListData.GetRange(startIndex, Math.Min(totalItems, postListData.Count - startIndex));
+                requiredResults = postListData.GetRange(index, Math.Min(totalItems, postListData.Count - index));
 
 
             }

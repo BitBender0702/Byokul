@@ -9,12 +9,15 @@ using Iyzipay.Request.V2.Subscription;
 using LMS.Common.Enums;
 using LMS.Common.ViewModels;
 using LMS.Common.ViewModels.Chat;
+using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Iyizico;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.Stripe;
 using LMS.Common.ViewModels.Student;
 using LMS.Data.Entity;
+using LMS.Data.Entity.Common;
 using LMS.Data.Migrations;
+using LMS.DataAccess.Repository;
 using LMS.Services;
 using LMS.Services.Blob;
 using LMS.Services.Iyizico;
@@ -22,6 +25,8 @@ using LMS.Services.Students;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Newtonsoft.Json;
 using System.Text;
@@ -33,11 +38,20 @@ namespace LMS.App.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly IIyizicoService _iyizicoService;
+        private readonly ChatHubs _chatHubs;
+        private readonly IHubContext<ChatHubs> _hubContext;
+        private IGenericRepository<Comment> _commentRepository;
+        private IGenericRepository<SchoolClassCourseTransaction> _schoolClassCourseTransactionRepository;
+        private IConfiguration _config;
 
-        public IyzicoController(UserManager<User> userManager, IIyizicoService iyizicoService)
+        public IyzicoController(UserManager<User> userManager, IIyizicoService iyizicoService, ChatHubs chatHubs, IHubContext<ChatHubs> hubContext, IGenericRepository<SchoolClassCourseTransaction> schoolClassCourseTransactionRepository, IConfiguration config)
         {
             _userManager = userManager;
             _iyizicoService = iyizicoService;
+            _chatHubs = chatHubs;
+            _hubContext = hubContext;
+            _schoolClassCourseTransactionRepository = schoolClassCourseTransactionRepository;
+            _config = config;
         }
 
         //[Route("buySchoolSubscription")]
@@ -60,25 +74,33 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
-        [Route("buyClassCourse")]
+        [Route("buySchoolClassCourse")]
         [HttpPost]
-        public async Task<IActionResult> BuyClassCourseSubscription([FromBody] BuyClassCourseViewModel model)
+        public async Task<IActionResult> BuySchoolClassCourse([FromBody] BuySchoolClassCourseViewModel model)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            var response = await _iyizicoService.BuyClassCourse(model, userId);
+            var response = await _iyizicoService.BuySchoolClassCourse(model, userId);
             return Json(response);
         }
 
         [HttpPost("callback")]
         [AllowAnonymous]
-        public IActionResult Callback([FromBody]ThreeDCallbackViewModel callbackModel)
+        public async Task<IActionResult> Callback([FromBody] ThreeDCallbackViewModel callbackModel)
         {
             try
             {
+                string userId = "";
+                string userConnectionId = "";
                 if (callbackModel.Status == "CALLBACK_THREEDS")
                 {
+                    userId = await _schoolClassCourseTransactionRepository.GetAll().Where(x => x.ConversationId == callbackModel.PaymentConversationId).Select(x => x.ActionDoneBy).FirstAsync();
+
                     Iyzipay.Options options = new Iyzipay.Options
                     {
+                        //ApiKey = this._config.GetValue<string>("IyzicoSettings:ApiKey"),
+                        //SecretKey = this._config.GetValue<string>("IyzicoSettings:SecretKey"),
+                        //BaseUrl = this._config.GetValue<string>("IyzicoSettings:BaseUrl")
+
                         ApiKey = "sandbox-ErjSK6FUTbZa2utyEJ2R2nVqKofoDipU",
                         SecretKey = "sandbox-lducaaS6qCX2hBmzvijo95MpFgU5GIOB",
                         BaseUrl = "https://sandbox-api.iyzipay.com"
@@ -103,54 +125,86 @@ namespace LMS.App.Controllers
 
 
 
-
-                        _iyizicoService.CloseIyizicoThreeDAuthWindow(request.ConversationId);
+                        //userConnectionId = _chatHubs.GetUserConnectionId(userId);
+                        //if (userConnectionId != null)
+                        //{
+                        //    await _hubContext.Clients.Client(userConnectionId).SendAsync("close3dsPopup");
+                        //}
+                        //_iyizicoService.CloseIyizicoThreeDAuthWindow(request.ConversationId);
                         return base.Content("<div>Payment successful.</div>", "text/html");
                     }
                     if (threedsPayment.Status == Status.FAILURE.ToString())
                     {
-                        _iyizicoService.CloseIyizicoThreeDAuthWindow(request.ConversationId);
+                        //_iyizicoService.CloseIyizicoThreeDAuthWindow(request.ConversationId);
                         return base.Content("<div>Your payment has failed. Please try again.</div>", "text/html");
                     }
                 }
                 if (callbackModel.Status == "SUCCESS")
                 {
-                    Iyzipay.Options options = new Iyzipay.Options
+                    try
                     {
-                        ApiKey = "sandbox-ErjSK6FUTbZa2utyEJ2R2nVqKofoDipU",
-                        SecretKey = "sandbox-lducaaS6qCX2hBmzvijo95MpFgU5GIOB",
-                        BaseUrl = "https://sandbox-api.iyzipay.com"
-                    };
-                    CreateThreedsPaymentRequest request = new CreateThreedsPaymentRequest();
+                        await _iyizicoService.UpdateSchoolClassCourseTransaction(callbackModel.PaymentConversationId, callbackModel.PaymentId.ToString());
+                        userId = await _schoolClassCourseTransactionRepository.GetAll().Where(x => x.ConversationId == callbackModel.PaymentConversationId).Select(x => x.ActionDoneBy).FirstAsync();
+                        userConnectionId = _chatHubs.GetUserConnectionId(userId);
+                        if (userConnectionId != null)
+                        {
+                            await _hubContext.Clients.Client(userConnectionId).SendAsync("paymentResponse", "true");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        userConnectionId = _chatHubs.GetUserConnectionId(userId);
+                        if (userConnectionId != null)
+                        {
+                            await _hubContext.Clients.Client(userConnectionId).SendAsync("paymentResponse", "false");
+                        }
+                    }
 
-                    request.ConversationId = callbackModel.PaymentConversationId.ToString();
-                    request.PaymentId = callbackModel.PaymentId.ToString();
-
-                    //if (!string.IsNullOrEmpty(callbackModel.ConversationData))
+                    //Iyzipay.Options options = new Iyzipay.Options
                     //{
-                    //    request.ConversationData = callbackModel.ConversationData;
+                    //    //ApiKey = this._config.GetValue<string>("IyzicoSettings:ApiKey"),
+                    //    //SecretKey = this._config.GetValue<string>("IyzicoSettings:SecretKey"),
+                    //    //BaseUrl = this._config.GetValue<string>("IyzicoSettings:BaseUrl")
+
+                    //    ApiKey = "sandbox-ErjSK6FUTbZa2utyEJ2R2nVqKofoDipU",
+                    //    SecretKey = "sandbox-lducaaS6qCX2hBmzvijo95MpFgU5GIOB",
+                    //    BaseUrl = "https://sandbox-api.iyzipay.com"
+                    //};
+                    //CreateThreedsPaymentRequest request = new CreateThreedsPaymentRequest();
+
+                    //request.ConversationId = callbackModel.PaymentConversationId.ToString();
+                    //request.PaymentId = callbackModel.PaymentId.ToString();
+
+                    ////if (!string.IsNullOrEmpty(callbackModel.ConversationData))
+                    ////{
+                    ////    request.ConversationData = callbackModel.ConversationData;
+                    ////}
+
+                    //ThreedsPayment threedsPayment = ThreedsPayment.Create(request, options);
+
+                    //if (threedsPayment.Status == Status.SUCCESS.ToString())
+                    //{
+
+
+
+
+                    //    //_iyizicoService.CloseIyizicoThreeDAuthWindow(request.ConversationId);
+                    //    return base.Content("<div>Payment successful.</div>", "text/html");
                     //}
-
-                    ThreedsPayment threedsPayment = ThreedsPayment.Create(request, options);
-
-                    if (threedsPayment.Status == Status.SUCCESS.ToString())
-                    {
-
-
-
-
-                        _iyizicoService.CloseIyizicoThreeDAuthWindow(request.ConversationId);
-                        return base.Content("<div>Payment successful.</div>", "text/html");
-                    }
-                    if (threedsPayment.Status == Status.FAILURE.ToString())
-                    {
-                        _iyizicoService.CloseIyizicoThreeDAuthWindow(request.ConversationId);
-                        return base.Content("<div>Your payment has failed. Please try again.</div>", "text/html");
-                    }
+                    //if (threedsPayment.Status == Status.FAILURE.ToString())
+                    //{
+                    //    //_iyizicoService.CloseIyizicoThreeDAuthWindow(request.ConversationId);
+                    //    return base.Content("<div>Your payment has failed. Please try again.</div>", "text/html");
+                    //}
 
 
 
                 }
+
+                //if (callbackModel.Status == "FAILURE")
+                //{
+                //    HandlePaymentFailure(data.iyziPaymentId);
+                //}
             }
             catch (Exception ex)
             {
@@ -219,7 +273,7 @@ namespace LMS.App.Controllers
 
             if (paymentResponse.IyziEventType == "THREE_DS_AUTH" && paymentResponse.Status == "SUCCESS")
             {
-                await _iyizicoService.UpdateClassCourseTransaction(conversationId, paymentId);
+                await _iyizicoService.UpdateSchoolClassCourseTransaction(conversationId, paymentId);
             }
             if (paymentResponse.Status == "SUCCESS")
             {
@@ -307,6 +361,15 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [Route("allTransactionDetails")]
+        [HttpPost]
+        public async Task<IActionResult> GetAllTransactionDetails([FromBody] TransactionParamViewModel model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _iyizicoService.GetAllTransactionDetails(model, userId);
+            return Ok(response);
+        }
+
         [Route("cancelSubscription")]
         [HttpPost]
         public async Task<IActionResult> CancelSubscription(Guid schoolId)
@@ -340,12 +403,12 @@ namespace LMS.App.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUserSavedCards()
         {
-            //var email = User.Identity.Name;
-            var email = "john2Doe11@gmail.com";
+            var email = User.Identity.Name;
+            //var email = "john2Doe11@gmail.com";
             var response = await _iyizicoService.GetUserSavedCards(email);
-            if (response.CardDetails.Count > 0)
+            if (response.Count > 0)
             {
-                return Ok(new { Success = true,Message = Common.ViewModels.Post.Constants.SavedCardRetrieveSuccessfully, Data = response });
+                return Ok(new { Success = true, Message = Common.ViewModels.Post.Constants.SavedCardRetrieveSuccessfully, Data = response });
             }
             return Ok(new { Success = true, Message = Common.ViewModels.Post.Constants.CardsNotExist, Data = response });
         }
@@ -354,7 +417,8 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCard(CardInformation cardInfo)
         {
-            var response = await _iyizicoService.CreateCard(cardInfo);
+            var email = User.Identity.Name;
+            var response = await _iyizicoService.CreateCard(cardInfo, email);
             if (response)
             {
                 return Ok(new { Success = true, Message = Common.ViewModels.Post.Constants.CardsCreatedSuccessfully });
@@ -364,7 +428,7 @@ namespace LMS.App.Controllers
 
         [Route("removeCard")]
         [HttpPost]
-        public async Task<IActionResult> RemoveCard(string cardUserKey,string cardToken)
+        public async Task<IActionResult> RemoveCard(string cardUserKey, string cardToken)
         {
             var response = await _iyizicoService.RemoveCard(cardUserKey, cardToken);
             if (response)

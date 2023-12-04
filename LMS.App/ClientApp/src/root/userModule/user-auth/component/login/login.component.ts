@@ -210,7 +210,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
             this.loginForm.setErrors({ incorrectPassword: true });
           }
 
-          if(response.errorMessage == "email not confirm"){
+          if(response.errorMessage == "Email is not confirmed"){
             localStorage.setItem("email",this.user.email);
             $("#resend-email").modal('show');
             this._authService.loginState$.next(false);

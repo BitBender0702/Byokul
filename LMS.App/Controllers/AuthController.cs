@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using LMS.Common.ViewModels.Post;
 using Microsoft.AspNetCore.Authorization;
 using System.Text.RegularExpressions;
+using LMS.Services.Iyizico;
+using LMS.Services.FileStorage;
+using LMS.DataAccess.Repository;
 
 namespace LMS.App.Controllers
 {
@@ -18,14 +21,18 @@ namespace LMS.App.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IAuthService _authService;
         private readonly ICommonService _commonService;
+        private readonly IIyizicoService _iyzicoService;
+        private readonly IGenericRepository<User> _userRepository;
         private IConfiguration _config;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public AuthController(SignInManager<User> signInManager, UserManager<User> userManager, IAuthService authService, IConfiguration config, IWebHostEnvironment webHostEnvironment, ICommonService commonService)
+        public AuthController(SignInManager<User> signInManager, UserManager<User> userManager, IAuthService authService, IIyizicoService iyzicoService, IConfiguration config, IGenericRepository<User> userRepository, IWebHostEnvironment webHostEnvironment, ICommonService commonService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _authService = authService;
+            _iyzicoService = iyzicoService;
             _config = config;
+            _userRepository = userRepository;
             _webHostEnvironment = webHostEnvironment;
             _commonService = commonService;
         }
@@ -82,13 +89,23 @@ namespace LMS.App.Controllers
                         text = text.Replace("[URL]", callBackUrl);
                         await _commonService.SendEmail(new List<string> { user.Email }, null, null, "Verify Your Email Address", body: text, null, null);
 
-                        return Ok(new { result = "success" , userId = user.Id});
+                        var iyzicoSubmerchantKey = await _iyzicoService.CreateSubMerchent(user);
+                        user.IyzicoSubMerchantKey = iyzicoSubmerchantKey;
+                        _userRepository.Update(user);
+                        _userRepository.Save();
+
+                        //return Ok(new { result = Constants.Success , userId = user.Id});
+                        return Ok(new { Success = true, Message = Constants.RegisteredSuccessfully, userId = user.Id });
+
                     }
 
-                    return Ok(new { result = result.Errors.FirstOrDefault()?.Description });
+                    //return Ok(new { result = Constants.Success, message = result.Errors.FirstOrDefault()?.Description });
+                    return Ok(new { Success = false, Message = result.Errors.FirstOrDefault()?.Description });
                 }
 
-                return Ok(new { result = ModelState.Select(x => x.Value.Errors.FirstOrDefault()?.ErrorMessage).FirstOrDefault()});
+                //return Ok(new { result = ModelState.Select(x => x.Value.Errors.FirstOrDefault()?.ErrorMessage).FirstOrDefault()});
+                return Ok(new { Success = false, Message = ModelState.Select(x => x.Value.Errors.FirstOrDefault()?.ErrorMessage).FirstOrDefault() });
+
 
 
             }

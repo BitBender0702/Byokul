@@ -570,57 +570,6 @@ namespace LMS.Data.Migrations
                     b.ToTable("ClassCourseRatings");
                 });
 
-            modelBuilder.Entity("LMS.Data.Entity.Common.ClassCourseTransaction", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("ClassId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ConversationId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("CourseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsRefund")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassId");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ClassCourseTransactions");
-                });
-
             modelBuilder.Entity("LMS.Data.Entity.Common.SavedClassCourse", b =>
                 {
                     b.Property<Guid>("Id")
@@ -652,6 +601,67 @@ namespace LMS.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("SavedClassCourses");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.Common.SchoolClassCourseTransaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ActionDoneBy")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ClassId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConversationId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRefund")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SSCOwnerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid?>("SchoolId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActionDoneBy");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("SSCOwnerId");
+
+                    b.HasIndex("SchoolId");
+
+                    b.ToTable("SchoolClassCourseTransactions");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.Common.SharedClassCourse", b =>
@@ -1711,11 +1721,57 @@ namespace LMS.Data.Migrations
                     b.ToTable("SchoolLanguages");
                 });
 
+            modelBuilder.Entity("LMS.Data.Entity.SchoolSubscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedById")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("SchoolId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("SchoolSubscriptionPlanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("DeletedById");
+
+                    b.HasIndex("SchoolId");
+
+                    b.HasIndex("SchoolSubscriptionPlanId");
+
+                    b.ToTable("SchoolSubscriptions");
+                });
+
             modelBuilder.Entity("LMS.Data.Entity.SchoolSubscriptionPlan", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
 
                     b.Property<string>("PlanName")
                         .IsRequired()
@@ -2170,6 +2226,9 @@ namespace LMS.Data.Migrations
 
                     b.Property<bool>("IsVarified")
                         .HasColumnType("bit");
+
+                    b.Property<string>("IyzicoSubMerchantKey")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -2875,27 +2934,6 @@ namespace LMS.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("LMS.Data.Entity.Common.ClassCourseTransaction", b =>
-                {
-                    b.HasOne("LMS.Data.Entity.Class", "Class")
-                        .WithMany()
-                        .HasForeignKey("ClassId");
-
-                    b.HasOne("LMS.Data.Entity.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId");
-
-                    b.HasOne("LMS.Data.Entity.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Class");
-
-                    b.Navigation("Course");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("LMS.Data.Entity.Common.SavedClassCourse", b =>
                 {
                     b.HasOne("LMS.Data.Entity.Class", "Class")
@@ -2915,6 +2953,39 @@ namespace LMS.Data.Migrations
                     b.Navigation("Class");
 
                     b.Navigation("Course");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.Common.SchoolClassCourseTransaction", b =>
+                {
+                    b.HasOne("LMS.Data.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("ActionDoneBy");
+
+                    b.HasOne("LMS.Data.Entity.Class", "Class")
+                        .WithMany()
+                        .HasForeignKey("ClassId");
+
+                    b.HasOne("LMS.Data.Entity.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId");
+
+                    b.HasOne("LMS.Data.Entity.User", "SSCOwner")
+                        .WithMany()
+                        .HasForeignKey("SSCOwnerId");
+
+                    b.HasOne("LMS.Data.Entity.School", "School")
+                        .WithMany()
+                        .HasForeignKey("SchoolId");
+
+                    b.Navigation("Class");
+
+                    b.Navigation("Course");
+
+                    b.Navigation("SSCOwner");
+
+                    b.Navigation("School");
 
                     b.Navigation("User");
                 });
@@ -3310,6 +3381,33 @@ namespace LMS.Data.Migrations
                     b.Navigation("Language");
 
                     b.Navigation("School");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.SchoolSubscription", b =>
+                {
+                    b.HasOne("LMS.Data.Entity.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("LMS.Data.Entity.User", "DeletedBy")
+                        .WithMany()
+                        .HasForeignKey("DeletedById");
+
+                    b.HasOne("LMS.Data.Entity.School", "School")
+                        .WithMany()
+                        .HasForeignKey("SchoolId");
+
+                    b.HasOne("LMS.Data.Entity.SchoolSubscriptionPlan", "SchoolSubscriptionPlan")
+                        .WithMany()
+                        .HasForeignKey("SchoolSubscriptionPlanId");
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("DeletedBy");
+
+                    b.Navigation("School");
+
+                    b.Navigation("SchoolSubscriptionPlan");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.SchoolTag", b =>

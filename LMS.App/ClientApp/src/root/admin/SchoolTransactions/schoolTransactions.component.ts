@@ -114,6 +114,7 @@ export class SchoolTransactionsComponent extends MultilingualComponent implement
         else{
           this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: response.errorMessage });
         }
+        this.ngOnInit();
         });
       }
 

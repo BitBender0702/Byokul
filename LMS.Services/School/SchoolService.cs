@@ -65,6 +65,7 @@ namespace LMS.Services
         private IGenericRepository<SharedClassCourse> _sharedClassCourseRepository;
         private IGenericRepository<SavedPost> _savedPostRepository;
         private IGenericRepository<UserPermission> _userPermissionRepository;
+        private IGenericRepository<SchoolSubscription> _schoolSubscriptionRepository;
         private readonly UserManager<User> _userManager;
         private IGenericRepository<ClassViews> _ClassViewsRepository;
         private IGenericRepository<CourseViews> _CourseViewsRepository;
@@ -80,7 +81,7 @@ namespace LMS.Services
         private IGenericRepository<Notification> _notificationRepository;
 
 
-        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<User> userRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedClassCourse> savedClassCourseRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<SharedClassCourse> sharedClassCourseRepository, IGenericRepository<UserPermission> userPermissionRepository, UserManager<User> userManager, IGenericRepository<ClassViews> ClassViewsRepository, IGenericRepository<CourseViews> CourseViewsRepository, IGenericRepository<ChatHead> chatHeadRepository, IBlobService blobService, IUserService userService, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<CourseTag> courseTagRepository, IClassService classService, ICourseService courseService, IConfiguration config, IIyizicoService iyizicoService, IGenericRepository<Notification> notificationRepository)
+        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<User> userRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedClassCourse> savedClassCourseRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<SharedClassCourse> sharedClassCourseRepository, IGenericRepository<UserPermission> userPermissionRepository, IGenericRepository<SchoolSubscription> schoolSubscriptionRepository, UserManager<User> userManager, IGenericRepository<ClassViews> ClassViewsRepository, IGenericRepository<CourseViews> CourseViewsRepository, IGenericRepository<ChatHead> chatHeadRepository, IBlobService blobService, IUserService userService, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<CourseTag> courseTagRepository, IClassService classService, ICourseService courseService, IConfiguration config, IIyizicoService iyizicoService, IGenericRepository<Notification> notificationRepository)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -108,6 +109,7 @@ namespace LMS.Services
             _savedClassCourseRepository = savedClassCourseRepository;
             _sharedClassCourseRepository = sharedClassCourseRepository;
             _savedPostRepository = savedPostRepository;
+            _schoolSubscriptionRepository = schoolSubscriptionRepository;
             _userManager = userManager;
             _ClassViewsRepository = ClassViewsRepository;
             _CourseViewsRepository = CourseViewsRepository;
@@ -508,6 +510,21 @@ namespace LMS.Services
 
                 response.NoOfAppliedCourseFilters = await _userClassCourseFilterRepository.GetAll().Where(x => x.UserId == loginUserId && x.ClassCourseFilterType == ClassCourseFilterEnum.Course && x.SchoolId == response.SchoolId && x.IsActive).CountAsync();
 
+
+
+
+
+
+                // here we will add isSchoolSubscribed property
+                //var schoolSubscription = await _schoolSubscriptionRepository.GetAll().Where(x => x.SchoolId == response.SchoolId && x.CreatedById == loginUserId).FirstOrDefaultAsync();
+                //if (schoolSubscription != null)
+                //{
+                //    response.IsSchoolSubscribed = schoolSubscription.IsActive;
+                //}
+
+                var isActive = await _schoolSubscriptionRepository.GetAll().Where(x => x.SchoolId == response.SchoolId && x.CreatedById == loginUserId).Select(x => x.IsActive).FirstOrDefaultAsync();
+
+                response.IsSchoolSubscribed = isActive;
                 return response;
             }
             return null;
@@ -1196,9 +1213,8 @@ namespace LMS.Services
 
                 var attachment = _postAttachmentRepository.GetById(lastPostId);
                 int index = schoolList.FindIndex(x => x.Id == attachment.PostId);
-                int startIndex = Math.Max(0, index - 3);
                 int totalItems = 7;
-                requiredResults = schoolList.GetRange(startIndex, Math.Min(totalItems, schoolList.Count - startIndex));
+                requiredResults = schoolList.GetRange(index, Math.Min(totalItems, schoolList.Count - index));
 
 
             }

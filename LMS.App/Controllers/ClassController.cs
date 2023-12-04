@@ -77,8 +77,8 @@ namespace LMS.App.Controllers
         [Route("getClassByName")]
         [HttpGet]
         public async Task<IActionResult> GetClassByName(string className)
-        
-        
+
+
         {
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _classService.GetClassByName(className, userId, false);
@@ -172,7 +172,7 @@ namespace LMS.App.Controllers
             {
                 return BadRequest(new { Success = false, ErrorMessage = ex.Message });
             }
-            }
+        }
 
         [Route("saveClassCertificates")]
         [HttpPost]
@@ -259,7 +259,7 @@ namespace LMS.App.Controllers
 
         [Route("getClassFilters")]
         [HttpGet]
-        public async Task<IActionResult> GetClassFilters(string userId,Guid schoolId)
+        public async Task<IActionResult> GetClassFilters(string userId, Guid schoolId)
         {
             var response = await _classService.GetClassFilters(userId, schoolId);
             return Ok(response);
@@ -271,7 +271,7 @@ namespace LMS.App.Controllers
         {
             var userId = await GetUserIdAsync(this._userManager);
             await _classService.SaveClassFilters(model, userId);
-            return Ok(new { Success = true, Message= "Class Filter Saved" });
+            return Ok(new { Success = true, Message = "Class Filter Saved" });
             //return Ok();
         }
 
@@ -337,7 +337,7 @@ namespace LMS.App.Controllers
             }
             else
             {
-                return Ok(new { Success = false, Message = Constants.ClassNotRatedSuccessfully,ClassRating = classRatings });
+                return Ok(new { Success = false, Message = Constants.ClassNotRatedSuccessfully, ClassRating = classRatings });
             }
 
         }
@@ -362,15 +362,28 @@ namespace LMS.App.Controllers
             {
                 return Ok(new { Success = true, Message = Constants.StudentIsBanned });
             }
-            else if(isStudentBanUnbanned == false)
+            else if (isStudentBanUnbanned == false)
             {
                 return Ok(new { Success = true, Message = Constants.StudentIsUnBanned });
             }
-            else if(isStudentBanUnbanned == null)
+            else if (isStudentBanUnbanned == null)
             {
                 return Ok(new { Success = false, Message = Constants.NoPermissionForBan });
             }
             return Ok();
+        }
+
+        [Route("joinFreeClass")]
+        [HttpPost]
+        public async Task<IActionResult> JoinFreeClass(Guid classId)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _classService.JoinFreeClass(classId, userId);
+            if (response)
+            {
+                return Ok(new { Success = true, Message = Constants.CourseJoinedSuccessfully });
+            }
+            return Ok(new { Success = false, Message = Constants.ClassIdInvalidOrStudentExist });
         }
 
 

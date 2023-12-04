@@ -33,11 +33,11 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import { PaymentComponent, paymentStatusResponse } from '../../payment/payment.component';
 import { AuthService } from 'src/root/service/auth.service';
-import { SignalrService, commentLikeResponse } from 'src/root/service/signalr.service';
+import { SignalrService, commentLikeResponse, paymentResponse } from 'src/root/service/signalr.service';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { generateCertificateResponse } from '../../generateCertificate/generateCertificate.component';
-import { OpenSideBar, enableDisableScc, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, enableDisableScc, followedCourseResponse, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 export const convertIntoClassResponse = new Subject<{ classId: string, className: string, school: any, avatar: string }>();
 export const deleteCourseResponse = new BehaviorSubject<string>('');
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
@@ -57,6 +57,7 @@ import { deleteModalPostResponse } from '../../delete-confirmation/delete-confir
 import { disableEnableResponse } from 'src/root/admin/registeredCourses/registeredCourses.component';
 import { UserService } from 'src/root/service/user.service';
 import { isUserSchoolOrNotResponse } from '../../freeTrial/freeTrial.component';
+import { PaymentResponseModalComponent } from '../../paymentResponseModal/paymentResponseModal.component';
 
 
 @Component({
@@ -153,6 +154,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   deletePostSubscription!: Subscription;
   deleteReelSubscription!: Subscription;
   generateCertificateSubscription!: Subscription;
+  paymentResponseSubscription!:Subscription;
   filteredAttachments: any[] = [];
   courseAvatar: string = '';
 
@@ -467,7 +469,15 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
 
     this.paymentStatusSubscription = paymentStatusResponse.subscribe(response => {
-      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'We will notify when payment will be successful' });
+      if(response.loadingIcon){
+        this.loadingIcon = true;
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('PaymentProcessingMessage');
+        this.messageService.add({ severity: 'info', summary: translatedSummary, life: 6000, detail: translatedMessage });
+      }
+      else{
+        this.loadingIcon = false;
+      }
     });
 
     if (!this.deletePostSubscription) {
@@ -541,7 +551,20 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
     notifyMessageAndNotificationCount.next({});
 
-
+    if (!this.paymentResponseSubscription) {
+      this.paymentResponseSubscription = paymentResponse.subscribe(response => {
+        debugger
+        followedCourseResponse.next({courseId:this.course.courseId,courseAvatar:this.course.avatar,courseName:this.course.courseName,schoolName:this.course.school.schoolName})
+        this.loadingIcon = false;
+        this.course.isCourseStudent = true;
+        const initialState = {
+          isPaymentSuccess: response.isPaymentSuccess,
+          from: Constant.Course
+        };
+        this.bsModalService.show(PaymentResponseModalComponent, { initialState });
+      });
+    }
+    
   }
 
   addEventListnerOnCarousel() {
@@ -630,6 +653,9 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
     if (this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription.unsubscribe();
+    }
+    if (this.paymentResponseSubscription) {
+      this.paymentResponseSubscription.unsubscribe();
     }
   }
 
@@ -1360,7 +1386,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
   openPaymentModal() {
-    var courseDetails = { "id": this.course.courseId, "name": this.course.courseName, "avatar": this.course.avatar, "type": 2, "amount": this.course.price, "currency": this.course.currency }
+    var courseDetails = { "id": this.course.courseId, "name": this.course.courseName, "avatar": this.course.avatar, "type": 3, "amount": this.course.price, "currency": this.course.currency, "schoolAvatar": this.course.school.avatar }
     const initialState = {
       paymentDetails: courseDetails
     };
@@ -1803,6 +1829,19 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       if(response.data == true){
         this.userIsBanned = true
       }
+    })
+  }
+
+  joinFreeCourse(){
+    this.loadingIcon = true;
+    this._courseService.joinFreeCourse(this.course.courseId).subscribe((response)=>{
+      debugger;
+      this.loadingIcon = false;
+      this.course.isCourseStudent = true;
+      const translatedInfoSummary = this.translateService.instant('Success');
+      const translatedMessage = this.translateService.instant('CourseJoinedSuccessfully');
+      this.messageService.add({ severity: 'success', summary: translatedInfoSummary, life: 3000, detail: translatedMessage });
+      followedCourseResponse.next({ courseId: this.course.courseId, courseAvatar: this.course.avatar, courseName: this.course.courseName, schoolName: this.course.school.schoolName });
     })
   }
 

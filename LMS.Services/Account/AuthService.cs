@@ -52,34 +52,40 @@ namespace LMS.Services.Account
         public async Task<JwtResponseViewModel> AuthenticateUser(LoginViewModel loginViewModel)
         {
             var jwtResponse = new JwtResponseViewModel();
-            var user = await _userManager.FindByNameAsync(loginViewModel.Email);
-            if (user != null)
+            try
             {
-                jwtResponse.UserId = user.Id;
-                var permissions = await _userPermissionRepository.GetAll().Include(x => x.Permission).Where(x => x.UserId == user.Id).ToListAsync();
-                var userPermissions = _mapper.Map<List<UserPermissionViewModel>>(permissions);
-                var result = await _signInManager.PasswordSignInAsync(loginViewModel.Email, loginViewModel.Password, false, false);
-                if (result.Succeeded && !result.IsNotAllowed)
+                var user = await _userManager.FindByNameAsync(loginViewModel.Email);
+                if (user != null)
                 {
+                    jwtResponse.UserId = user.Id;
+                    var permissions = await _userPermissionRepository.GetAll().Include(x => x.Permission).Where(x => x.UserId == user.Id).ToListAsync();
+                    var userPermissions = _mapper.Map<List<UserPermissionViewModel>>(permissions);
+                    var result = await _signInManager.PasswordSignInAsync(loginViewModel.Email, loginViewModel.Password, false, false);
+                    if (result.Succeeded && !result.IsNotAllowed)
+                    {
 
-                    var token = await GenerateJSONWebToken(user);
-                    jwtResponse.Token = token;
-                    jwtResponse.UserPermissions = userPermissions;
-                    return jwtResponse;
+                        var token = await GenerateJSONWebToken(user);
+                        jwtResponse.Token = token;
+                        jwtResponse.UserPermissions = userPermissions;
+                        return jwtResponse;
+                    }
+                    if (!result.Succeeded && result.IsNotAllowed)
+                    {
+                        jwtResponse.ErrorMessage = Constants.EmailNotConfirmed;
+                        return jwtResponse;
+                    }
+                    if (!result.Succeeded)
+                    {
+                        jwtResponse.ErrorMessage = Constants.IncorrectPassword;
+                        return jwtResponse;
+                    }
                 }
-                if (!result.Succeeded && result.IsNotAllowed)
-                {
-                    jwtResponse.ErrorMessage = Constants.EmailNotConfirmed;
-                    return jwtResponse;
-                }
-                if (!result.Succeeded)
-                {
-                    jwtResponse.ErrorMessage = Constants.IncorrectPassword;
-                    return jwtResponse;
-                }
+                jwtResponse.ErrorMessage = Constants.UserNotFound;
+                return jwtResponse;
             }
-            jwtResponse.ErrorMessage = Constants.UserNotFound;
-            return jwtResponse;
+            catch (Exception ex) {
+                throw ex;
+            }
         }
 
         public async Task<string> GenerateJSONWebToken(User userInfo)

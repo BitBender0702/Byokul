@@ -26,7 +26,7 @@ namespace LMS.Services.Admin
         Task<bool> DisableCourse(DisableClassCourseViewModel model);
         Task<AdminDashboardViewModel> GetDashboardDetails();
         Task<List<SchoolTransactionViewModel>> GetAllSchoolTransactions();
-        Task<List<ClassCourseTransactionViewModel>> GetAllClassCourseTransactions();
+        Task<List<SchoolClassCourseTransactionViewModel>> GetAllClassCourseTransactions();
 
     }
 }

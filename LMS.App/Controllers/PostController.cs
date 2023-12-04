@@ -72,7 +72,7 @@ namespace LMS.App.Controllers
         [Route("uploadPost")]
         [HttpPost]
         public async Task<IActionResult> UploadPost(PostViewModel postViewModel)
-            {
+        {
             var userId = await GetUserIdAsync(this._userManager);
             postViewModel.BlobUrls = JsonConvert.DeserializeObject<List<BlobUrlsViewModel>>(postViewModel.BlobUrlsJson);
             if (postViewModel.Id != null && postViewModel.Id != new Guid())
@@ -227,8 +227,13 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveUserSharedPost(string userId, Guid postId)
         {
-            await _postService.SaveUserSharedPost(userId, postId);
-            return Ok();
+            var response = await _postService.SaveUserSharedPost(userId, postId);
+            if (response)
+            {
+                return Ok(new { Success = true, Message = Constants.PostSharedSuccessfully });
+            }
+            return Ok(new { Success = false, Message = Constants.UserIdOrPostIdInCorrect });
+
         }
 
         [Route("savePostByUser")]

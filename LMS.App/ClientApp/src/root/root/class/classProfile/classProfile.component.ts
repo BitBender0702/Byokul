@@ -44,10 +44,10 @@ import { Arabic } from 'flatpickr/dist/l10n/ar';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import { Turkish } from 'flatpickr/dist/l10n/tr';
 import flatpickr from 'flatpickr';
-import { OpenSideBar, enableDisableScc, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, enableDisableScc, followedClassResponse, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
-import { SignalrService } from 'src/root/service/signalr.service';
+import { SignalrService, paymentResponse } from 'src/root/service/signalr.service';
 import { enumToObjects } from 'src/root/Enums/getEnum';
 import { CurrencyEnum } from 'src/root/Enums/CurrencyEnum';
 import { ClassCourseRating } from 'src/root/interfaces/course/addCourseRating';
@@ -56,6 +56,7 @@ import { deleteModalPostResponse } from '../../delete-confirmation/delete-confir
 import { disableEnableResponse } from 'src/root/admin/registeredCourses/registeredCourses.component';
 import { UserService } from 'src/root/service/user.service';
 import { isUserSchoolOrNotResponse } from '../../freeTrial/freeTrial.component';
+import { PaymentResponseModalComponent } from '../../paymentResponseModal/paymentResponseModal.component';
 
 
 export const deleteClassResponse = new BehaviorSubject<string>('');
@@ -169,17 +170,15 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   isSelected: boolean = false;
   cropModalRef!: BsModalRef;
   @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
-
   minDate: any;
   filteredAttachments: any[] = [];
-
   classCertificateForm!: FormGroup;
   classCertificateInfo: any;
   currencies: any;
   teacherForFileStorage: any;
   deleteModalPostSubscription!: Subscription;
-
   disableEnableSubscription!: Subscription;
+  paymentResponseSubscription!: Subscription;
 
   @ViewChild('openClassOwnCertificate') openClassOwnCertificate!: ElementRef;
 
@@ -267,6 +266,9 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
     if (this.disableEnableSubscription) {
       this.disableEnableSubscription.unsubscribe();
+    }
+    if (this.paymentResponseSubscription) {
+      this.paymentResponseSubscription.unsubscribe();
     }
   }
 
@@ -557,7 +559,15 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     this.paymentStatusSubscription = paymentStatusResponse.subscribe(response => {
-      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'We will notify when payment will be successful' });
+      if(response.loadingIcon){
+        this.loadingIcon = true;
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('PaymentProcessingMessage');
+        this.messageService.add({ severity: 'info', summary: translatedSummary, life: 6000, detail: translatedMessage });
+      }
+      else{
+        this.loadingIcon = false;
+      }
     });
 
     if (!this.deletePostSubscription) {
@@ -623,7 +633,19 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
     notifyMessageAndNotificationCount.next({});
 
-
+    if (!this.paymentResponseSubscription) {
+      this.paymentResponseSubscription = paymentResponse.subscribe(response => {
+        debugger
+        followedClassResponse.next({classId:this.class.classId,classAvatar:this.class.avatar,className:this.class.className,schoolName:this.class.school.schoolName})
+        this.loadingIcon = false;
+        this.class.isClassStudent = true;
+        const initialState = {
+          isPaymentSuccess: response.isPaymentSuccess,
+          from: Constant.Class
+        };
+        this.bsModalService.show(PaymentResponseModalComponent, { initialState });
+      });
+    }
   }
 
   getClassDetails(classId: string) {
@@ -1471,7 +1493,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   openPaymentModal() {
-    var classDetails = { "id": this.class.classId, "name": this.class.className, "avatar": this.class.avatar, "type": 1, "amount": this.class.price, "currency": this.class.currency }
+    var classDetails = { "id": this.class.classId, "name": this.class.className, "avatar": this.class.avatar, "type": 2, "amount": this.class.price, "currency": this.class.currency,"schoolAvatar": this.class.school.avatar  }
     const initialState = {
       paymentDetails: classDetails
     };
@@ -1993,6 +2015,19 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       if(response.data == true){
         this.userIsBanned = true
       }
+    })
+  }
+
+  joinFreeClass(){
+    this.loadingIcon = true;
+    this._classService.joinFreeClass(this.class.classId).subscribe((response)=>{
+      debugger;
+      this.loadingIcon = false;
+      this.class.isClassStudent = true;
+      const translatedInfoSummary = this.translateService.instant('Success');
+      const translatedMessage = this.translateService.instant('ClassJoinedSuccessfully');
+      this.messageService.add({ severity: 'success', summary: translatedInfoSummary, life: 3000, detail: translatedMessage });
+      followedClassResponse.next({ classId: this.class.classId, classAvatar: this.class.avatar, className: this.class.className, schoolName: this.class.school.schoolName });
     })
   }
 

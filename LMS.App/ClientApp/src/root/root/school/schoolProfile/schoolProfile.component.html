@@ -26,23 +26,23 @@
             {{ "Back" | translate }}
           </button>
           <button
-            *ngIf="isOwner || hasPostPermission"
+            *ngIf="(isOwner || hasPostPermission) && school.isSchoolSubscribed"
             (click)="openPostModal(true)"
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44"
           >
             {{ "GoLive" | translate }}
           </button>
-          <!--<button
-          *ngIf="isOwner && showSubscriptionBtn"
-          (click)="openPostModal(false)"
+          <button
+          *ngIf="isOwner && !school.isSchoolSubscribed"
+          (click)="openPaymentModal()"
           type="button"
           class="btn custom-btn primary_btn earning-btn fw_400 h_44"
         >
           {{ "BuySubscription" | translate }}
-        </button>-->
+        </button>
           <button
-            *ngIf="isOwner || hasPostPermission"
+            *ngIf="(isOwner || hasPostPermission) && school.isSchoolSubscribed"
             (click)="openPostModal(false)"
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44"

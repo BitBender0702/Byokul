@@ -18,7 +18,7 @@ namespace LMS.Services
         Task<CourseViewModel> UpdateCourse(CourseViewModel courseViewModel);
         Task DeleteCourseById(Guid classId, string deletedById);
         Task RestoreCourseById(Guid classId, string deletedById);
-        Task<CourseDetailsViewModel> GetCourseByName(string courseName,string loginUserid);
+        Task<CourseDetailsViewModel> GetCourseByName(string courseName, string loginUserid);
         Task<CourseDetailsViewModel> GetCourseById(Guid courseId, string loginUserid);
         Task<IEnumerable<CourseViewModel>> GetAllCourses();
         Task<CourseViewModel> GetBasicCourseInfo(Guid courseId);
@@ -49,6 +49,8 @@ namespace LMS.Services
         Task<bool?> BanUnbanStudentFromCourse(BanUnbanStudentModel banUnbanStudent);
 
         Task<IEnumerable<GlobalSearchViewModel>> CoursesGlobalSearch(string searchString, int pageNumber, int pageSize);
+
+        Task<bool> JoinFreeCourse(Guid courseId, string userId);
 
 
     }

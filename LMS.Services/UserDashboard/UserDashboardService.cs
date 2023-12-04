@@ -62,7 +62,7 @@ namespace LMS.Services.UserDashboard
             var schools = await _schoolRepository.GetAll().Where(x => x.CreatedById == userId && !x.IsDeleted).ToListAsync();
             var teacherSchools = await _schoolTeacherRepository.GetAll().Include(x => x.Teacher).Include(x => x.School).Where(x => x.Teacher.UserId == userId).Select(x => x.School).ToListAsync();
             schools = schools.Concat(teacherSchools).Distinct() .ToList();
-            var OwnedSchools = _mapper.Map<List<SchoolViewModel>>(schools);
+           var OwnedSchools = _mapper.Map<List<SchoolViewModel>>(schools);
             model.OwnedSchools = OwnedSchools;
 
             var teacherSchoolIds = await _schoolTeacherRepository.GetAll().Include(x => x.Teacher).Where(x => x.Teacher.UserId == userId).Select(x => x.SchoolId).ToListAsync();
@@ -119,6 +119,7 @@ namespace LMS.Services.UserDashboard
                 .Where(x => x.Student.UserId == userId && !x.Class.IsDeleted).ToListAsync();
 
             var followedClasses = _mapper.Map<IEnumerable<ClassViewModel>>(classStudents.Select(x => x.Class).ToList());
+
             model.FollowedClasses = followedClasses;
 
             // followed courses

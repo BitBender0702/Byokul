@@ -108,6 +108,7 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
   thumbnailUploadSubscription!: Subscription;
   hamburgerCount:number = 0;
   isNextButtonDisabled:boolean = false;
+  disabled: boolean = true;
 
 
   constructor(injector: Injector,private translateService: TranslateService,private bsModalService: BsModalService,private datePipe: DatePipe,public messageService:MessageService,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient,private domSanitizer: DomSanitizer) {

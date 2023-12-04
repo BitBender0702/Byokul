@@ -20,6 +20,10 @@ export class IyizicoService{
         return this.http.post(`${this.apiUrl}/iyizico/getSubscriptionPlans`,{headers: this.headers});
     }
 
+    getUserSavedCardsList(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/iyizico/getUserSavedCards`,{headers: this.headers});
+    }
+
     cancelSubscription(schoolId:string): Observable<any> {
         return this.http.post(`${this.apiUrl}/iyizico/cancelSubscription` + '?schoolId=' + schoolId,'',{headers: this.headers});
     }

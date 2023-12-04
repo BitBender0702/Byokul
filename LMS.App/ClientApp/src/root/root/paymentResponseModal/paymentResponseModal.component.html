@@ -1,0 +1,40 @@
+<div>
+    <div appBsModal bsModal class="modal fade edit-school-modal show d-block" id="create-post" tabindex="-1"
+      aria-labelledby="create-post" aria-hidden="true" area-modal="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0 justify-content-center position-relative">
+            <h1 *ngIf="isPaymentSuccess" class="modal-title font_32 text_dark fw_700 border-0 text-center" id="editschool">{{'Success'| translate}}!</h1>
+            <h1 *ngIf="!isPaymentSuccess" class="modal-title font_32 text_dark fw_700 border-0 text-center" id="editschool">{{'Failure'| translate}}!</h1>
+            <button (click)="closeModal()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+              aria-label="Close"><img src="../../../../assets/images/cross.svg" /></button>
+          </div>
+          <div class="modal-body">
+            <h2 *ngIf="isPaymentSuccess" class="font_21">{{"PaymentSuccessMessage"| translate}}
+                <span *ngIf="from == 'class'">{{"Class"| translate}}</span>
+                <span *ngIf="from == 'course'">{{"Course"| translate}}</span>
+                <span *ngIf="from == 'school'">{{"School"| translate}}</span>
+            </h2>
+            <h2 *ngIf="!isPaymentSuccess" class="font_21">{{"PaymentFailureMessage"| translate}}
+              <span *ngIf="from == 'class'">{{"Class"| translate}}</span>
+              <span *ngIf="from == 'school'">{{"School"| translate}}</span>
+          </h2>
+            <button
+            (click)="closeModal()"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_58 w-100 mt-4"
+          >
+          <div class="font_22">
+            {{ "GoToYour" | translate }}
+            <span *ngIf="from == 'class'">{{"Class" | translate}}</span>
+            <span *ngIf="from == 'course'">{{"Course" | translate}}</span>
+            <span *ngIf="from == 'school'">{{"School" | translate}}</span>
+              {{"Profile" | translate}}
+            </div>
+          </button>          
+        </div>
+        </div>
+    </div>
+</div>
+
+<loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

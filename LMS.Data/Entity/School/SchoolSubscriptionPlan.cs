@@ -10,6 +10,7 @@ namespace LMS.Data.Entity
     {
         public Guid Id { get; set; }
         public string PlanName { get; set; }
+        public int Amount { get; set; }
         public Guid PlanReferenceCode { get; set; }
     }
 }

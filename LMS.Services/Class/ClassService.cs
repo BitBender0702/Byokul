@@ -51,14 +51,16 @@ namespace LMS.Services
         private IGenericRepository<UserClassCourseFilter> _userClassCourseFilterRepository;
         private IGenericRepository<UserSharedPost> _userSharedPostRepository;
         private IGenericRepository<SavedPost> _savedPostRepository;
-        private IGenericRepository<ClassCourseTransaction> _classCourseTransactionRepository;
+        private IGenericRepository<SchoolClassCourseTransaction> _classCourseTransactionRepository;
+        private IGenericRepository<Student> _studentRepository;
+        private IGenericRepository<User> _userRepository;
         private readonly IBlobService _blobService;
         private readonly IUserService _userService;
         private IConfiguration _config;
 
         private IGenericRepository<ClassCourseRating> _classCourseRatingRepository;
 
-        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassCourseRating> classCourseRatingRepository, IGenericRepository<Course> courseRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<CourseTag> courseTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassLike> classLikeRepository, IGenericRepository<ClassViews> classViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IConfiguration config, IGenericRepository<ClassCourseTransaction> classCourseTransactionRepository)
+        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassCourseRating> classCourseRatingRepository, IGenericRepository<Course> courseRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<CourseTag> courseTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassLike> classLikeRepository, IGenericRepository<ClassViews> classViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<Student> studentRepository, IGenericRepository<User> userRepository, IConfiguration config, IGenericRepository<SchoolClassCourseTransaction> classCourseTransactionRepository)
         {
             _mapper = mapper;
             _classRepository = classRepository;
@@ -83,6 +85,8 @@ namespace LMS.Services
             _userClassCourseFilterRepository = userClassCourseFilterRepository;
             _userSharedPostRepository = userSharedPostRepository;
             _savedPostRepository = savedPostRepository;
+            _studentRepository = studentRepository;
+            _userRepository = userRepository;
             _config = config;
             _classCourseTransactionRepository = classCourseTransactionRepository;
 
@@ -304,7 +308,7 @@ namespace LMS.Services
             classes.AccessibilityId = classUpdateViewModel.AccessibilityId;
             classes.Price = classUpdateViewModel.Price;
             classes.Currency = classUpdateViewModel.Currency;
-            classes.Description = classUpdateViewModel.Description; 
+            classes.Description = classUpdateViewModel.Description;
             _classRepository.Update(classes);
             _classRepository.Save();
 
@@ -455,6 +459,16 @@ namespace LMS.Services
                 //    model.IsClassAccessable = true;
                 //}
 
+                var isClassStudent = await _classStudentRepository.GetAll().Include(x => x.Class).Include(x => x.Student).Where(x => x.ClassId == singleLanguage.ClassId && x.Student.UserId == loginUserId).FirstOrDefaultAsync();
+
+                if (isClassStudent == null)
+                {
+                    model.IsClassStudent = false;
+                }
+                else
+                {
+                    model.IsClassStudent = true;
+                }
                 model.IsClassAccessable = true;
                 return model;
             }
@@ -512,7 +526,7 @@ namespace LMS.Services
             model.Reels = await GetReelsByClassId(classes.ClassId, loginUserId);
             model.ClassCertificates = await GetCertificateByClassId(classes.ClassId);
 
-            var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.UserId == loginUserId).FirstOrDefaultAsync();
+            var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.ActionDoneBy == loginUserId).FirstOrDefaultAsync();
 
             //var isFileStorageaccessible = await _classStudentRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.StudentId == Guid.Parse(loginUserId)).FirstOrDefaultAsync();
             //if (isFileStorageaccessible != null) 
@@ -614,7 +628,7 @@ namespace LMS.Services
         }
 
 
-            public async Task<IEnumerable<ClassViewModel>> GetAllClasses()
+        public async Task<IEnumerable<ClassViewModel>> GetAllClasses()
         {
             IEnumerable<ClassViewModel> model = _classRepository.GetAll().Where(x => !x.IsDeleted).Select(x => new ClassViewModel
             {
@@ -709,9 +723,8 @@ namespace LMS.Services
 
                 var attachment = _postAttachmentRepository.GetById(lastPostId);
                 int index = reelList.FindIndex(x => x.Id == attachment.PostId);
-                int startIndex = Math.Max(0, index - 3);
                 int totalItems = 7;
-                requiredResults = reelList.GetRange(startIndex, Math.Min(totalItems, reelList.Count - startIndex));
+                requiredResults = reelList.GetRange(index, Math.Min(totalItems, reelList.Count - index));
 
 
             }
@@ -845,7 +858,8 @@ namespace LMS.Services
                 _classTeacherRepository.Delete(classTeacher.Id);
                 var res = await _classTeacherRepository.SaveAsync();
                 return (int)res > 0;
-            }catch(Exception) { throw new Exception(Constants.ClassOrTeacherIdNotExist); }
+            }
+            catch (Exception) { throw new Exception(Constants.ClassOrTeacherIdNotExist); }
 
         }
 
@@ -1199,7 +1213,7 @@ namespace LMS.Services
 
         }
 
-     
+
         public async Task<int?> ClassRating(ClassCourseRatingViewModel classRating)
         {
             //var classForRating = _courseRepository.GetById(courseRating.ClassId);
@@ -1269,6 +1283,47 @@ namespace LMS.Services
             return true;
 
         }
+
+        public async Task<bool> JoinFreeClass(Guid classId, string userId)
+        {
+            try
+            {
+                Guid studentId = new Guid();
+                var isStudentExist = await _studentRepository.GetAll().Where(x => x.UserId == userId).FirstOrDefaultAsync();
+
+                if (isStudentExist == null)
+                {
+                    var user = _userRepository.GetById(userId);
+                    var student = new Student
+                    {
+                        StudentName = user.FirstName + " " + user.LastName,
+                        CreatedById = userId,
+                        UserId = userId,
+                        CreatedOn = DateTime.Now
+                    };
+
+                    _studentRepository.Insert(student);
+                    _studentRepository.Save();
+                    studentId = student.StudentId;
+                }
+
+                var classStudent = new ClassStudent
+                {
+                    StudentId = isStudentExist == null ? studentId : isStudentExist.StudentId,
+                    ClassId = classId,
+                    IsStudentBannedFromClass = false
+                };
+
+                _classStudentRepository.Insert(classStudent);
+                _classStudentRepository.Save();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
 
 
     }

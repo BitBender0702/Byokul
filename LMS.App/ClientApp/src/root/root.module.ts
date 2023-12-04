@@ -93,6 +93,7 @@ import { AppDeliveryAndReturnComponent } from './root/FlutterStaticPages/deliver
 import { AppDsaForStudentsComponent } from './root/FlutterStaticPages/dsaForStudents/dsaForStudents.component';
 import { AppDsaForSchoolComponent } from './root/FlutterStaticPages/dsaForSchool/dsaForSchool.component';
 import { FreeTrialComponent } from './root/freeTrial/freeTrial.component';
+import { PaymentResponseModalComponent } from './root/paymentResponseModal/paymentResponseModal.component';
 export const options: Partial<IConfig> = {
   thousandSeparator: "'"
 };
@@ -229,7 +230,8 @@ const routes: Routes = [
     AppDeliveryAndReturnComponent,
     AppDsaForSchoolComponent,
     AppDsaForStudentsComponent,
-    FreeTrialComponent
+    FreeTrialComponent,
+    PaymentResponseModalComponent
   ],
   imports: [
     CommonModule,

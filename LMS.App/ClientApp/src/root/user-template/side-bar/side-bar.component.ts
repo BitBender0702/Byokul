@@ -18,7 +18,8 @@ export const OpenSideBar =new Subject<{isOpenSideBar:boolean}>();
 export const enableDisableScc =new Subject<{isDisable:boolean,schoolId?:string,classId?:string,courseId?:string}>(); 
 export const totalMessageAndNotificationCount =new Subject<{hamburgerCount:number}>(); 
 export const notifyMessageAndNotificationCount =new Subject<{}>(); 
-
+export const followedClassResponse =new Subject<{classId: string, classAvatar : string,className:string,schoolName:string }>(); 
+export const followedCourseResponse =new Subject<{courseId: string, courseAvatar : string,courseName:string,schoolName:string }>(); 
 
 @Component({
   selector: 'side-bar',
@@ -34,11 +35,13 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
   isDataLoaded:boolean = false;
   loginUserId!:string;
   isOpenSidebar: boolean = false;
+  isUserBanned:boolean= false;
   notificationResponseSubscription!:Subscription;
   enableDisableSccSubscription!:Subscription;
   unreadChatSubscription!: Subscription;
   notifyMessageAndNotificationSubscription!: Subscription;
-  isUserBanned:boolean= false;
+  followedClassResponseSubscription!: Subscription;
+  followedCourseResponseSubscription!: Subscription;
 
   constructor(injector: Injector,userService: UserService,private router: Router,private cd: ChangeDetectorRef, private elementRef: ElementRef) {
     super(injector);
@@ -309,6 +312,38 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
       }
         this.sidebarInfo.ownedClasses.push(classObject);
     });
+
+    if (!this.followedClassResponseSubscription) {
+      this.followedClassResponseSubscription = followedClassResponse.subscribe(response => {
+        debugger
+        let classObj = {
+          classId:response.classId,
+          avatar:response.classAvatar,
+          className: response.className,
+          school:{
+            schoolName:response.schoolName
+          }
+        };
+        if(this.sidebarInfo)
+          this.sidebarInfo.followedClasses.push(classObj);
+      });
+    }
+
+    if (!this.followedCourseResponseSubscription) {
+      this.followedCourseResponseSubscription = followedCourseResponse.subscribe(response => {
+        debugger
+        let courseObj = {
+          courseId:response.courseId,
+          avatar:response.courseAvatar,
+          courseName: response.courseName,
+          school:{
+            schoolName:response.schoolName
+          }
+        };
+        if(this.sidebarInfo)
+          this.sidebarInfo.followedCourses.push(courseObj);
+      });
+    }
     
   }
 
@@ -324,6 +359,12 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
     }
     if (this.notifyMessageAndNotificationSubscription) {
       this.notifyMessageAndNotificationSubscription.unsubscribe();
+    }
+    if (this.followedClassResponseSubscription) {
+      this.followedClassResponseSubscription.unsubscribe();
+    }
+    if (this.followedCourseResponseSubscription) {
+      this.followedCourseResponseSubscription.unsubscribe();
     }
   }
 

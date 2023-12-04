@@ -1,0 +1,23 @@
+.class-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.school-logo {
+    position: absolute;
+    right: -10px;
+    top: -8px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
+    background: grey;
+  }
+
+.cursor_pointer {
+    cursor: pointer;
+}
+  

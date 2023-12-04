@@ -15,6 +15,7 @@ import { Turkish } from 'flatpickr/dist/l10n/tr';
 import { Arabic } from 'flatpickr/dist/l10n/ar';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import 'flatpickr/dist/flatpickr.min.css';
+import { Constant } from 'src/root/interfaces/constant';
 export const registrationResponse =new BehaviorSubject <boolean>(false);  
 
 
@@ -181,7 +182,8 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
         this.user = this.registrationForm.value;
         this._authService.registerUser(this.user).pipe(finalize(()=> this.loadingIcon = false)).subscribe({
                   next: (response: AuthenticatedResponse) => {
-                    if(response.result != "success"){
+                    debugger
+                    if(response.userId == undefined){
                       this.registrationForm.setErrors({ unauthenticated: true });
                     }
                     else{

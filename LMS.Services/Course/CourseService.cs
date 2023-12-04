@@ -23,6 +23,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
+using Class = LMS.Data.Entity.Class;
 
 namespace LMS.Services
 {
@@ -51,12 +53,15 @@ namespace LMS.Services
         private IGenericRepository<UserClassCourseFilter> _userClassCourseFilterRepository;
         private IGenericRepository<UserSharedPost> _userSharedPostRepository;
         private IGenericRepository<SavedPost> _savedPostRepository;
-        private IGenericRepository<ClassCourseTransaction> _classCourseTransactionRepository;
+        private IGenericRepository<SchoolClassCourseTransaction> _classCourseTransactionRepository;
         private IGenericRepository<ClassCourseRating> _classCourseRatingRepository;
+        private IGenericRepository<Student> _studentRepository;
+        private IGenericRepository<User> _userRepository;
+        private IGenericRepository<ClassStudent> _classStudentRepository;
         private IConfiguration _config;
 
 
-        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<ClassCourseRating> classCourseRatingRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<Class> classRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<CourseCertificate> courseCertificateRepository, IGenericRepository<CourseTag> courseTagRepository, UserManager<User> userManager, IBlobService blobService, IClassService classService, IUserService userService, IGenericRepository<CourseLike> courseLikeRepository, IGenericRepository<CourseViews> courseViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<ClassCourseTransaction> classCourseTransactionRepository, IConfiguration config)
+        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<ClassCourseRating> classCourseRatingRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<Class> classRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<CourseCertificate> courseCertificateRepository, IGenericRepository<CourseTag> courseTagRepository, UserManager<User> userManager, IBlobService blobService, IClassService classService, IUserService userService, IGenericRepository<CourseLike> courseLikeRepository, IGenericRepository<CourseViews> courseViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<SchoolClassCourseTransaction> classCourseTransactionRepository, IGenericRepository<Student> studentRepository, IGenericRepository<User> userRepository, IGenericRepository<ClassStudent> classStudentRepository, IConfiguration config)
         {
             _mapper = mapper;
             _courseRepository = courseRepository;
@@ -82,6 +87,9 @@ namespace LMS.Services
             _userSharedPostRepository = userSharedPostRepository;
             _savedPostRepository = savedPostRepository;
             _classCourseTransactionRepository = classCourseTransactionRepository;
+            _studentRepository = studentRepository;
+            _userRepository = userRepository;
+            _classStudentRepository = classStudentRepository;
             _config = config;
             _classCourseRatingRepository = classCourseRatingRepository;
 
@@ -391,18 +399,19 @@ namespace LMS.Services
 
 
                 var singleLanguage = courseList.Where(x => Encoding.UTF8.GetBytes(Regex.Replace(x.CourseName, @"\s", "").ToLower()).SequenceEqual(data)).FirstOrDefault();
-               // var newCourseName = "";
-                if(singleLanguage == null)
+                // var newCourseName = "";
+                if (singleLanguage == null)
                 {
                     var newCourseName = System.Web.HttpUtility.UrlEncode(courseName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").Replace(".", "").ToLower();
                     singleLanguage = courseList.Where(x => (System.Web.HttpUtility.UrlEncode(Regex.Replace(x.CourseName, @"\s", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == newCourseName)).FirstOrDefault();
                 }
 
 
+
                 if (singleLanguage == null)
                 {
 
-                    var classDetails = await _classService.GetClassByName(courseName, loginUserId,true);
+                    var classDetails = await _classService.GetClassByName(courseName, loginUserId, true);
 
                     var courses = new CourseDetailsViewModel();
                     courses.CourseId = classDetails.ClassId;
@@ -434,6 +443,19 @@ namespace LMS.Services
                         courses.IsRatedByUser = true;
                     }
 
+
+                    var isClassStudent = await _classStudentRepository.GetAll().Include(x => x.Student).Where(x => x.ClassId == classDetails.ClassId && x.Student.UserId == loginUserId).FirstOrDefaultAsync();
+
+                    if (isClassStudent == null)
+                    {
+                        courses.IsCourseStudent = false;
+                    }
+                    else
+                    {
+                        courses.IsCourseStudent = true;
+                    }
+
+
                     var isBanned = _courseStudentRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.StudentId == Guid.Parse(loginUserId)).FirstOrDefault();
                     if (isBanned == null)
                     {
@@ -445,14 +467,14 @@ namespace LMS.Services
                     }
 
                     courses.CourseCertificates = _mapper.Map<IEnumerable<CertificateViewModel>>(classDetails.ClassCertificates);
-                    
+
                     //var isFileStorageaccessibleForSingleLanguage = await _courseStudentRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.StudentId == Guid.Parse(loginUserId)).FirstOrDefaultAsync();
                     //if (isFileStorageaccessibleForSingleLanguage != null)
                     //{
                     //    courses.IsFileStorageAccessible = true;
                     //}
 
-                    var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserId && x.PaymentId != null).FirstOrDefaultAsync();
+                    var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.ActionDoneBy == loginUserId && x.PaymentId != null).FirstOrDefaultAsync();
 
                     //if (isClassAccessible != null || courses.CreatedById == loginUserId)
                     //{
@@ -468,14 +490,28 @@ namespace LMS.Services
                 }
                 model = _mapper.Map<CourseDetailsViewModel>(singleLanguage);
 
-                
+                if (singleLanguage != null)
+                {
+                    var isCourseStudent = await _courseStudentRepository.GetAll().Include(x => x.Student).Where(x => x.CourseId == singleLanguage.CourseId && x.Student.UserId == loginUserId).FirstOrDefaultAsync();
+
+                    if (isCourseStudent == null)
+                    {
+                        model.IsCourseStudent = false;
+                    }
+                    else
+                    {
+                        model.IsCourseStudent = true;
+                    }
+                }
+
+
                 //var isFileStorageaccessible = await _courseStudentRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.StudentId == Guid.Parse(loginUserId)).FirstOrDefaultAsync();
                 //if (isFileStorageaccessible != null)
                 //{
                 //    model.IsFileStorageAccessible = true;
                 //}
 
-                var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserId && x.PaymentId != null).FirstOrDefaultAsync();
+                var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.ActionDoneBy == loginUserId && x.PaymentId != null).FirstOrDefaultAsync();
 
                 //if (isCourseAccessible != null || singleLanguage.CreatedById == loginUserId)
                 //{
@@ -565,7 +601,7 @@ namespace LMS.Services
 
 
 
-                var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserId).FirstOrDefaultAsync();
+                var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.ActionDoneBy == loginUserId).FirstOrDefaultAsync();
 
                 //if (isCourseAccessible != null || model.CreatedById == loginUserId)
                 //{
@@ -670,7 +706,7 @@ namespace LMS.Services
 
         public async Task RestoreCourseById(Guid courseId, string deletedByid)
         {
-           
+
             Course course = _courseRepository.GetById(courseId);
             course.IsDeleted = false;
             course.DeletedById = deletedByid;
@@ -742,9 +778,8 @@ namespace LMS.Services
 
                 var attachment = _postAttachmentRepository.GetById(lastPostId);
                 int index = reelList.FindIndex(x => x.Id == attachment.PostId);
-                int startIndex = Math.Max(0, index - 3);
                 int totalItems = 7;
-                requiredResults = reelList.GetRange(startIndex, Math.Min(totalItems, reelList.Count - startIndex));
+                requiredResults = reelList.GetRange(index, Math.Min(totalItems, reelList.Count - index));
 
 
             }
@@ -889,14 +924,15 @@ namespace LMS.Services
                 {
                     _courseTeacherRepository.Delete(courseTeacher.Id);
                     var result = await _courseTeacherRepository.SaveAsync();
-                    if((int)result > 0)
+                    if ((int)result > 0)
                     {
                         isDeleted = true;
                     }
                 }
 
                 return isDeleted;
-            }catch(Exception) { throw new Exception(Constants.CourseOrTeacherIdNotExist); }
+            }
+            catch (Exception) { throw new Exception(Constants.CourseOrTeacherIdNotExist); }
 
         }
 
@@ -1342,6 +1378,47 @@ namespace LMS.Services
 
             var result = courses.Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderBy(x => x.Type).ToList();
             return result;
+        }
+
+
+        public async Task<bool> JoinFreeCourse(Guid courseId, string userId)
+        {
+            try
+            {
+                Guid studentId = new Guid();
+                var isStudentExist = await _studentRepository.GetAll().Where(x => x.UserId == userId).FirstOrDefaultAsync();
+
+                if (isStudentExist == null)
+                {
+                    var user = _userRepository.GetById(userId);
+                    var student = new Student
+                    {
+                        StudentName = user.FirstName + " " + user.LastName,
+                        CreatedById = userId,
+                        UserId = userId,
+                        CreatedOn = DateTime.Now
+                    };
+
+                    _studentRepository.Insert(student);
+                    _studentRepository.Save();
+                    studentId = student.StudentId;
+                }
+
+                var courseStudent = new CourseStudent
+                {
+                    StudentId = isStudentExist == null ? studentId : isStudentExist.StudentId,
+                    CourseId = courseId,
+                    IsStudentBannedFromCourse = false
+                };
+
+                _courseStudentRepository.Insert(courseStudent);
+                _courseStudentRepository.Save();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
     }

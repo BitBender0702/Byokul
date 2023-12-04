@@ -438,7 +438,7 @@ namespace LMS.Services
 
         public async Task SaveSchedulePostInfo(PostViewModel postViewModel, string userId)
         {
-            string reelId = "";           
+            string reelId = "";
             var post = _postRepository.GetById(postViewModel.Id);
             post.IsPostSchedule = false;
             _postRepository.Update(post);
@@ -483,7 +483,7 @@ namespace LMS.Services
         }
 
         public async Task ScheduleLiveStream(PostViewModel postViewModel, string userId, DateTimeOffset scheduledTime)
-        {          
+        {
             postViewModel.DateTime = null;
             var scheduleJobId = BackgroundJob.Schedule(() => SaveLiveStreamInfo(postViewModel.Id, userId, postViewModel.PostAuthorType), scheduledTime);
         }
@@ -1037,25 +1037,25 @@ namespace LMS.Services
 
         }
 
-        public async Task SaveUserSharedPost(string userId, Guid postId)
+        public async Task<bool> SaveUserSharedPost(string userId, Guid postId)
         {
-            var isUserSharedPostExist = await _userSharedPostRepository.GetAll().Where(x => x.UserId == userId && x.PostId == postId).FirstOrDefaultAsync();
-
-            //if (isUserSharedPostExist != null)
-            //{
-            //    _userSharedPostRepository.Delete(isUserSharedPostExist.Id);UserShared
-            //    _userSharedPostRepository.Save();
-            //}
-
-            var userSharedPost = new UserSharedPost
+            try
             {
-                UserId = userId,
-                PostId = postId,
-                CreatedOn = DateTime.UtcNow
-            };
+                var userSharedPost = new UserSharedPost
+                {
+                    UserId = userId,
+                    PostId = postId,
+                    CreatedOn = DateTime.UtcNow
+                };
 
-            _userSharedPostRepository.Insert(userSharedPost);
-            _userSharedPostRepository.Save();
+                _userSharedPostRepository.Insert(userSharedPost);
+                _userSharedPostRepository.Save();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public async Task<bool?> SavePostByUser(string userId, Guid postId)

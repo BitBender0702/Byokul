@@ -146,6 +146,8 @@ export class SchoolService{
     }
 
     getUserAllSchools(userId:string): Observable<any> {
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         return this.http.get(`${this.apiUrl}/school/getUserAllSchools`+ '?userId=' + userId,{headers: this.headers});
     }
 

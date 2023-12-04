@@ -174,5 +174,9 @@ export class ClassService{
         return this.http.post(`${this.apiUrl}/class/banUnbanStudentFromClass`,banUnbanStudentFromClass, {headers: this.headers});
     }
 
+    joinFreeClass(classId:string):Observable<any>{
+        return this.http.post(`${this.apiUrl}/class/joinFreeClass` + '?classId=' + classId,'',{headers: this.headers});
+    }
+
 
 }

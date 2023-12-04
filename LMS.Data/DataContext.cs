@@ -87,14 +87,15 @@ namespace LMS.Data
         public DbSet<UserCertificate> UserCertificates { get; set; }
         public DbSet<SchoolSubscriptionPlan> SchoolSubscriptionPlans { get; set; }
         public DbSet<SchoolTransaction> SchoolTransactions { get; set; }
-        public DbSet<ClassCourseTransaction> ClassCourseTransactions { get; set; }
+        public DbSet<SchoolClassCourseTransaction> SchoolClassCourseTransactions { get; set; }
         public DbSet<CardUserKey> CardUserKeys { get; set; }
         public DbSet<CardRenewal> CardRenewals { get; set; }
         public DbSet<ClassCourseRating> ClassCourseRatings { get; set; }
         public DbSet<VideoLibrary> VideoLibrary { get; set; }
         public DbSet<SharedClassCourse> SharedClassCourse { get; set; }
+        public DbSet<SchoolSubscription> SchoolSubscriptions { get; set; }
 
- 
+
 
 
 

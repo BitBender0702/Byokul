@@ -53,8 +53,7 @@
             *ngIf="
               !isOwner &&
               course.price != null &&
-              course.price != 0 &&
-              !course.isCourseAccessable
+              course.price != 0 && !course.isCourseStudent
             "
             (click)="openPaymentModal()"
             type="button"
@@ -62,6 +61,14 @@
           >
             {{ "Buyfor" | translate }} {{ course.price }} {{ course.currency }}
           </button>
+          <button
+          *ngIf="!isOwner && !course.isCourseStudent && (course.price == null || course.price == 0)"
+          (click)="joinFreeCourse()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+        >
+          {{ "Join" | translate }} $0
+        </button>
         </div>
         <div
           class="live-header d-flex align-items-center justify-content-between"
@@ -493,7 +500,7 @@
         </div>
 
         <div
-          *ngIf="course.isCourseAccessable && !userIsBanned"
+        *ngIf="((course.isCourseStudent && course.serviceType.type == 'Paid') || course.serviceType.type == 'Free' || hasPostPermission || isOwner) && !userIsBanned"
           class="tab-content"
           id="pills-tabContent"
         >

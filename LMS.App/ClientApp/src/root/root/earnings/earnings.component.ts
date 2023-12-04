@@ -178,7 +178,7 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
 
     initialAllTransactionDetails(transactionParamViewModel:TransactionParamViewModel){
       this._paymentService.allTransactionDetails(this.transactionParamViewModel).subscribe((response) => {
-        this.allTransactionDetails = response;
+        this.allTransactionDetails = response.allTransactions;
         this.loadingIcon = false;
         this.isSubmitted = false;
       });

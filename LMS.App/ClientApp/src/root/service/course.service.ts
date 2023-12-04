@@ -167,4 +167,8 @@ export class CourseService{
         );
     }
 
+    joinFreeCourse(courseId:string):Observable<any>{
+        return this.http.post(`${this.apiUrl}/course/joinFreeCourse` + '?courseId=' + courseId,'',{headers: this.headers});
+    }
+
 }

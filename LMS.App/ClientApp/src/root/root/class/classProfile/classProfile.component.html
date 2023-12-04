@@ -57,14 +57,22 @@
           >
             {{ "CreatePost" | translate }}
           </button>
-          <!-- <button
-            *ngIf="!isOwner && class.price != null && class.price != 0"
+          <button
+            *ngIf="!isOwner && class.price != null && class.price != 0 && !class.isClassStudent"
             (click)="openPaymentModal()"
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44"
           >
             {{ "Buyfor" | translate }} ${{ class.price }}
-          </button> -->
+          </button>
+          <button
+          *ngIf="!isOwner && !class.isClassStudent && (class.price == null || class.price == 0)"
+          (click)="joinFreeClass()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+        >
+          {{ "Join" | translate }} $0
+        </button>
           <button
             *ngIf="
               !isOwner &&
@@ -542,7 +550,7 @@
         </div>
 
         <div
-          *ngIf="class.isClassAccessable || hasPostPermission"
+        *ngIf="((class.isClassStudent && class.serviceType.type == 'Paid') || class.serviceType.type == 'Free' || hasPostPermission || isOwner)"
           class="tab-content"
           id="pills-tabContent"
         >

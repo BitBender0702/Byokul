@@ -68,6 +68,8 @@ export const endMeetingResponse = new Subject<{}>();
 export const shareStreamResponse = new Subject<{}>();
 export const notiFyTeacherResponse = new Subject<{userId:string}>();
 export const notificationResponse = new Subject<NotificationViewModel>();
+export const paymentResponse = new Subject<{isPaymentSuccess: boolean;}>();
+export const close3dsPopup = new Subject<{}>();
 export const progressResponse = new Subject<{
   progressCount: number;
   fileName: string;
@@ -87,7 +89,7 @@ export class SignalrService {
 
   initializeConnection(token: string) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://byokul.com/chatHub', {
+      .withUrl('https://localhost:7220/chatHub', {
          httpClient: new CustomXhrHttpClient(token)
       })
       .withAutomaticReconnect()
@@ -258,6 +260,17 @@ export class SignalrService {
     this.hubConnection?.on('ReloadClassCourseProfile', (reloadClassCourseProfile)=>{
       disableEnableResponse.next({reloadClassCourseProfile: reloadClassCourseProfile})
     })
+
+    this.hubConnection?.on('paymentResponse',
+    (isPaymentSuccess) => {
+      debugger
+      paymentResponse.next({isPaymentSuccess: isPaymentSuccess});
+    });
+
+    this.hubConnection?.on('close3dsPopup',
+    () => {
+      close3dsPopup.next({});
+    });
 
 
   }

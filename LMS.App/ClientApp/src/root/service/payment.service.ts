@@ -22,7 +22,8 @@ export class PaymentService{
     }
 
     buyClassCourse(paymentDetails:any):Observable<any>{
-      return this.http.post(`${this.apiUrl}/iyizico/buyClassCourse`,paymentDetails, {headers: this.headers});
+      debugger
+      return this.http.post(`${this.apiUrl}/iyizico/buySchoolClassCourse`,paymentDetails, {headers: this.headers});
     }
 
     transactionDetails(transactionParamViewModel: TransactionParamViewModel):Observable<any>{
@@ -38,7 +39,7 @@ export class PaymentService{
     }
 
     allTransactionDetails(transactionParamViewModel: TransactionParamViewModel):Observable<any>{
-      return this.http.post(`${this.apiUrl}/stripe/allTransactionDetails`,transactionParamViewModel, {headers: this.headers});
+      return this.http.post(`${this.apiUrl}/iyizico/allTransactionDetails`,transactionParamViewModel, {headers: this.headers});
     }
 
     payout(payoutViewModel:PayoutViewModel): Observable<any> {

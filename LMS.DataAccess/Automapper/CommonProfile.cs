@@ -42,7 +42,9 @@ namespace LMS.DataAccess.Automapper
             CreateMap<UserSharedPost, PostDetailsViewModel>()
               .ForMember(x => x.IsSharedPostPinned, opt => opt.MapFrom(o => o.IsPinned));
             CreateMap<SchoolTransaction, SchoolTransactionViewModel>();
-            CreateMap<ClassCourseTransaction, ClassCourseTransactionViewModel>();
+            CreateMap<SchoolClassCourseTransaction, SchoolTransactionViewModel>();
+            CreateMap<SchoolClassCourseTransaction, SchoolClassCourseTransactionViewModel>().ReverseMap();
+            
 
             CreateMap<ClassCourseRating, ClassCourseRatingViewModel>();
 

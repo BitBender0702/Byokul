@@ -48,7 +48,7 @@ getTrialSchoolCreatedDate(){
     var freeTrialInfo = JSON.parse(localStorage.getItem("freeTrialInfo")??'');
     
     
-      if(freeTrialInfo.trialSchoolCreationDate != null){
+      if(freeTrialInfo.trialSchoolCreationDate != null && freeTrialInfo.trialSchoolCreationDate != ""){
 
         const [datePart, timePart] = freeTrialInfo.trialSchoolCreationDate.split(' ');
 

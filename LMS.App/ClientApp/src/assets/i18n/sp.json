@@ -455,7 +455,52 @@
   "CourseCreatedSuccessfully": "Course created successfully",
   "SelectThumbnailOrVideoToStream": "Please select a thumbnail or video to stream",
   "Buy": "Buy",
-  "CropImage": "Crop Image"
+  "CropImage": "Crop Image",
+  "DoYouWantToEndLiveStream":"Canlı Yayını Bitirmek İstiyor musunuz?",
+  "ProceedPayment": "Proceed payment",
+  "PaymentInformation": "Payment Information",
+  "NewPaymentMethod": "New payment method",
+  "Agreements": "Agreements",
+  "StoreCardAgreement": "Store my card securely with iyzico. I accept the iyzico",
+  "Terms": "Terms",
+  "And": "and",
+  "ByOkulAgreement": "I accept the ByOkul",
+  "TermsAndConditions": "Terms and conditions",
+  "Privacypolicy": "Privacy policy",
+  "Pay": "Pay",
+  "ExpirationDate": "Expiration date",
+  "CVVNumber": "CVV Number",
+  "CardHolderName": "Card Holder Name",
+  "InCorrectCardInfo": "The card information you provided is incorrect or incomplete. Please double-check the card number, expiration date and CVV code, and try again.",
+  "AcceptByOkulAgreement": "Please accept ByOkul T&C and Privacy policy",
+  "Plan": "Plan",
+  "BuySubscription": "Buy Subscription",
+  "Join": "Join",
+  "ClassJoinedSuccessfully": "Class joined successfully",
+  "CourseJoinedSuccessfully": "Course joined successfully",
+  "Failure": "Failure",
+  "PaymentSuccessMessage": "Conguratulations, you are successfully enrolled to the",
+  "Class": "Class",
+  "Course": "Course",
+  "PaymentFailureMessage": "Your payment is failed, please try again",
+  "GoToYour": "Go to your",
+  "Profile": "profile",
+  "PaymentProcessingMessage":"Your payment is being processed, please do not close this page until you see the confirmation message."
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

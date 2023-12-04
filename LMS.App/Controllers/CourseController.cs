@@ -111,7 +111,7 @@ namespace LMS.App.Controllers
         }
 
 
-        [Route("saveCourseLanguages")]  
+        [Route("saveCourseLanguages")]
         [HttpPost]
         public async Task<IActionResult> SaveCourseLanguages([FromBody] SaveCourseLanguageViewModel model)
         {
@@ -131,7 +131,7 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveCourseTeachers([FromBody] SaveCourseTeacherViewModel model)
         {
-            await _courseService.SaveCourseTeachers(model.TeacherIds,new Guid(model.CourseId));
+            await _courseService.SaveCourseTeachers(model.TeacherIds, new Guid(model.CourseId));
             return Ok();
         }
 
@@ -144,12 +144,13 @@ namespace LMS.App.Controllers
                 var res = await _courseService.DeleteCourseTeacher(model);
                 if (res)
                 {
-                    return Ok(new {Success = true, Message = Constants.TeacherDeletedSuccesfully});
+                    return Ok(new { Success = true, Message = Constants.TeacherDeletedSuccesfully });
                 }
                 throw new Exception(Constants.CourseOrTeacherIdNotExist);
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
-                return BadRequest(new {Success = false, ErrorMessage = ex.Message});
+                return BadRequest(new { Success = false, ErrorMessage = ex.Message });
             }
         }
 
@@ -285,7 +286,7 @@ namespace LMS.App.Controllers
                 return Ok(new { Success = false, Message = Constants.RatingMustBeBetween1To5 });
             }
             var courseRatings = await _courseService.CourseRating(courseRating);
-            if(courseRatings != null)
+            if (courseRatings != null)
             {
                 return Ok(new { Success = true, Message = Constants.CourseRatedSuccessfully, CourseRating = courseRatings });
             }
@@ -333,6 +334,19 @@ namespace LMS.App.Controllers
         {
             var user = await _courseService.CoursesGlobalSearch(searchString, pageNumber, pageSize);
             return Ok(user);
+        }
+
+        [Route("joinFreeCourse")]
+        [HttpPost]
+        public async Task<IActionResult> JoinFreeCourse(Guid courseId)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _courseService.JoinFreeCourse(courseId, userId);
+            if (response)
+            {
+                return Ok(new { Success = true, Message = Constants.ClassJoinedSuccessfully });
+            }
+            return Ok(new { Success = false, Message = Constants.CourseIdInvalidOrStudentExist });
         }
 
     }

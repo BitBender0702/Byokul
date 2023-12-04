@@ -29,6 +29,10 @@ using System.Reflection.Metadata;
 using Hangfire;
 using LMS.Data.Entity.Iyizico;
 using Org.BouncyCastle.Crypto.Macs;
+using Class = LMS.Data.Entity.Class;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using LMS.Services.Common;
 
 namespace LMS.Services.FileStorage
 {
@@ -39,33 +43,45 @@ namespace LMS.Services.FileStorage
         private readonly IGenericRepository<SchoolSubscriptionPlan> _schoolSubscriptionPlanRepository;
         private readonly IGenericRepository<User> _userRepository;
         private readonly IGenericRepository<SchoolTransaction> _schoolTransactionRepository;
-        private readonly IGenericRepository<ClassCourseTransaction> _classCourseTransactionRepository;
+        private readonly IGenericRepository<SchoolClassCourseTransaction> _schoolClassCourseTransactionRepository;
         private readonly IGenericRepository<School> _schoolRepository;
+        private readonly IGenericRepository<Class> _classRepository;
+        private readonly IGenericRepository<Course> _courseRepository;
         private readonly IGenericRepository<Student> _studentRepository;
         private readonly IGenericRepository<ClassStudent> _classStudentRepository;
         private readonly IGenericRepository<CourseStudent> _courseStudentRepository;
         private readonly IGenericRepository<CardUserKey> _cardUserKeyRepository;
         private readonly IGenericRepository<CardRenewal> _cardRenewalRepository;
+        private readonly IGenericRepository<SchoolSubscription> _schoolSubscriptionRepository;
         private readonly INotificationService _notificationService;
         private readonly IHubContext<ChatHubs> _hubContext;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UserManager<User> _userManager;
+        private readonly ICommonService _commonService;
 
 
-        public IyizicoService(IMapper mapper, IConfiguration config, IGenericRepository<SchoolSubscriptionPlan> schoolSubscriptionPlanRepository, IGenericRepository<User> userRepository, IGenericRepository<SchoolTransaction> schoolTransactionRepository, IGenericRepository<ClassCourseTransaction> classCourseTransactionRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Student> studentRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CardUserKey> cardUserKeyRepository, IGenericRepository<CardRenewal> cardRenewalRepository, INotificationService notificationService, IHubContext<ChatHubs> hubContext)
+        public IyizicoService(IMapper mapper, IConfiguration config, IGenericRepository<SchoolSubscriptionPlan> schoolSubscriptionPlanRepository, IGenericRepository<User> userRepository, IGenericRepository<SchoolTransaction> schoolTransactionRepository, IGenericRepository<SchoolClassCourseTransaction> schoolClassCourseTransactionRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Student> studentRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CardUserKey> cardUserKeyRepository, IGenericRepository<CardRenewal> cardRenewalRepository, IGenericRepository<SchoolSubscription> schoolSubscriptionRepository, INotificationService notificationService, IHubContext<ChatHubs> hubContext, IWebHostEnvironment webHostEnvironment, UserManager<User> userManager, ICommonService commonService)
         {
             _mapper = mapper;
             _config = config;
             _schoolSubscriptionPlanRepository = schoolSubscriptionPlanRepository;
             _userRepository = userRepository;
             _schoolTransactionRepository = schoolTransactionRepository;
-            _classCourseTransactionRepository = classCourseTransactionRepository;
+            _schoolClassCourseTransactionRepository = schoolClassCourseTransactionRepository;
             _schoolRepository = schoolRepository;
+            _classRepository = classRepository;
+            _courseRepository = courseRepository;
             _studentRepository = studentRepository;
             _classStudentRepository = classStudentRepository;
             _courseStudentRepository = courseStudentRepository;
             _cardUserKeyRepository = cardUserKeyRepository;
             _cardRenewalRepository = cardRenewalRepository;
+            _schoolSubscriptionRepository = schoolSubscriptionRepository;
             _notificationService = notificationService;
             _hubContext = hubContext;
+            _webHostEnvironment = webHostEnvironment;
+            _userManager = userManager;
+            _commonService = commonService;
         }
 
         //public async Task<BuySchoolSubscriptionViewModel> BuySchoolSubscription(BuySchoolSubscriptionViewModel model, string userId, Guid schoolId)
@@ -183,7 +199,7 @@ namespace LMS.Services.FileStorage
             request.BasketId = Guid.NewGuid().ToString();
             request.PaymentChannel = PaymentChannel.WEB.ToString();
             request.PaymentGroup = PaymentGroup.PRODUCT.ToString();
-            request.CallbackUrl = "https://823a-223-177-183-104.ngrok-free.app/iyizico/callback";
+            request.CallbackUrl = "https://bb1a-122-176-18-127.ngrok-free.app/iyizico/callback";
 
             //request.CallbackUrl = "https://byokul.com/iyizico/callback";
 
@@ -722,15 +738,24 @@ namespace LMS.Services.FileStorage
             await _notificationService.SaveTransactionNotification(notificationViewModel);
         }
 
-        public async Task UpdateClassCourseTransaction(string conversationId, string paymentId)
+        public async Task UpdateSchoolClassCourseTransaction(string conversationId, string paymentId)
         {
             string message = "";
+            string paymentMessage = "";
             Options options = new Options
             {
                 ApiKey = this._config.GetValue<string>("IyzicoSettings:ApiKey"),
                 SecretKey = this._config.GetValue<string>("IyzicoSettings:SecretKey"),
                 BaseUrl = this._config.GetValue<string>("IyzicoSettings:BaseUrl")
             };
+
+
+            CreateApprovalRequest request = new CreateApprovalRequest();
+            request.Locale = Locale.TR.ToString();
+            request.ConversationId = "64048bd1-d0d8-490c-9d16-9f9dde3be476";
+            request.PaymentTransactionId = "23231805";
+
+            Approval approval = Approval.Create(request, options);
 
             var payment = new RetrievePaymentRequest
             {
@@ -745,70 +770,118 @@ namespace LMS.Services.FileStorage
 
             if (paymentDetails.Status == "success")
             {
-                var classCourseTransaction = _classCourseTransactionRepository.GetAll().Where(x => x.ConversationId == conversationId && x.PaymentId == null).Include(x => x.Class).Include(x => x.Course).FirstOrDefault();
+                var transaction = _schoolClassCourseTransactionRepository.GetAll().Where(x => x.ConversationId == conversationId && x.PaymentId == null).Include(x => x.User).Include(x => x.School).Include(x => x.Class).Include(x => x.Course).FirstOrDefault();
 
-                if (classCourseTransaction != null)
+                // here we check if school payment then we add a job after 30 days
+                if (transaction.SchoolId != null)
                 {
-                    if (classCourseTransaction.ClassId != null)
-                    {
-                        message = $"Your transaction of {amount} is successful for Class {classCourseTransaction.Class.ClassName}";
-                        await AddClassStudent(classCourseTransaction.UserId, classCourseTransaction.ClassId.Value);
-                        await SendClassCourseNotification(classCourseTransaction, message, classCourseTransaction.Class.Avatar);
-                    }
-                    else
-                    {
-                        message = $"Your transaction of {amount} is successful for Course {classCourseTransaction.Course.CourseName}";
-                        await AddCourseStudent(classCourseTransaction.UserId, classCourseTransaction.CourseId.Value);
-                        await SendClassCourseNotification(classCourseTransaction, message, classCourseTransaction.Course.Avatar);
-
-                    }
-
-                    classCourseTransaction.IsActive = true;
-                    classCourseTransaction.Message = message;
-                    classCourseTransaction.PaymentId = paymentId;
-                    classCourseTransaction.Message = message;
-                    classCourseTransaction.Amount = amount;
-                    _classCourseTransactionRepository.Update(classCourseTransaction);
-                    _classCourseTransactionRepository.Save();
+                    await UpdateSchoolSubscription((Guid)transaction.SchoolId, transaction.ActionDoneBy,true);
+                    //await ScheduleSchoolPayment(transaction);
+                    var scheduleJobId = BackgroundJob.Schedule(() => UpdateSchoolSubscription((Guid)transaction.SchoolId, transaction.ActionDoneBy,false), TimeSpan.FromMinutes(3));
 
                 }
-                else
+                if (transaction != null)
                 {
-                    var schoolTransaction = _schoolTransactionRepository.GetAll().Where(x => x.ConversationId == conversationId && x.PaymentId == null).Include(x => x.School).FirstOrDefault();
-                    if (schoolTransaction != null)
+                    var user = transaction.User;
+
+                    if (transaction.SchoolId != null)
                     {
-                        await UpdateSchoolTransaction(conversationId, paymentId, true);
+                        message = $"Your transaction of {amount} is successful for School {transaction.School.SchoolName}";
+                        paymentMessage = user.FirstName + " " + user.LastName + "paid" + amount + "₺ for class" + transaction.School.SchoolName;
+                        await SendSchoolClassCourseNotification(transaction, message, transaction.School.Avatar);
                     }
 
+                    if (transaction.ClassId != null)
+                    {
+                        message = $"Your transaction of {amount} is successful for Class {transaction.Class.ClassName}";
+                        paymentMessage = user.FirstName + " " + user.LastName + " " + "paid" + " " + amount + "₺ for class" + " " + transaction.Class.ClassName;
+                        await AddClassStudent(transaction.ActionDoneBy, transaction.ClassId.Value);
+                        await SendSchoolClassCourseNotification(transaction, message, transaction.Class.Avatar);
+                    }
+                    if (transaction.CourseId != null)
+                    {
+                        message = $"Your transaction of {amount} is successful for Course {transaction.Course.CourseName}";
+                        paymentMessage = user.FirstName + " " + user.LastName + " " + "paid" + " " + amount + "₺ for course" + " " + transaction.Course.CourseName;
+                        await AddCourseStudent(transaction.ActionDoneBy, transaction.CourseId.Value);
+                        await SendSchoolClassCourseNotification(transaction, message, transaction.Course.Avatar);
+
+                    }
+
+                    transaction.IsActive = true;
+                    transaction.Message = paymentMessage;
+                    transaction.PaymentId = paymentId;
+                    transaction.Amount = amount;
+                    _schoolClassCourseTransactionRepository.Update(transaction);
+                    _schoolClassCourseTransactionRepository.Save();
+
                 }
+                //else
+                //{
+                //    var schoolTransaction = _schoolTransactionRepository.GetAll().Where(x => x.ConversationId == conversationId && x.PaymentId == null).Include(x => x.School).FirstOrDefault();
+                //    if (schoolTransaction != null)
+                //    {
+                //        await UpdateSchoolTransaction(conversationId, paymentId, true);
+                //    }
+
+                //}
             }
             if (paymentDetails.Status == "NOT_SUFFICIENT_FUNDS")
             {
-                var classCourseTransaction = _classCourseTransactionRepository.GetAll().Where(x => x.ConversationId == conversationId && x.PaymentId == null).Include(x => x.Class).Include(x => x.Course).FirstOrDefault();
+                var classCourseTransaction = _schoolClassCourseTransactionRepository.GetAll().Where(x => x.ConversationId == conversationId && x.PaymentId == null).Include(x => x.Class).Include(x => x.Course).FirstOrDefault();
                 if (classCourseTransaction.ClassId != null)
                 {
                     message = $"Your transaction of {paymentDetails.PaidPrice} is failed for Class {classCourseTransaction.Class.ClassName}";
-                    await SendClassCourseNotification(classCourseTransaction, message, classCourseTransaction.Class.Avatar);
+                    await SendSchoolClassCourseNotification(classCourseTransaction, message, classCourseTransaction.Class.Avatar);
                 }
                 else
                 {
                     message = $"Your transaction of {paymentDetails.PaidPrice} is failed for Course {classCourseTransaction.Course.CourseName}";
-                    await SendClassCourseNotification(classCourseTransaction, message, classCourseTransaction.Course.Avatar);
-
+                    await SendSchoolClassCourseNotification(classCourseTransaction, message, classCourseTransaction.Course.Avatar);
                 }
 
             }
         }
 
 
-        public async Task SendClassCourseNotification(ClassCourseTransaction model, string message, string avatar)
+        public async Task UpdateSchoolSubscription(Guid schoolId, string userId, bool isActive)
+        {
+            var schoolSubscription = await _schoolSubscriptionRepository.GetAll().Where(x => x.SchoolId == schoolId && x.CreatedById == userId).FirstOrDefaultAsync();
+            if (schoolSubscription != null)
+            {
+                schoolSubscription.IsActive = isActive;
+                _schoolSubscriptionRepository.Update(schoolSubscription);
+                _schoolSubscriptionRepository.Save();
+            }
+
+            if (!isActive)
+            {
+                await SendRenewSubscriptionEmailToUser(userId, schoolId);
+            }
+        }
+
+        public async Task SendRenewSubscriptionEmailToUser(string userId, string schoolId)
+        {
+            var user = _userRepository.GetById(userId);
+            var school = _
+            var path = _webHostEnvironment.ContentRootPath;
+            var filePath = Path.Combine(path, "Email/renew-schoolSubscription.html");
+            var text = System.IO.File.ReadAllText(filePath);
+            text = text.Replace("[Recipient]", user.FirstName + " " + user.LastName);
+            //text = text.Replace("[OwnerName]", OwnerName);
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            await _commonService.SendEmail(new List<string> { user.Email }, null, null, "Assigned Permissions", body: text, null, null);
+        }
+
+        public async Task SendSchoolClassCourseNotification(SchoolClassCourseTransaction model, string message, string avatar)
         {
             var notificationViewModel = new NotificationViewModel();
-            notificationViewModel.UserId = model.UserId;
-            notificationViewModel.ActionDoneBy = model.UserId;
+            notificationViewModel.UserId = model.ActionDoneBy;
+            notificationViewModel.ActionDoneBy = model.ActionDoneBy;
             notificationViewModel.Avatar = avatar;
             notificationViewModel.NotificationContent = message;
-            notificationViewModel.ChatTypeId = model.ClassId == null ? model.CourseId : model.ClassId;
+            notificationViewModel.ChatTypeId = model.ClassId != null ? model.ClassId : model.CourseId != null ? model.CourseId : model.SchoolId != null ? model.SchoolId : null;
+            //notificationViewModel.ChatTypeId = model.ClassId == null ? model.CourseId : model.ClassId;
             await _notificationService.SaveTransactionNotification(notificationViewModel);
         }
 
@@ -915,8 +988,31 @@ namespace LMS.Services.FileStorage
             return _mapper.Map<List<SchoolSubscriptionPlansViewModel>>(subscriptionPlans);
         }
 
-        public async Task<string> BuyClassCourse(BuyClassCourseViewModel model, string userId)
+        public async Task<string> BuySchoolClassCourse(BuySchoolClassCourseViewModel model, string userId)
         {
+
+
+
+            var SSCOwner = new User();
+            if (model.ParentType == SchoolClassCourseEnum.School)
+            {
+                SSCOwner = await _schoolRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.SchoolId == model.ParentId).Select(x => x.CreatedBy).FirstAsync();
+            }
+            if (model.ParentType == SchoolClassCourseEnum.Class)
+            {
+                SSCOwner = await _classRepository.GetAll().Include(x => x.School).ThenInclude(x => x.CreatedBy).Where(x => x.ClassId == model.ParentId).Select(x => x.School.CreatedBy).FirstAsync();
+            }
+            if (model.ParentType == SchoolClassCourseEnum.Course)
+            {
+                SSCOwner = await _courseRepository.GetAll().Include(x => x.School).ThenInclude(x => x.CreatedBy).Where(x => x.CourseId == model.ParentId).Select(x => x.School.CreatedBy).FirstAsync();
+            }
+
+            if (model.SchoolSubscriptionPlanId != null)
+            {
+                await SaveSchoolSubscription(model, userId);
+            }
+
+            string subMerchantKey = "";
             var user = _userRepository.GetById(userId);
             Options options = new Options
             {
@@ -924,6 +1020,13 @@ namespace LMS.Services.FileStorage
                 SecretKey = this._config.GetValue<string>("IyzicoSettings:SecretKey"),
                 BaseUrl = this._config.GetValue<string>("IyzicoSettings:BaseUrl")
             };
+
+            CreateApprovalRequest request1 = new CreateApprovalRequest();
+            request1.Locale = Locale.TR.ToString();
+            request1.ConversationId = "b2cd204e-bc6a-4427-bd38-14d9a56d3bdf";
+            request1.PaymentTransactionId = "23239117";
+
+            Approval approval = Approval.Create(request1, options);
 
             CreatePaymentRequest request = new CreatePaymentRequest();
             request.Locale = Locale.TR.ToString();
@@ -936,10 +1039,10 @@ namespace LMS.Services.FileStorage
             request.PaymentChannel = PaymentChannel.WEB.ToString();
             request.PaymentGroup = PaymentGroup.PRODUCT.ToString();
             //request.CallbackUrl = "https://byokul.com/iyizico/callback";
-            request.CallbackUrl = "https://823a-223-177-183-104.ngrok-free.app/iyizico/callback";
+            request.CallbackUrl = "https://bb1a-122-176-18-127.ngrok-free.app/iyizico/callback";
 
 
-            var paymentCard = await GetPaymentCard(model);
+            var paymentCard = await GetPaymentCard(model, user.Email);
             request.PaymentCard = paymentCard;
             var buyer = await GetBuyer(user);
             request.Buyer = buyer;
@@ -958,12 +1061,24 @@ namespace LMS.Services.FileStorage
             firstBasketItem.Price = model.Amount.ToString();
 
             //create submerchant
-            var subMerchantKey = await CreateSubMerchent(model,userId);
-
+            //if (model.SchoolSubscriptionPlanId == null)
+            //{
+            if (SSCOwner.IyzicoSubMerchantKey == null)
+            {
+                subMerchantKey = await CreateSubMerchent(SSCOwner);
+                SSCOwner.IyzicoSubMerchantKey = subMerchantKey;
+                _userRepository.Update(SSCOwner);
+                _userRepository.Save();
+            }
+            else
+            {
+                subMerchantKey = SSCOwner.IyzicoSubMerchantKey;
+            }
 
             var subMerchantPrice = (model.Amount * 80) / 100;
             firstBasketItem.SubMerchantKey = subMerchantKey;
             firstBasketItem.SubMerchantPrice = subMerchantPrice.ToString();
+            //}
 
 
             basketItems.Add(firstBasketItem);
@@ -974,14 +1089,44 @@ namespace LMS.Services.FileStorage
             if (threedsInitialize.Status == "success")
             {
                 model.ConversationId = threedsInitialize.ConversationId;
-                await saveClassCourseTransaction(model, userId);
+                await saveSchoolClassCourseTransaction(model, userId);
                 return threedsInitialize.HtmlContent;
             }
 
             return "ErrorMessage" + threedsInitialize.ErrorMessage + "Status" + threedsInitialize.Status + "ErrorCode" + threedsInitialize.ErrorCode;
         }
 
-        public async Task<string> CreateSubMerchent(BuyClassCourseViewModel model, string userId)
+
+
+        public async Task SaveSchoolSubscription(BuySchoolClassCourseViewModel model, string userId)
+        {
+            var isSchoolSubscriptionExist = await _schoolSubscriptionRepository.GetAll().Where(x => x.SchoolId == model.ParentId && x.SchoolSubscriptionPlanId == model.SchoolSubscriptionPlanId).FirstOrDefaultAsync();
+            //if (isSchoolSubscriptionExist != null)
+            //{
+            //    isSchoolSubscriptionExist.IsActive = true;
+            //    _schoolSubscriptionRepository.Update(isSchoolSubscriptionExist);
+            //    _schoolSubscriptionRepository.Save();
+            //}
+            //else
+            //{
+
+            if (isSchoolSubscriptionExist == null)
+            {
+                var schoolSubscription = new SchoolSubscription
+                {
+                    SchoolId = model.ParentId,
+                    SchoolSubscriptionPlanId = model.SchoolSubscriptionPlanId,
+                    IsActive = false,
+                    CreatedById = userId,
+                    CreatedOn = DateTime.UtcNow
+                };
+
+                _schoolSubscriptionRepository.Insert(schoolSubscription);
+                _schoolSubscriptionRepository.Save();
+                //}
+            }
+        }
+        public async Task<string> CreateSubMerchent(User user)
         {
             Options options = new Options
             {
@@ -996,39 +1141,62 @@ namespace LMS.Services.FileStorage
             request.SubMerchantExternalId = Guid.NewGuid().ToString();
             request.SubMerchantType = SubMerchantType.PERSONAL.ToString();
             request.Address = "test class";
-            request.ContactName = "Dharmendra";
-            request.ContactSurname = "Sinsinwar";
-            request.Email = "dharmendra@gmail.com";
+            request.ContactName = user.FirstName;
+            request.ContactSurname = user.LastName;
+            request.Email = user.Email;
             request.GsmNumber = "+909129202000";
-            request.Name = "Dharam Request";
-            request.LegalCompanyTitle = "Dharam Company";
-            //request.Iban = "TR180006200119000006672315";
-            //request.IdentityNumber = "31300864726";
+            request.Name = user.FirstName + " " + user.LastName;
+            request.LegalCompanyTitle = user.FirstName + "company";
+            request.Iban = "TR180006200119000006672315";
+            request.IdentityNumber = "31300864726";
             request.Currency = Currency.TRY.ToString();
 
             SubMerchant subMerchant = SubMerchant.Create(request, options);
+
+
+
+
+
             return subMerchant.SubMerchantKey;
         }
 
-        public async Task saveClassCourseTransaction(BuyClassCourseViewModel model, string userId)
+        public async Task saveSchoolClassCourseTransaction(BuySchoolClassCourseViewModel model, string userId)
         {
-            var classCourseTransaction = new ClassCourseTransaction
+            string SSCOwnerId = "";
+            if (model.ParentType == SchoolClassCourseEnum.School)
             {
-                UserId = userId,
-                ClassId = model.ParentType == ClassCourseEnum.Class ? model.ParentId : null,
-                CourseId = model.ParentType == ClassCourseEnum.Course ? model.ParentId : null,
+                var school = _schoolRepository.GetById(model.ParentId);
+                SSCOwnerId = school.CreatedById;
+            }
+            if (model.ParentType == SchoolClassCourseEnum.Class)
+            {
+                var classes = _classRepository.GetById(model.ParentId);
+                SSCOwnerId = classes.CreatedById;
+            }
+            if (model.ParentType == SchoolClassCourseEnum.Course)
+            {
+                var course = _courseRepository.GetById(model.ParentId);
+                SSCOwnerId = course.CreatedById;
+            }
+            var classCourseTransaction = new SchoolClassCourseTransaction
+            {
+                ActionDoneBy = userId,
+                SSCOwnerId = SSCOwnerId,
+                SchoolId = model.ParentType == SchoolClassCourseEnum.School ? model.ParentId : null,
+                ClassId = model.ParentType == SchoolClassCourseEnum.Class ? model.ParentId : null,
+                CourseId = model.ParentType == SchoolClassCourseEnum.Course ? model.ParentId : null,
                 ConversationId = model.ConversationId,
                 CreatedOn = DateTime.UtcNow,
                 IsActive = false,
                 Status = 1
             };
 
-            _classCourseTransactionRepository.Insert(classCourseTransaction);
-            _classCourseTransactionRepository.Save();
+            _schoolClassCourseTransactionRepository.Insert(classCourseTransaction);
+            _schoolClassCourseTransactionRepository.Save();
         }
 
 
-        public async Task<PaymentCard> GetPaymentCard(BuyClassCourseViewModel model)
+        public async Task<PaymentCard> GetPaymentCard(BuySchoolClassCourseViewModel model, string email)
         {
             Options options = new Options
             {
@@ -1037,57 +1205,68 @@ namespace LMS.Services.FileStorage
                 BaseUrl = this._config.GetValue<string>("IyzicoSettings:BaseUrl")
             };
 
-            var expMonth = model.ExpiresOn.Substring(0, Math.Min(2, model.ExpiresOn.Length));
-            int lastTwoStartIndex = Math.Max(0, model.ExpiresOn.Length - 2);
-            var expYear = model.ExpiresOn.Substring(lastTwoStartIndex);
-            var cardNumber = model.CardNumber.Replace("-", "");
-
             PaymentCard paymentCard = new PaymentCard();
-            paymentCard.CardUserKey = "Tw1LwrcYkZrPgF/g4yolJjcnlus=";
-            paymentCard.CardToken = "v7dXoSwJvYYc68nCkytSF1tmxCs=";
-            //paymentCard.CardHolderName = model.CardHolderName;
-            //paymentCard.CardNumber = cardNumber;
-            //paymentCard.ExpireMonth = expMonth;
-            //paymentCard.ExpireYear = expYear;
-            //paymentCard.Cvc = model.SecurityCode;
-
-            //if (model.IsSaveCardCheckboxSelected)
-            //{
-            //    paymentCard.RegisterCard = 1;
-            //}
-            //else
-            //{
-            //    paymentCard.RegisterCard = 0;
-            //}
-
-            //CreateCardRequest cardRequest = new CreateCardRequest();
-            //cardRequest.Locale = Locale.TR.ToString();
-            //cardRequest.ConversationId = Guid.NewGuid().ToString();
-            //cardRequest.Email = "john11@gmail.com";
-            //cardRequest.ExternalId = "";
-
-            //CardInformation cardInformation = new CardInformation();
-            //cardInformation.CardAlias = "card alias";
-            //cardInformation.CardHolderName = model.CardHolderName;
-            //cardInformation.CardNumber = model.CardNumber;
-            //cardInformation.ExpireMonth = expMonth;
-            //cardInformation.ExpireYear = expYear;
-            //cardRequest.Card = cardInformation;
-            //Iyzipay.Model.Card card = Card.Create(cardRequest, options);
+            //paymentCard.CardUserKey = "Tw1LwrcYkZrPgF/g4yolJjcnlus=";
+            //paymentCard.CardToken = "v7dXoSwJvYYc68nCkytSF1tmxCs=";
 
 
-            //if (card.Status == Status.SUCCESS.ToString())
-            //{
-            //    var cardUserKey = new CardUserKey
-            //    {
-            //        Id = Guid.NewGuid(),
-            //        Email = "john11@gmail.com",
-            //        CardKey = card.CardUserKey
-            //    };
+            if (!String.IsNullOrEmpty(model.CardUserKey) && !String.IsNullOrEmpty(model.CardToken))
+            {
+                paymentCard.CardUserKey = model.CardUserKey;
+                paymentCard.CardToken = model.CardToken;
+            }
+            else
+            {
+                var expMonth = model.ExpiresOn.Substring(0, Math.Min(2, model.ExpiresOn.Length));
+                int lastTwoStartIndex = Math.Max(0, model.ExpiresOn.Length - 2);
+                var expYear = model.ExpiresOn.Substring(lastTwoStartIndex);
+                var cardNumber = model.CardNumber.Replace("-", "");
 
-            //    _cardUserKeyRepository.Insert(cardUserKey);
-            //    _cardUserKeyRepository.Save();
-            //}
+                paymentCard.CardHolderName = model.CardHolderName;
+                paymentCard.CardNumber = cardNumber;
+                paymentCard.ExpireMonth = expMonth;
+                paymentCard.ExpireYear = expYear;
+                paymentCard.Cvc = model.SecurityCode;
+
+                if (model.IsSaveCardCheckboxSelected)
+                {
+                    paymentCard.RegisterCard = 1;
+                }
+                else
+                {
+                    paymentCard.RegisterCard = 0;
+                }
+
+                CreateCardRequest cardRequest = new CreateCardRequest();
+                cardRequest.Locale = Locale.TR.ToString();
+                cardRequest.ConversationId = Guid.NewGuid().ToString();
+                cardRequest.Email = email;
+                cardRequest.ExternalId = "";
+
+                CardInformation cardInformation = new CardInformation();
+                cardInformation.CardAlias = "card alias";
+                cardInformation.CardHolderName = model.CardHolderName;
+                cardInformation.CardNumber = model.CardNumber;
+                cardInformation.ExpireMonth = expMonth;
+                cardInformation.ExpireYear = expYear;
+                cardRequest.Card = cardInformation;
+                Iyzipay.Model.Card card = Card.Create(cardRequest, options);
+
+
+                if (card.Status == Status.SUCCESS.ToString())
+                {
+                    var cardUserKey = new CardUserKey
+                    {
+                        Id = Guid.NewGuid(),
+                        Email = email,
+                        CardKey = card.CardUserKey
+                    };
+
+                    _cardUserKeyRepository.Insert(cardUserKey);
+                    _cardUserKeyRepository.Save();
+                }
+
+            }
 
             return paymentCard;
         }
@@ -1127,16 +1306,16 @@ namespace LMS.Services.FileStorage
         {
             int pageSize = 10;
             var transactionDetails = new TransactionsDetailsViewModel();
-            var transactions = await _schoolTransactionRepository.GetAll()
+            var transactions = await _schoolClassCourseTransactionRepository.GetAll()
                               .Include(x => x.User)
-                              .Include(x => x.School).Where(x => x.UserId == userId && x.IsActive && ((string.IsNullOrEmpty(model.SearchString)) || (x.User.FirstName.Contains(model.SearchString)) || (x.User.LastName.Contains(model.SearchString) || (x.User.FirstName + " " + x.User.LastName).ToLower().Contains(model.SearchString.ToLower())) && ((model.StartDate == null) || (model.EndDate == null) || (x.CreatedOn.Date >= model.StartDate.Value.Date && x.CreatedOn.Date <= model.EndDate.Value.Date)))).OrderByDescending(x => x.CreatedOn).Skip((model.pageNumber - 1) * pageSize)
+                              .Include(x => x.School).Where(x => (x.School != null && x.School.CreatedById == userId) && x.IsActive && ((string.IsNullOrEmpty(model.SearchString)) || (x.User.FirstName.Contains(model.SearchString)) || (x.User.LastName.Contains(model.SearchString) || (x.User.FirstName + " " + x.User.LastName).ToLower().Contains(model.SearchString.ToLower())) && ((model.StartDate == null) || (model.EndDate == null) || (x.CreatedOn.Date >= model.StartDate.Value.Date && x.CreatedOn.Date <= model.EndDate.Value.Date)))).OrderByDescending(x => x.CreatedOn).Skip((model.pageNumber - 1) * pageSize)
              .Take(pageSize).ToListAsync();
             transactions = transactions.DistinctBy(x => x.PaymentId).ToList();
-            var transactionResponse = _mapper.Map<List<SchoolTransactionViewModel>>(transactions);
+            var transactionResponse = _mapper.Map<List<SchoolClassCourseTransactionViewModel>>(transactions);
             if (transactions.Count != 0)
             {
                 //transactionDetails.MonthlyIncome = await GetMonthlyIncome(userId);
-                transactionDetails.SourceOfIncome = await _classCourseTransactionRepository.GetAll().Include(x => x.Class).Include(x => x.Course).Where(x => (x.Class != null && x.Class.CreatedById == userId) || (x.Course != null && x.Course.CreatedById == userId)).CountAsync();
+                transactionDetails.SourceOfIncome = await _schoolClassCourseTransactionRepository.GetAll().Include(x => x.Class).Include(x => x.Course).Where(x => (x.Class != null && x.Class.CreatedById == userId && x.PaymentId != null) || (x.Course != null && x.Course.CreatedById == userId && x.PaymentId != null)).CountAsync();
 
             }
 
@@ -1155,16 +1334,17 @@ namespace LMS.Services.FileStorage
         {
             int pageSize = 10;
             var transactionDetails = new TransactionsDetailsViewModel();
-            var transactions = await _classCourseTransactionRepository.GetAll()
+            var test = await _schoolClassCourseTransactionRepository.GetAll().ToListAsync();
+            var transactions = await _schoolClassCourseTransactionRepository.GetAll()
                               .Include(x => x.User)
-                              .Include(x => x.Class).ThenInclude(x => x.School).Include(x => x.Course).ThenInclude(x => x.School).Where(x => (x.Class != null && x.Class.CreatedById == userId) || (x.Course != null && x.Course.CreatedById == userId) && ((string.IsNullOrEmpty(model.SearchString)) || (x.User.FirstName.Contains(model.SearchString)) || (x.User.LastName.Contains(model.SearchString) || (x.User.FirstName + " " + x.User.LastName).ToLower().Contains(model.SearchString.ToLower())) && ((model.StartDate == null) || (model.EndDate == null) || (x.CreatedOn.Date >= model.StartDate.Value.Date && x.CreatedOn.Date <= model.EndDate.Value.Date)))).OrderByDescending(x => x.CreatedOn).Skip((model.pageNumber - 1) * pageSize)
+                              .Include(x => x.Class).ThenInclude(x => x.School).Include(x => x.Course).ThenInclude(x => x.School).Where(x => (x.Class != null && x.Class.CreatedById == userId && x.PaymentId != null) || (x.Course != null && x.Course.CreatedById == userId && x.PaymentId != null) && ((string.IsNullOrEmpty(model.SearchString)) || (x.User.FirstName.Contains(model.SearchString)) || (x.User.LastName.Contains(model.SearchString) || (x.User.FirstName + " " + x.User.LastName).ToLower().Contains(model.SearchString.ToLower())) && ((model.StartDate == null) || (model.EndDate == null) || (x.CreatedOn.Date >= model.StartDate.Value.Date && x.CreatedOn.Date <= model.EndDate.Value.Date)))).OrderByDescending(x => x.CreatedOn).Skip((model.pageNumber - 1) * pageSize)
              .Take(pageSize).ToListAsync();
 
-            var transactionResponse = _mapper.Map<List<ClassCourseTransactionViewModel>>(transactions);
+            var transactionResponse = _mapper.Map<List<SchoolClassCourseTransactionViewModel>>(transactions);
             if (transactions.Count != 0)
             {
                 //transactionDetails.MonthlyIncome = await GetMonthlyIncome(userId);
-                transactionDetails.SourceOfIncome = await _classCourseTransactionRepository.GetAll().Include(x => x.Class).Include(x => x.Course).Where(x => (x.Class != null && x.Class.CreatedById == userId) || (x.Course != null && x.Course.CreatedById == userId)).CountAsync();
+                transactionDetails.SourceOfIncome = await _schoolClassCourseTransactionRepository.GetAll().Include(x => x.Class).Include(x => x.Course).Where(x => (x.Class != null && x.Class.CreatedById == userId) || (x.Course != null && x.Course.CreatedById == userId)).CountAsync();
 
             }
 
@@ -1177,6 +1357,35 @@ namespace LMS.Services.FileStorage
             }
 
             return transactionDetails;
+        }
+
+        public async Task<TransactionsDetailsViewModel> GetAllTransactionDetails(TransactionParamViewModel model, string userId)
+        {
+            int pageSize = 10;
+            var transactionDetails = new TransactionsDetailsViewModel();
+            var transactions = await _schoolClassCourseTransactionRepository.GetAll()
+                              .Include(x => x.User)
+                              .Where(x => x.SSCOwnerId == userId && x.IsActive && ((string.IsNullOrEmpty(model.SearchString)) || (x.User.FirstName.Contains(model.SearchString)) || (x.User.LastName.Contains(model.SearchString) || (x.User.FirstName + " " + x.User.LastName).ToLower().Contains(model.SearchString.ToLower())) && ((model.StartDate == null) || (model.EndDate == null) || (x.CreatedOn.Date >= model.StartDate.Value.Date && x.CreatedOn.Date <= model.EndDate.Value.Date)))).OrderByDescending(x => x.CreatedOn).Skip((model.pageNumber - 1) * pageSize)
+             .Take(pageSize).ToListAsync();
+            transactions = transactions.DistinctBy(x => x.PaymentId).ToList();
+            var transactionResponse = _mapper.Map<List<SchoolClassCourseTransactionViewModel>>(transactions);
+            if (transactions.Count != 0)
+            {
+                //transactionDetails.MonthlyIncome = await GetMonthlyIncome(userId);
+                transactionDetails.SourceOfIncome = await _schoolClassCourseTransactionRepository.GetAll().Include(x => x.Class).Include(x => x.Course).Where(x => (x.Class != null && x.Class.CreatedById == userId && x.PaymentId != null) || (x.Course != null && x.Course.CreatedById == userId && x.PaymentId != null)).CountAsync();
+
+            }
+
+            transactionDetails.AllTransactions = transactionResponse;
+            var userOwnedSchools = await _schoolRepository.GetAll().Where(x => x.CreatedById == userId).ToListAsync();
+
+            //if (userOwnedSchools.Count > 0)
+            //{
+            //    transactionDetails.IsUserHasOwnedSchool = true;
+            //}
+
+            return transactionDetails;
+
         }
 
 
@@ -1297,23 +1506,23 @@ namespace LMS.Services.FileStorage
 
             if (refund.Status == "success")
             {
-                if (type == LMS.Common.Enums.SchoolClassCourseEnum.School)
-                {
-                    var schoolTransaction = await _schoolTransactionRepository.GetAll().Where(x => x.PaymentId == paymentId).FirstAsync();
-                    schoolTransaction.IsRefund = true;
-                    _schoolTransactionRepository.Update(schoolTransaction);
-                    _schoolTransactionRepository.Save();
-                    return Constants.Success;
+                //if (type == LMS.Common.Enums.SchoolClassCourseEnum.School)
+                //{
+                //    var schoolTransaction = await _schoolTransactionRepository.GetAll().Where(x => x.PaymentId == paymentId).FirstAsync();
+                //    schoolTransaction.IsRefund = true;
+                //    _schoolTransactionRepository.Update(schoolTransaction);
+                //    _schoolTransactionRepository.Save();
+                //    return Constants.Success;
 
-                }
-                else
-                {
-                    var classCourseTransaction = await _classCourseTransactionRepository.GetAll().Where(x => x.PaymentId == paymentId).FirstAsync();
-                    classCourseTransaction.IsRefund = true;
-                    _classCourseTransactionRepository.Update(classCourseTransaction);
-                    _classCourseTransactionRepository.Save();
-                    return Constants.Success;
-                }
+                //}
+                //else
+                //{
+                var classCourseTransaction = await _schoolClassCourseTransactionRepository.GetAll().Where(x => x.PaymentId == paymentId).FirstAsync();
+                classCourseTransaction.IsRefund = true;
+                _schoolClassCourseTransactionRepository.Update(classCourseTransaction);
+                _schoolClassCourseTransactionRepository.Save();
+                return Constants.Success;
+                //}
 
 
             }
@@ -1329,8 +1538,9 @@ namespace LMS.Services.FileStorage
             _hubContext.Clients.All.SendAsync("CloseIyizicoThreeDAuthWindow", true);
         }
 
-        public async Task<CardList> GetUserSavedCards(string email)
+        public async Task<List<CardList>> GetUserSavedCards(string email)
         {
+            var CardLists = new List<CardList>();
             Options options = new Options
             {
                 ApiKey = this._config.GetValue<string>("IyzicoSettings:ApiKey"),
@@ -1338,25 +1548,42 @@ namespace LMS.Services.FileStorage
                 BaseUrl = this._config.GetValue<string>("IyzicoSettings:BaseUrl")
             };
 
-            var isCardUserKeyExist = _cardUserKeyRepository.GetAll().Where(x => x.Email == email).FirstOrDefault();
+            //var isCardUserKeyExist = _cardUserKeyRepository.GetAll().Where(x => x.Email == email).FirstOrDefault();
+            var isCardUserKeyExist = _cardUserKeyRepository.GetAll().Where(x => x.Email == email).ToList();
 
-            if (isCardUserKeyExist != null)
+            foreach (var item in isCardUserKeyExist)
             {
+
                 RetrieveCardListRequest request = new RetrieveCardListRequest();
                 request.Locale = Locale.TR.ToString();
-                request.CardUserKey = isCardUserKeyExist.CardKey;
+                request.CardUserKey = item.CardKey;
+
 
                 CardList cardList = CardList.Retrieve(request, options);
 
-                return cardList;
-
-
+                CardLists.Add(cardList);
             }
-            return null;
+
+            return CardLists;
+
+            //if (isCardUserKeyExist != null)
+            //{
+
+            //    RetrieveCardListRequest request = new RetrieveCardListRequest();
+            //    request.Locale = Locale.TR.ToString();
+            //    request.CardUserKey = isCardUserKeyExist.CardKey;
+
+
+            //    CardList cardList = CardList.Retrieve(request, options);
+
+            //    return cardList;
+
+
+            //}
         }
 
 
-        public async Task<bool> CreateCard(CardInformation cardInfo)
+        public async Task<bool> CreateCard(CardInformation cardInfo, string email)
         {
             Options options = new Options
             {
@@ -1368,7 +1595,7 @@ namespace LMS.Services.FileStorage
             CreateCardRequest request = new CreateCardRequest();
             request.Locale = Locale.TR.ToString();
             request.ConversationId = Guid.NewGuid().ToString();
-            request.Email = "john2Doe11@gmail.com";
+            request.Email = email;
 
             CardInformation cardInformation = new CardInformation();
             cardInformation.CardAlias = cardInfo.CardAlias;
@@ -1387,7 +1614,7 @@ namespace LMS.Services.FileStorage
                 var cardUserKey = new CardUserKey
                 {
                     Id = Guid.NewGuid(),
-                    Email = "john2Doe11@gmail.com",
+                    Email = email,
                     CardKey = card.CardUserKey
                 };
 
