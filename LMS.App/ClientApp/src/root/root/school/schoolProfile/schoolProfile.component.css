@@ -1,3 +1,18 @@
+.certificate-modal-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-color: #000;
+  overflow: hidden;
+}
+
+.certificate-modal-img img {
+  width: 600px !important;
+  height: 600px;
+  object-fit: contain;
+}
+
 #schoolOwnCertificate .modal-dialog {
   max-width: 960px;
 }
