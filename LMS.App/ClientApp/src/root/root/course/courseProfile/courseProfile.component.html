@@ -53,7 +53,8 @@
             *ngIf="
               !isOwner &&
               course.price != null &&
-              course.price != 0 && !course.isCourseStudent
+              course.price != 0 &&
+              !course.isCourseStudent
             "
             (click)="openPaymentModal()"
             type="button"
@@ -62,13 +63,17 @@
             {{ "Buyfor" | translate }} {{ course.price }} {{ course.currency }}
           </button>
           <button
-          *ngIf="!isOwner && !course.isCourseStudent && (course.price == null || course.price == 0)"
-          (click)="joinFreeCourse()"
-          type="button"
-          class="btn custom-btn primary_btn earning-btn fw_400 h_44"
-        >
-          {{ "Join" | translate }} $0
-        </button>
+            *ngIf="
+              !isOwner &&
+              !course.isCourseStudent &&
+              (course.price == null || course.price == 0)
+            "
+            (click)="joinFreeCourse()"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+          >
+            {{ "Join" | translate }} $0
+          </button>
         </div>
         <div
           class="live-header d-flex align-items-center justify-content-between"
@@ -500,7 +505,13 @@
         </div>
 
         <div
-        *ngIf="((course.isCourseStudent && course.serviceType.type == 'Paid') || course.serviceType.type == 'Free' || hasPostPermission || isOwner) && !userIsBanned"
+          *ngIf="
+            ((course.isCourseStudent && course.serviceType.type == 'Paid') ||
+              course.serviceType.type == 'Free' ||
+              hasPostPermission ||
+              isOwner) &&
+            !userIsBanned
+          "
           class="tab-content"
           id="pills-tabContent"
         >
@@ -594,8 +605,20 @@
                                 </button>
                               </div>
                               <div class="feed-name font_14 text_sec1 hideName">
-                                <img *ngIf="course.avatar != null && course.avatar != 'null'" [lazyLoad]="course.avatar" />
-                                <img *ngIf="course.avatar == null || course.avatar == 'null'"  src="../../../../assets/images/classLogo.png" />
+                                <img
+                                  *ngIf="
+                                    course.avatar != null &&
+                                    course.avatar != 'null'
+                                  "
+                                  [lazyLoad]="course.avatar"
+                                />
+                                <img
+                                  *ngIf="
+                                    course.avatar == null ||
+                                    course.avatar == 'null'
+                                  "
+                                  src="../../../../assets/images/classLogo.png"
+                                />
                                 {{ course.courseName }}
                               </div>
                               <div
@@ -642,8 +665,18 @@
                   >
                     <div class="d-flex align-items-center gap-2">
                       <div class="school-gridprofile-icon">
-                        <img *ngIf="course.avatar != 'null' && course.avatar != null" [lazyLoad]="course.avatar"/>
-                        <img *ngIf="course.avatar == null || course.avatar == 'null'" src="../../../../assets/images/classLogo.png"/>
+                        <img
+                          *ngIf="
+                            course.avatar != 'null' && course.avatar != null
+                          "
+                          [lazyLoad]="course.avatar"
+                        />
+                        <img
+                          *ngIf="
+                            course.avatar == null || course.avatar == 'null'
+                          "
+                          src="../../../../assets/images/classLogo.png"
+                        />
                       </div>
                       <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
                         {{ course.courseName }}
@@ -3043,7 +3076,11 @@
           </button>
           <button
             (click)="
-              convertToClass(course.courseName, course.school.schoolName,course.courseId)
+              convertToClass(
+                course.courseName,
+                course.school.schoolName,
+                course.courseId
+              )
             "
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
@@ -3179,7 +3216,7 @@
         </button>
       </div>
       <div class="modal-body" *ngIf="courseCertificateInfo != undefined">
-        <div>
+        <div class="certificate-modal-img">
           <img [src]="courseCertificateInfo.certificateUrl" />
         </div>
         <br />
