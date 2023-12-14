@@ -58,10 +58,12 @@ namespace LMS.Services
         private IGenericRepository<Student> _studentRepository;
         private IGenericRepository<User> _userRepository;
         private IGenericRepository<ClassStudent> _classStudentRepository;
+        private IGenericRepository<SavedClassCourse> _savedClassCourseRepository;
+        private IGenericRepository<SharedClassCourse> _sharedClassCourseRepository;
         private IConfiguration _config;
 
 
-        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<ClassCourseRating> classCourseRatingRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<Class> classRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<CourseCertificate> courseCertificateRepository, IGenericRepository<CourseTag> courseTagRepository, UserManager<User> userManager, IBlobService blobService, IClassService classService, IUserService userService, IGenericRepository<CourseLike> courseLikeRepository, IGenericRepository<CourseViews> courseViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<SchoolClassCourseTransaction> classCourseTransactionRepository, IGenericRepository<Student> studentRepository, IGenericRepository<User> userRepository, IGenericRepository<ClassStudent> classStudentRepository, IConfiguration config)
+        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<ClassCourseRating> classCourseRatingRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<Class> classRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<CourseCertificate> courseCertificateRepository, IGenericRepository<CourseTag> courseTagRepository, UserManager<User> userManager, IBlobService blobService, IClassService classService, IUserService userService, IGenericRepository<CourseLike> courseLikeRepository, IGenericRepository<CourseViews> courseViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<SchoolClassCourseTransaction> classCourseTransactionRepository, IGenericRepository<Student> studentRepository, IGenericRepository<User> userRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<SavedClassCourse> savedClassCourseRepository, IGenericRepository<SharedClassCourse> sharedClassCourseRepository, IConfiguration config)
         {
             _mapper = mapper;
             _courseRepository = courseRepository;
@@ -90,6 +92,8 @@ namespace LMS.Services
             _studentRepository = studentRepository;
             _userRepository = userRepository;
             _classStudentRepository = classStudentRepository;
+            _savedClassCourseRepository = savedClassCourseRepository;
+            _sharedClassCourseRepository = sharedClassCourseRepository;
             _config = config;
             _classCourseRatingRepository = classCourseRatingRepository;
 
@@ -1419,6 +1423,58 @@ namespace LMS.Services
             {
                 return false;
             }
+        }
+
+        public async Task<CombineClassCourseViewModel> GetCoursePopupDetails(Guid courseId, string userId)
+        {
+            var requiredCourse = await _courseRepository.GetAll().Include(x => x.School).Include(x => x.Accessibility).Include(x => x.ServiceType).Where(x => x.CourseId == courseId).FirstAsync();
+            var savedClassCourse = await _savedClassCourseRepository.GetAll().ToListAsync();
+            var sharedClassCourse = await _sharedClassCourseRepository.GetAll().ToListAsync();
+            var tagList = await _courseTagRepository.GetAll().ToListAsync();
+            var course = _mapper.Map<CourseViewModel>(requiredCourse);
+
+            var item = new CombineClassCourseViewModel();
+
+            item.Tags = tagList.Where(x => x.CourseId == course.CourseId).Select(x => x.CourseTagValue).ToList();
+
+            item.CourseLikes = await GetLikesOnCourse(course.CourseId);
+            item.CourseViews = await GetViewsOnCourse(course.CourseId);
+            item.CommentsCount = await _userService.GetCommentsCountOnPost(course.CourseId);
+
+            if (item.CourseLikes.Any(x => x.UserId == userId && x.CourseId == course.CourseId))
+            {
+                item.IsLikedByCurrentUser = true;
+            }
+            else
+            {
+                item.IsLikedByCurrentUser = false;
+            }
+
+            item.Id = course.CourseId;
+            item.Avatar = course.Avatar;
+            item.Accessibility = course.Accessibility;
+            item.ServiceType = course.ServiceType;
+            item.Description = course.Description;
+            item.Name = course.CourseName;
+            item.SchoolName = course.School.SchoolName;
+            item.Price = course.Price;
+            item.Rating = course.Rating;
+            item.CreatedOn = course.CreatedOn;
+            item.CreatedById = course.CreatedById;
+            item.Type = ClassCourseEnum.Course;
+            item.IsPinned = course.IsPinned;
+            item.ThumbnailUrl = course.ThumbnailUrl;
+            item.ThumbnailType = course.ThumbnailType;
+            item.NoOfStudents = await GetStudents(course.CourseId);
+            item.Rating = course.Rating;
+            item.IsCommentsDisabled = course.IsCommentsDisabled;
+            item.IsClassCourseSavedByCurrentUser = savedClassCourse.Any(x => x.CourseId == course.CourseId && x.UserId == userId);
+            item.SavedClassCourseCount = savedClassCourse.Where(x => x.CourseId == course.CourseId && x.UserId == userId).Count();
+            item.SharedClassCourseCount = sharedClassCourse.Where(x => x.CourseId == course.CourseId).Count();
+            item.Currency = course.Currency;
+
+            return item;
+
         }
 
     }

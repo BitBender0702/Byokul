@@ -148,7 +148,7 @@ namespace LMS.App.Controllers
                         userConnectionId = _chatHubs.GetUserConnectionId(userId);
                         if (userConnectionId != null)
                         {
-                            await _hubContext.Clients.Client(userConnectionId).SendAsync("paymentResponse", "true");
+                            await _hubContext.Clients.Client(userConnectionId).SendAsync("paymentResponse", true);
                         }
                     }
                     catch (Exception ex)
@@ -156,7 +156,7 @@ namespace LMS.App.Controllers
                         userConnectionId = _chatHubs.GetUserConnectionId(userId);
                         if (userConnectionId != null)
                         {
-                            await _hubContext.Clients.Client(userConnectionId).SendAsync("paymentResponse", "false");
+                            await _hubContext.Clients.Client(userConnectionId).SendAsync("paymentResponse", false);
                         }
                     }
 
@@ -201,10 +201,15 @@ namespace LMS.App.Controllers
 
                 }
 
-                //if (callbackModel.Status == "FAILURE")
-                //{
-                //    HandlePaymentFailure(data.iyziPaymentId);
-                //}
+                if (callbackModel.Status == "FAILURE")
+                {
+                    userId = await _schoolClassCourseTransactionRepository.GetAll().Where(x => x.ConversationId == callbackModel.PaymentConversationId).Select(x => x.ActionDoneBy).FirstAsync();
+                    userConnectionId = _chatHubs.GetUserConnectionId(userId);
+                    if (userConnectionId != null)
+                    {
+                        await _hubContext.Clients.Client(userConnectionId).SendAsync("paymentResponse", false);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -435,7 +440,7 @@ namespace LMS.App.Controllers
             {
                 return Ok(new { Success = true, Message = Common.ViewModels.Post.Constants.CardsRemovedSuccessfully });
             }
-            return Ok(new { Success = true, Message = Common.ViewModels.Post.Constants.InvalidCard });
+            return Ok(new { Success = false, Message = Common.ViewModels.Post.Constants.InvalidCard });
         }
 
         //[Route("retrieveCard")]

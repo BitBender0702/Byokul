@@ -52,6 +52,7 @@ namespace LMS.Services
         Task<int?> ClassRating(ClassCourseRatingViewModel classRating);
         Task<bool?> BanUnbanStudentFromClass(BanUnbanStudentModel banUnbanStudent);
         Task<bool> JoinFreeClass(Guid classId, string userId);
+        public Task<CombineClassCourseViewModel> GetClassPopupDetails(Guid classId, string userId);
 
     }
 }

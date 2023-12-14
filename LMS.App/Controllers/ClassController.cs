@@ -387,6 +387,14 @@ namespace LMS.App.Controllers
         }
 
 
+        [Route("getClassPopupDetails")]
+        [HttpGet]
+        public async Task<IActionResult> GetClassPopupDetails(Guid classId)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _classService.GetClassPopupDetails(classId, userId);
+            return Ok(response);
+        }
 
     }
 }

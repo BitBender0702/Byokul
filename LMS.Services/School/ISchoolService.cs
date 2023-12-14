@@ -22,7 +22,7 @@ namespace LMS.Services
         Task<SchoolUpdateViewModel> UpdateSchool(SchoolUpdateViewModel schoolUpdateViewModel);
         Task<SchoolDetailsViewModel> GetSchoolByName(string schoolName,string loginUserId);
         Task<SchoolDetailsViewModel> GetSchoolById(Guid schoolId, string loginUserId);
-        Task<IEnumerable<SchoolViewModel>> GetAllSchools(string userId);
+        Task<List<SchoolViewModel>> GetAllSchools(string userId);
         Task DeleteSchoolById(Guid schoolId, string deletedById);
         Task RestoreSchoolById(Guid schoolId, string deletedById);
         Task<IEnumerable<SpecializationViewModel>> SpecializationList();
@@ -38,7 +38,7 @@ namespace LMS.Services
         Task DeleteSchoolLanguage(SchoolLanguageViewModel model);
         Task SaveSchoolTeachers(SaveSchoolTeacherViewModel model);
         Task<bool> DeleteSchoolTeacher(SchoolTeacherViewModel model);
-        Task<SchoolViewModel> GetBasicSchoolInfo(Guid schoolId);
+        Task<SchoolViewModel> GetBasicSchoolInfo(Guid schoolId, string userId);
         Task<List<SchoolFollowerViewModel>> GetSchoolFollowers(Guid schoolId, int pageNumber, string? searchString);
         Task<string> IsSchoolNameExist(string schoolName);
         //Task<SchoolViewModel> GetSchoolByName(string schoolName);

@@ -391,10 +391,9 @@ namespace LMS.Services
             if (schoolUpdateViewModel.AvatarImage != null)
             {
                 schoolUpdateViewModel.Avatar = await _blobService.UploadFileAsync(schoolUpdateViewModel.AvatarImage, containerName, false);
-                  school.Avatar = schoolUpdateViewModel.Avatar;            
             }
 
-           
+            school.Avatar = schoolUpdateViewModel.Avatar;
             school.SchoolName = schoolUpdateViewModel.SchoolName;
             school.SchoolSlogan = schoolUpdateViewModel.SchoolSlogan;
             school.Founded = schoolUpdateViewModel.Founded;
@@ -608,14 +607,22 @@ namespace LMS.Services
             return response;
         }
 
-        public async Task<IEnumerable<SchoolViewModel>> GetAllSchools(string userId)
+        public async Task<List<SchoolViewModel>> GetAllSchools(string userId)
         {
-            IEnumerable<SchoolViewModel> model = _schoolRepository.GetAll().Where(x => !x.IsDeleted && x.CreatedById == userId).Select(x => new SchoolViewModel
+            var schoolSubscriptions = await _schoolSubscriptionRepository.GetAll().ToListAsync();
+            var a = schoolSubscriptions.Where(y => y.CreatedById == userId).Select(y => y.IsActive).FirstOrDefault();
+            List<SchoolViewModel> model = _schoolRepository.GetAll().Where(x => !x.IsDeleted && x.CreatedById == userId).Select(x => new SchoolViewModel
             {
                 SchoolId = x.SchoolId,
                 SchoolName = x.SchoolName,
-            });
+                IsSchoolSubscribed = false
 
+            }).ToList();
+
+            foreach (var item in model)
+            {
+                item.IsSchoolSubscribed = schoolSubscriptions.Where(x => x.SchoolId == item.SchoolId && x.CreatedById == userId).Select(x => x.IsActive).FirstOrDefault();
+            }
             return model;
         }
 
@@ -1418,11 +1425,16 @@ namespace LMS.Services
 
         }
 
-        public async Task<SchoolViewModel> GetBasicSchoolInfo(Guid schoolId)
+        public async Task<SchoolViewModel> GetBasicSchoolInfo(Guid schoolId, string userId)
         {
             var school = await _schoolRepository.GetAll().Where(x => x.SchoolId == schoolId).FirstOrDefaultAsync();
 
             var response = _mapper.Map<SchoolViewModel>(school);
+
+            var isActive = await _schoolSubscriptionRepository.GetAll().Where(x => x.SchoolId == response.SchoolId && x.CreatedById == userId).Select(x => x.IsActive).FirstOrDefaultAsync();
+
+            response.IsSchoolSubscribed = isActive;
+
             return response;
 
         }

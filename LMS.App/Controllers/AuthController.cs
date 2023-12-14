@@ -122,10 +122,10 @@ namespace LMS.App.Controllers
             token = token.Replace(" ", "+");
             var user = await _userManager.FindByEmailAsync(email);
 
-            if (user is null) return BadRequest($"User not found for email: {email}");
+            if (user is null) return Ok(new { Success = false, Message = $"User not found for email: {email}" });
 
             var result = await _userManager.ConfirmEmailAsync(user, token);
-            return (result.Succeeded ? Ok(new { result = "success" }) : BadRequest("Invalid token"));
+            return (result.Succeeded ? Ok(new { Success = true, Message = Constants.EmailConfirmedSuccessfully }) : Ok(new { Success = false, result = Constants.InvalidToken }));
         }
 
 
@@ -189,14 +189,18 @@ namespace LMS.App.Controllers
         {
             if (resetPasswordViewModel.NewPassword != resetPasswordViewModel.ConfirmPassword)
             {
-                return Ok(new { token = "New Password and confirm password did not match" });
+                return Ok(new { Success = false, Message = Constants.NewPassAndConfirmPassNotmatch });
+
+                //return Ok(new { result = "New Password and confirm password did not match" });
             }
-            var result = await _authService.ResetPassword(resetPasswordViewModel);
-            if (result == Constants.ResetTokenExpired)
+            var response = await _authService.ResetPassword(resetPasswordViewModel);
+            if (response == Constants.ResetTokenExpired)
             {
-                return Ok(new { token = Constants.ResetTokenExpired });
+                return Ok(new { Success = false, Message = Constants.ResetTokenExpired });
+                //return Ok(new { result = Constants.ResetTokenExpired });
             }
-            return Ok(new { token = result });
+            return Ok(new { Success = true, Message = Constants.PassResetSuccessfully, Token = response });
+            //return Ok(new { result = response });
         }
 
 
@@ -244,10 +248,14 @@ namespace LMS.App.Controllers
                     text = text.Replace("[URL]", callBackUrl);
                     await _commonService.SendEmail(new List<string> { user.Email }, null, null, "Verify Your Email Address", body: text, null, null);
 
-                    return Ok(new { result = "success" });
+                    //return Ok(new { result = "success" });
+                    return Ok(new { Success = true, Message = Constants.PassResendSuccessfully });
+
                 }
 
-                return Ok(new { result = $"User not found for email: {user.Email}" });
+                //return Ok(new { result = $"User not found for email: {user.Email}" });
+                return Ok(new { Success = false, Message = $"User not found for email: {user.Email}" });
+
 
             }
             catch (Exception ex)

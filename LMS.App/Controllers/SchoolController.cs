@@ -207,7 +207,8 @@ namespace LMS.App.Controllers
         [HttpGet]
         public async Task<IActionResult> GetBasicSchoolInfo(Guid schoolId)
         {
-            var school = await _schoolService.GetBasicSchoolInfo(schoolId);
+            var userId = await GetUserIdAsync(this._userManager);
+            var school = await _schoolService.GetBasicSchoolInfo(schoolId, userId);
             return Ok(school);
         }
 

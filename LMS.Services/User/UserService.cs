@@ -384,14 +384,20 @@ namespace LMS.Services
 
         public async Task<UserUpdateViewModel> UpdateUser(UserUpdateViewModel userUpdateViewModel)
         {
+            User user = _userRepository.GetById(userUpdateViewModel.Id);
 
             if (userUpdateViewModel.AvatarImage != null)
             {
                 userUpdateViewModel.Avatar = await _blobService.UploadFileAsync(userUpdateViewModel.AvatarImage, containerName, false);
+                user.Avatar = userUpdateViewModel.Avatar;
             }
 
-            User user = _userRepository.GetById(userUpdateViewModel.Id);
-            user.Avatar = userUpdateViewModel.Avatar == "null" ? null : userUpdateViewModel.Avatar;
+            if (userUpdateViewModel.AvatarImage == null && (userUpdateViewModel.Avatar == null || userUpdateViewModel.Avatar == "null"))
+            {
+                userUpdateViewModel.Avatar = null;
+                user.Avatar = userUpdateViewModel.Avatar;
+            }
+
             user.FirstName = userUpdateViewModel.FirstName;
             user.LastName = userUpdateViewModel.LastName;
             user.DOB = userUpdateViewModel.DOB;

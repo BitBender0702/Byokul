@@ -18,6 +18,7 @@ using LMS.Common.ViewModels.Post;
 using Newtonsoft.Json;
 using AutoMapper;
 using LMS.Common.ViewModels.Permission;
+using LMS.Data.Entity.Common;
 
 namespace LMS.Services.Account
 {
@@ -32,10 +33,12 @@ namespace LMS.Services.Account
         private IGenericRepository<UserPermission> _userPermissionRepository;
         private IGenericRepository<User> _userRepository;
         private IGenericRepository<School> _schoolRepository;
+        private IGenericRepository<SchoolClassCourseTransaction> _schoolClassCourseTransaction;
+        private IGenericRepository<SchoolSubscription> _schoolSubscriptionRepository;
         private readonly IMapper _mapper;
 
 
-        public AuthService(IConfiguration config, IWebHostEnvironment webHostEnvironment, SignInManager<User> signInManager, UserManager<User> userManager, DataContext context, ICommonService commonService, IGenericRepository<UserPermission> userPermissionRepository, IGenericRepository<User> userRepository, IGenericRepository<School> schoolRepository, IMapper mapper)
+        public AuthService(IConfiguration config, IWebHostEnvironment webHostEnvironment, SignInManager<User> signInManager, UserManager<User> userManager, DataContext context, ICommonService commonService, IGenericRepository<UserPermission> userPermissionRepository, IGenericRepository<User> userRepository, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolClassCourseTransaction> schoolClassCourseTransaction, IGenericRepository<SchoolSubscription> schoolSubscriptionRepository, IMapper mapper)
         {
             _config = config;
             _webHostEnvironment = webHostEnvironment;
@@ -46,6 +49,8 @@ namespace LMS.Services.Account
             _userPermissionRepository = userPermissionRepository;
             _userRepository = userRepository;
             _schoolRepository = schoolRepository;
+            _schoolClassCourseTransaction = schoolClassCourseTransaction;
+            _schoolSubscriptionRepository = schoolSubscriptionRepository;
             _mapper = mapper;
         }
 
@@ -107,18 +112,21 @@ namespace LMS.Services.Account
             }
 
             claims.Add(new Claim("isBan", userInfo.IsBan.ToString()));
-
-            var trialSchoolCreationDate = await _schoolRepository.GetAll().Where(x => x.CreatedById == userInfo.Id).FirstOrDefaultAsync();
-
+            var trialSchool = await _schoolRepository.GetAll().Where(x => x.CreatedById == userInfo.Id).FirstOrDefaultAsync();
             var schoolsCount = await _schoolRepository.GetAll().Where(x => x.CreatedById == userInfo.Id).CountAsync();
 
             claims.Add(new Claim("userSchoolsCount", schoolsCount.ToString()));
+            if (trialSchool != null)
+            {
+                claims.Add(new Claim("schoolId", trialSchool.SchoolId.ToString()));
+                claims.Add(new Claim("schoolName", trialSchool.SchoolName.ToString()));
+                claims.Add(new Claim("avatar", trialSchool.Avatar.ToString()));
 
+                var isAnySchoolSubscribed = await _schoolSubscriptionRepository.GetAll().Include(x => x.School).Where(x => x.School.CreatedById == userInfo.Id && x.IsActive).FirstOrDefaultAsync();
+                claims.Add(new Claim("isTrialSchoolPaymentDone", isAnySchoolSubscribed != null ? true.ToString() : false.ToString()));
+            };
 
-            //claims.Add(new Claim("isUserFirstSchool", schoolsCount == 1 ? true.ToString() : false.ToString()));
-
-            claims.Add(new Claim("trialSchoolCreationDate", trialSchoolCreationDate == null ? "" : trialSchoolCreationDate.CreatedOn.ToString()));
-
+            claims.Add(new Claim("trialSchoolCreationDate", trialSchool == null ? "" : trialSchool.CreatedOn.ToString()));
             var identity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));

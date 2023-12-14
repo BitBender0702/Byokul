@@ -349,5 +349,14 @@ namespace LMS.App.Controllers
             return Ok(new { Success = false, Message = Constants.CourseIdInvalidOrStudentExist });
         }
 
+        [Route("getCoursePopupDetails")]
+        [HttpGet]
+        public async Task<IActionResult> GetCoursePopupDetails(Guid courseId)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _courseService.GetCoursePopupDetails(courseId, userId);
+            return Ok(response);
+        }
+
     }
 }

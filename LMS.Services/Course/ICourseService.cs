@@ -51,6 +51,8 @@ namespace LMS.Services
         Task<IEnumerable<GlobalSearchViewModel>> CoursesGlobalSearch(string searchString, int pageNumber, int pageSize);
 
         Task<bool> JoinFreeCourse(Guid courseId, string userId);
+        public Task<CombineClassCourseViewModel> GetCoursePopupDetails(Guid courseId, string userId);
+
 
 
     }
