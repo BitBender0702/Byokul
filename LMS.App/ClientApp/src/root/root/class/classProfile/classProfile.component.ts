@@ -279,7 +279,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   reelsTags: any;
   isStorageUnAvailable: boolean = false;
   ngOnInit(): void {
-    debugger
     this.checkScreenSize();
     if (this.isScreenMobile) {
       this.itemsPerSlide = 2;
@@ -309,7 +308,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     let newClassName = this.className.replace(/\s/g, '').toLowerCase();
 
     this._classService.getClassById(newClassName).subscribe((response) => {
-      debugger;
       this.teacherForFileStorage = response.teachers;
       this.postsEndPageNumber = 1;
       this.classId = response.classId;
@@ -374,7 +372,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
       //     this.translateService.get(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'])
       // .subscribe(translations => {
-      //   debugger
       //   // Store the translated month names
       //   this.translateService.set('months', translations);
       // });
@@ -558,6 +555,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       })
     }
 
+    if (!this.paymentStatusSubscription) {
     this.paymentStatusSubscription = paymentStatusResponse.subscribe(response => {
       if(response.loadingIcon){
         this.loadingIcon = true;
@@ -569,6 +567,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         this.loadingIcon = false;
       }
     });
+   }
 
     if (!this.deletePostSubscription) {
       this.deletePostSubscription = deletePostResponse.subscribe(response => {
@@ -606,7 +605,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
     if (!this.userPermissionSubscription) {
       this.userPermissionSubscription = userPermission.subscribe(data => {
-        debugger;
         window.location.reload();
       })
     }
@@ -619,15 +617,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
     if (!this.disableEnableSubscription) {
       this.disableEnableSubscription = disableEnableResponse.subscribe(response => {
-        debugger;
-        
         this.ngOnInit();
       })
     }
 
     if (!this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-        debugger
         this.hamburgerCount = response.hamburgerCount;
       });
     }
@@ -635,10 +630,11 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
     if (!this.paymentResponseSubscription) {
       this.paymentResponseSubscription = paymentResponse.subscribe(response => {
-        debugger
-        followedClassResponse.next({classId:this.class.classId,classAvatar:this.class.avatar,className:this.class.className,schoolName:this.class.school.schoolName})
         this.loadingIcon = false;
-        this.class.isClassStudent = true;
+        if(response.isPaymentSuccess){
+          followedClassResponse.next({classId:this.class.classId,classAvatar:this.class.avatar,className:this.class.className,schoolName:this.class.school.schoolName})
+          this.class.isClassStudent = true;
+        }
         const initialState = {
           isPaymentSuccess: response.isPaymentSuccess,
           from: Constant.Class
@@ -657,7 +653,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   translateDate(date: Date): any {
-    debugger
     var formatteddate = this.datePipe.transform(date, 'MMMM d, y', '', 'es');
     const formattedDate = formatDate(date, 'MMMM d, y', 'ar');
     return formatteddate;
@@ -768,7 +763,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
     this.userPermissions = JSON.parse(localStorage.getItem('userPermissions') ?? '');
     var userPermissions: any[] = this.userPermissions;
-    debugger;
     userPermissions.forEach(element => {
       if ((element.typeId == this.class.classId || element.typeId == PermissionNameConstant.DefaultClassId) && element.ownerId == this.class.school.createdById && element.permissionType == PermissionTypeEnum.Class && element.permission.name == PermissionNameConstant.Post && (element.schoolId == null || element.schoolId == this.class.school.schoolId)) {
         this.hasPostPermission = true;
@@ -777,7 +771,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         this.hasUpdateClassPermission = true;
       }
       if ((element.typeId == this.class.classId || element.typeId == PermissionNameConstant.DefaultClassId) && element.ownerId == this.class.school.createdById && element.permissionType == PermissionTypeEnum.Class && element.permission.name == PermissionNameConstant.IssueCertificate && (element.schoolId == null || element.schoolId == this.class.school.schoolId)) {
-        debugger;
         this.hasIssueCertificatePermission = true;
       }
       if ((element.typeId == this.class.classId || element.typeId == PermissionNameConstant.DefaultClassId) && element.ownerId == this.class.school.createdById && element.permissionType == PermissionTypeEnum.Class && element.permission.name == PermissionNameConstant.AddClassCertificates && (element.schoolId == null || element.schoolId == this.class.school.schoolId)) {
@@ -852,7 +845,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   dateLessThan(from: string, to: string, currentDate: string) {
-    debugger
     return (group: FormGroup): { [key: string]: any } => {
       let f = group.controls[from];
       let t = group.controls[to];
@@ -992,12 +984,10 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   getDeletedCertificate(deletedCertificate: string) {
-    debugger
     this.deleteCertificate.certificateId = deletedCertificate;
   }
 
   deleteClassCertificate() {
-    debugger
     this.loadingIcon = true;
     this.deleteCertificate.classId = this.class.classId;
     this._classService.deleteClassCertificate(this.deleteCertificate).subscribe((response: any) => {
@@ -1042,7 +1032,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   //   });
   // }
   saveClassCertificate() {
-    debugger
     this.isSubmitted = true;
     if (!this.classCertificateForm.valid) {
       return;
@@ -1072,7 +1061,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     // this.userCertificateForm.updateValueAndValidity();
 
     this._classService.saveClassCertificates(this.certificateToUpload).subscribe((response: any) => {
-      debugger
       this.closeCertificatesModal();
       this.isSubmitted = false;
       this.certificateToUpload = new FormData();
@@ -1295,10 +1283,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     className = className.split(" ").join("").toLowerCase()
     schoolName = schoolName.split(" ").join("").toLowerCase()
     this._classService.convertToCourse(classId).subscribe((response) => {
-      debugger
       // localStorage.setItem("isClassConvertIntoCourse", JSON.stringify(true));
       convertIntoCourseResponse.next({ courseId: response.classId, courseName: response.className, avatar: response.avatar, school: response.school });
-      debugger
       const encodedClassName = encodeURIComponent(className);
       const encodedSchoolName = encodeURIComponent(schoolName);
       this.router.navigate([`profile/course/${schoolName}/${className}`],
@@ -1310,7 +1296,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
   isBanned: any;
   openPostsViewModal(posts: any): void {
-    debugger
     if (posts.isLive) {
       this._postService.openLiveStream(posts, this.userId).subscribe((response) => {
       });
@@ -1405,7 +1390,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   showPostDiv(post: any) {
-    debugger
     $('.imgDisplay').attr("style", "display:none;")
     $('.' + post.id).prevAll('.imgDisplay').first().attr("style", "display:block;");
 
@@ -1417,7 +1401,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       });
     }
     else {
-      debugger
       this.isGridItemInfo = true;
       this.cd.detectChanges();
       // const player = videojs(this.videoPlayer.nativeElement, { autoplay: false });
@@ -1515,7 +1498,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   openSharePostModal(postId: string, postType: number, title: string, description: string): void {
-    debugger;
     if (this.class.accessibility.name == Constant.Private || this.class.serviceType.type == Constant.Paid) {
       this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'This class is private/paid, you cant share the post!' });
     }
@@ -1540,7 +1522,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   openProfileShareModal(): void {
-    debugger
     const initialState = {
       classId: this.class.classId,
       schoolName: this.class.school.schoolName,
@@ -1619,7 +1600,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
 
   removeLogo() {
-    debugger
     if (this.class.avatar != null) {
       this.classAvatar = '';
     }
@@ -1671,14 +1651,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   formatLocalizedDate(date: any): string {
-    debugger
     var locale = this.translate.currentLang;
     const formattedDate = this.datePipe.transform(date, 'MMMM d, y', '', locale) ?? '';
     return this.translate.instant(formattedDate);
   }
 
   imageCropped(event: ImageCroppedEvent) {
-    debugger
     this.selectedImage = event.blob;
     this.croppedImage = this.domSanitizer.bypassSecurityTrustResourceUrl(
       event.objectUrl!
@@ -1699,7 +1677,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   onFileChange(event: any): void {
-    debugger
     this.isSelected = true;
     this.imageChangedEvent = event;
     this.hiddenButtonRef.nativeElement.click();
@@ -1714,7 +1691,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   applyCropimage() {
-    debugger
     this.uploadImage = this.croppedImage.changingThisBreaksApplicationSecurity;
     this.cropModalRef.hide();
   }
@@ -1738,12 +1714,10 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
   postDivId: string = "";
   openDialouge(event: any, post: any) {
-    debugger;
     const parts = event.currentTarget.className.split(' ');
     this.postDivId = parts[3];
     if (post.postAttachments != undefined) {
       var postAttach = post.postAttachments[0];
-      debugger
       if (postAttach != undefined) {
         if (postAttach.fileType != 1) {
           if (this.postDivId != "") {
@@ -1790,7 +1764,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   uploadImageName: string = "";
   avatarImage!: any;
   handleClassCertificate(event: any) {
-    debugger
     this.certificateToUpload.append("certificateImage", event.target.files[0], event.target.files[0].name);
     this.uploadImageName = event.target.files[0].name;
     const reader = new FileReader();
@@ -1804,7 +1777,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   editClassCertificate(classCertificateInfo: any) {
-    debugger
     // dob = dob.substring(0, dob.indexOf('T'));     
 
     var issuedDate = classCertificateInfo.issuedDate.substring(0, classCertificateInfo.issuedDate.indexOf('T'));
@@ -1830,7 +1802,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   openClassOwnCertificateModal(certificateInfo: any) {
-    debugger
     this.certificateToUpload.set('certificateImage', '');
     this.classCertificateInfo = certificateInfo;
     this.openClassOwnCertificate.nativeElement.click();
@@ -1838,7 +1809,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   getDeletedPostId(id: string) {
-    debugger
     this.loadingIcon = true;
     this._postService.deletePost(id).subscribe((_response) => {
       this.loadingIcon = false;
@@ -1847,7 +1817,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   openEditPostModal(post: any) {
-    debugger
     const initialState = {
       editPostId: post.id,
       from: post.postAuthorType == 1 ? "school" : post.postAuthorType == 2 ? "class" : post.postAuthorType == 3 ? "course" : post.postAuthorType == 4 ? "user" : undefined
@@ -1881,7 +1850,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
 
   openClassCertificate(certificateInfo: any) {
-    debugger
     this.certificateToUpload.set('certificateImage', '');
     this.classCertificateInfo = certificateInfo;
     this.openClassOwnCertificate.nativeElement.click();
@@ -1891,16 +1859,13 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
 
   rateTheClass() {
-    debugger
     this.classRatingView = {
       userId: this.userId,
       classId: this.classId,
       courseId: null,
       rating: this.rateNumber
     }
-    debugger
     this._classService.courseRating(this.classRatingView).subscribe((response) => {
-      debugger;
       this.isRatedByUser = true;
       this.class.rating = response.classRating;
       this.cd.detectChanges();
@@ -1952,14 +1917,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   // }
 
   // touchEnd(event:any){
-  //   debugger
   //   let nElement = document.getElementById('swipingTry')
   //   if(nElement)
   //   nElement.style.color = "black"
   // }
 
   // touchStart(event: any) {
-  //   debugger
   //   let nElement = document.getElementById('swipingTry')
   //   if(nElement)
   //   nElement.style.color = "red"
@@ -1997,7 +1960,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
   // isAllowedForFileStorage:boolean=false;
   // permissionForFileStorage(teacherForFileStorage:any){
-  //   debugger;
   //   let isAllowedForFileStorage = teacherForFileStorage?.find((x:any) => x?.userId == this.userId);
   //   if(isAllowedForFileStorage != undefined || isAllowedForFileStorage != null){
   //     this.isAllowedForFileStorage = true;
@@ -2007,10 +1969,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   userIsBanned:boolean=false;
   isUserBannedId:string='';
   checkIfUserIsBanned(){
-    debugger;
     this.loadingIcon = true;
     this._userService.isUserBanned(this.userId, this.isUserBannedId, PostAuthorTypeEnum.Class).subscribe((response)=>{
-      debugger;
       this.loadingIcon = false;
       if(response.data == true){
         this.userIsBanned = true
@@ -2021,7 +1981,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   joinFreeClass(){
     this.loadingIcon = true;
     this._classService.joinFreeClass(this.class.classId).subscribe((response)=>{
-      debugger;
       this.loadingIcon = false;
       this.class.isClassStudent = true;
       const translatedInfoSummary = this.translateService.instant('Success');

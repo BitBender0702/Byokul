@@ -105,15 +105,38 @@
                       </h5>
                     </div>
                     <div class="reel-username font_16 white_text">
-                      <div
-                        *ngIf="
-                          classCourseDetails.classCourseItem.avatar != null
-                        "
+                      <div *ngIf="classCourseDetails.classCourseItem?.type == 1"
+                      [routerLink]="[
+                        '/profile/class',
+                        classCourseDetails.classCourseItem?.schoolName,
+                        classCourseDetails.classCourseItem?.name
+                      ]"
                       >
-                        <img
+                        <img *ngIf="classCourseDetails.classCourseItem.avatar != null && classCourseDetails.classCourseItem.avatar != 'null'"
                           [src]="classCourseDetails.classCourseItem.avatar"
                           class="me-2"
                         />
+                        <img *ngIf="classCourseDetails.classCourseItem.avatar == null || classCourseDetails.classCourseItem.avatar == 'null'"
+                        src="../../../../assets/images/classLogo.png"
+                        class="me-2"
+                      />
+                        {{ classCourseDetails.classCourseItem.name }}
+                      </div>
+                      <div *ngIf="classCourseDetails.classCourseItem?.type == 2"
+                      [routerLink]="[
+                        '/profile/course',
+                        classCourseDetails.classCourseItem?.schoolName,
+                        classCourseDetails.classCourseItem?.name
+                      ]"
+                      >
+                        <img *ngIf="classCourseDetails.classCourseItem.avatar != null && classCourseDetails.classCourseItem.avatar != 'null'"
+                          [src]="classCourseDetails.classCourseItem.avatar"
+                          class="me-2"
+                        />
+                        <img *ngIf="classCourseDetails.classCourseItem.avatar == null || classCourseDetails.classCourseItem.avatar == 'null'"
+                        src="../../../../assets/images/classLogo.png"
+                        class="me-2"
+                      />
                         {{ classCourseDetails.classCourseItem.name }}
                       </div>
                     </div>
@@ -502,7 +525,7 @@
                           ><img
                             (click)="hideCommentModal()"
                             [routerLink]="['/user/userProfile', sender.id]"
-                            *ngIf="sender.avatar != null"
+                            *ngIf="sender?.avatar != null"
                             [src]="sender.avatar"
                             style="max-height: 100%"
                           />

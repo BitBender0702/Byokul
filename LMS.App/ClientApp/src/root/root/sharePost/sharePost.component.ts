@@ -62,7 +62,6 @@ export class SharePostComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    debugger
     this.post = this.options.initialState;
     if(this.post.schoolName != undefined && this.post.className == undefined && this.post.courseName == undefined){
       const encodedSchoolName = encodeURIComponent(this.post.schoolName.split(" ").join("").toLowerCase());
@@ -159,10 +158,8 @@ addTwitterMetaTags(title:string,description:string,image:string){
 }
 
 saveUserSharedPost(){
-  debugger
     this._postService.saveUserSharedPost(this.userId, this.postId).subscribe((response) => {
         this.close();
-        debugger;
         sharedPostResponse.next({postType:this.post.postType,postId:this.post.postId}); 
 
         //this.router.navigateByUrl(`user/userProfile/${this.userId}`);
@@ -174,7 +171,6 @@ saveUserSharedPost(){
   }
 
   shareStream(){
-    debugger
     if(this.streamUrl != undefined){
       this._signalrService.notifyShareStream(this.streamId + "_group");
       this._postService.saveUserSharedPost(this.userId,this.streamId).subscribe((result) => {
@@ -183,7 +179,6 @@ saveUserSharedPost(){
 }
 
 copyMessage(){
-  debugger
   var url = this.websiteUrl;
   if(this.schoolName != undefined && this.className == undefined && this.courseName == undefined){
     const encodedSchoolName = encodeURIComponent(this.schoolName.split(" ").join("").toLowerCase());
@@ -214,8 +209,6 @@ copyMessage(){
 
 
 openSharePostModal(){
-  debugger
-  // this.bsModalService.hide(this.bsModalService.config.id);
   const initialState = {
     schoolId: this.schoolId,
     classId: this.classId,

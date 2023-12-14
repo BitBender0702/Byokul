@@ -117,7 +117,7 @@
                 <!-- <span>{{item.dateTime | date: 'yyyy-MM-dd'}}</span>
                 <span class="mx-3">{{item.dateTime | date:'mm:ss' }}</span> -->
                 <div
-                  *ngIf="item.notificationType == 1 && item.reelId == null"
+                  *ngIf="item.notificationType == 1 && item.reelId == null && item.chatType == null"
                   style="cursor: pointer"
                   (click)="openPostsViewModel(item.post.id, item.postType)"
                   class="d-flex align-items-center justify-content-between"
@@ -148,6 +148,39 @@
                     </p>
                   </span>
                 </div>
+
+                <div
+                *ngIf="item.notificationType == 1 && (item.chatType == 4 || item.chatType == 5)"
+                style="cursor: pointer"
+                (click)="openClassCourseViewModal(item)"
+                class="d-flex align-items-center justify-content-between"
+              >
+                <span class="followers-name font_16 text_sec1 fw_600">
+                  <img
+                    *ngIf="item.avatar != null"
+                    [src]="item.avatar"
+                    class="rounded-circle notification-avatar"
+                    />
+                    <!-- style="width: 38px; height: 38px" -->
+                  <img
+                    *ngIf="item.avatar == null && item.user.gender== 1"
+                    src="../../../assets/images/maleProfile.jfif"
+                    class="rounded-circle"
+                    />
+                    <!-- style="width: 38px; height: 38px" -->
+                  <img
+                    *ngIf="
+                      item.avatar == null && (item.user.gender == 2 || item.user.gender == 3)
+                    "
+                    src="../../../assets/images/femaleProfile.jfif"
+                    class="rounded-circle"
+                    />
+                    <!-- style="width: 38px; height: 38px" -->
+                  <p class="font_16 ms-md-2 d-inline-block fw_400 mb-0">
+                    {{ item.notificationContent }}
+                  </p>
+                </span>
+              </div>
 
                 <div
                   *ngIf="item.notificationType == 10 && item.postType == 1"
@@ -480,7 +513,7 @@
             </div>
 
             <div
-              *ngIf="item.notificationType == 14"
+              *ngIf="item.notificationType == 14 && item.chatType == null"
               style="cursor: pointer"
               class="d-flex align-items-center justify-content-between"
               (click)="openPostsViewModel(item.post.id, item.postType)"
@@ -492,14 +525,14 @@
                   class="rounded-circle notification-avatar"
                 />
                 <img
-                  *ngIf="item.avatar == null && gender == '1'"
+                  *ngIf="item.avatar == null && item.user.gender == 1"
                   src="../../../assets/images/maleProfile.jfif"
                   class="rounded-circle"
                   
                 />
                 <img
                   *ngIf="
-                    item.avatar == null && (gender == '2' || gender == '3')
+                    item.avatar == null && (item.user.gender == 2 || item.user.gender == 3)
                   "
                   src="../../../assets/images/femaleProfile.jfif"
                   class="rounded-circle"
@@ -511,6 +544,39 @@
                 </p>
               </span>
             </div>
+
+            <div
+            *ngIf="item.notificationType == 14 && item.chatType != null"
+            style="cursor: pointer"
+            class="d-flex align-items-center justify-content-between"
+            (click)="openClassCourseViewModal(item)"
+          >
+            <span class="followers-name font_16 text_sec1 fw_600">
+              <img
+                *ngIf="item.avatar != null"
+                [src]="item.avatar"
+                class="rounded-circle notification-avatar"
+              />
+              <img
+                *ngIf="item.avatar == null && item.user.gender == 1"
+                src="../../../assets/images/maleProfile.jfif"
+                class="rounded-circle"
+                
+              />
+              <img
+                *ngIf="
+                  item.avatar == null && (item.user.gender == 2 || item.user.gender == 3)
+                "
+                src="../../../assets/images/femaleProfile.jfif"
+                class="rounded-circle"
+                
+              />
+
+              <p class="font_16 ms-md-2 d-inline-block fw_400 mb-0">
+                {{ item.notificationContent }}
+              </p>
+            </span>
+          </div>
               
                 <div class="position-relative">
                   <small>

@@ -219,7 +219,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   isBanned:any;
   isStorageUnAvailable:boolean=false;
   ngOnInit(): void {
-    debugger
     this.checkScreenSize();
     if (this.isScreenMobile) {
       this.itemsPerSlide = 2;
@@ -245,7 +244,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
     // newCourseName = decodeURIComponent(newCourseName);
     this._courseService.getCourseById(newCourseName).subscribe((response) => {
-      debugger
       this.postsPageNumber = 1;
       this.reelsPageNumber = 1;
       this.course = response;
@@ -376,7 +374,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     // });
     if (!this.addPostSubscription) {
       this.addPostSubscription = addPostResponse.subscribe((postResponse: any) => {
-        debugger
         // this.loadingIcon = true;
         //   if(postResponse.response.postType == 1){
         //     var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
@@ -468,6 +465,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       })
     }
 
+    if (!this.paymentStatusSubscription) {
     this.paymentStatusSubscription = paymentStatusResponse.subscribe(response => {
       if(response.loadingIcon){
         this.loadingIcon = true;
@@ -479,6 +477,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         this.loadingIcon = false;
       }
     });
+   }
 
     if (!this.deletePostSubscription) {
       this.deletePostSubscription = deletePostResponse.subscribe(response => {
@@ -524,7 +523,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
     if(!this.userPermissionSubscription){
       this.userPermissionSubscription = userPermission.subscribe(data=>{
-        debugger;
         window.location.reload();
       })
     }
@@ -538,14 +536,12 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
     if(!this.disableEnableResponseSubsciption){
       this.disableEnableResponseSubsciption = disableEnableResponse.subscribe(response => {
-        debugger;
         this.ngOnInit();
       })
     }
 
     if (!this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-        debugger
         this.hamburgerCount = response.hamburgerCount;
       });
     }
@@ -553,10 +549,11 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
     if (!this.paymentResponseSubscription) {
       this.paymentResponseSubscription = paymentResponse.subscribe(response => {
-        debugger
-        followedCourseResponse.next({courseId:this.course.courseId,courseAvatar:this.course.avatar,courseName:this.course.courseName,schoolName:this.course.school.schoolName})
         this.loadingIcon = false;
-        this.course.isCourseStudent = true;
+        if(response.isPaymentSuccess){
+          followedCourseResponse.next({courseId:this.course.courseId,courseAvatar:this.course.avatar,courseName:this.course.courseName,schoolName:this.course.school.schoolName})
+          this.course.isCourseStudent = true;
+        }
         const initialState = {
           isPaymentSuccess: response.isPaymentSuccess,
           from: Constant.Course
@@ -722,7 +719,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
     this.userPermissions = JSON.parse(localStorage.getItem('userPermissions') ?? '');
     var userPermissions: any[] = this.userPermissions;
-    debugger;
     userPermissions.forEach(element => {
       if ((element.typeId == this.course.courseId || element.typeId == PermissionNameConstant.DefaultCourseId) && element.ownerId == this.course.school.createdById && element.permissionType == PermissionTypeEnum.Course && element.permission.name == PermissionNameConstant.Post && (element.schoolId == null || element.schoolId == this.course.school.schoolId)) {
         this.hasPostPermission = true;
@@ -909,7 +905,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
   getDeletedCertificate(deletedCertificate: string) { 
-    debugger
     this.deleteCertificate.certificateId = deletedCertificate;
   }
 
@@ -1028,7 +1023,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
   resetCertificateModal() {
-    debugger
     this.isSubmitted = false;
     // this.courseCertificate.certificates = [];
     this.uploadImageName = "";
@@ -1110,7 +1104,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         isLiveTabOpen: isLiveTabOpen,
         isShareProfile: isShareProfile
       };
-      debugger
       this.bsModalService.show(CreatePostComponent, { initialState });
       return
     }
@@ -1122,7 +1115,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         isLiveTabOpen: isLiveTabOpen,
         isShareProfile: isShareProfile
       };
-      debugger
       this.bsModalService.show(CreatePostComponent, { initialState });
     } else{
       const translatedSummary = this.translateService.instant('Info');
@@ -1355,7 +1347,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
   openProfileShareModal(): void {
-    debugger
     const initialState = {
       courseId: this.course.courseId,
       schoolName: this.course.school.schoolName,
@@ -1466,7 +1457,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   unableDisableCourse() {
     this.loadingIcon = true;
     this._courseService.enableDisableCourse(this.course.courseId).subscribe((response) => {
-      debugger
       if (this.course.isDisableByOwner) {
         this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Course enabled successfully' });
         enableDisableScc.next({isDisable:false,courseId:this.course.courseId});
@@ -1480,7 +1470,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
   imageCropped(event: ImageCroppedEvent) {
-    debugger
     this.selectedImage = event.blob;
     this.croppedImage = this.domSanitizer.bypassSecurityTrustResourceUrl(
       event.objectUrl!
@@ -1500,7 +1489,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
   onFileChange(event: any): void {
-    debugger
     this.isSelected = true;
     this.imageChangedEvent = event;
     this.hiddenButtonRef.nativeElement.click();
@@ -1540,12 +1528,10 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
   postDivId: string = "";
   openDialouge(event: any, post: any) {
-    debugger;
     const parts = event.currentTarget.className.split(' ');
     this.postDivId = parts[3];
     if (post.postAttachments != undefined) {
       var postAttach = post.postAttachments[0];
-      debugger
       if (postAttach != undefined) {
         if (postAttach.fileType != 1) {
           if (this.postDivId != "") {
@@ -1590,7 +1576,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
   getDeletedPostId(id: string) {
-    debugger
     this.loadingIcon = true;
     this._postService.deletePost(id).subscribe((_response) => {
       this.loadingIcon = false;
@@ -1599,7 +1584,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
   openEditPostModal(post: any) {
-    debugger
     const initialState = {
       editPostId: post.id,
       from: post.postAuthorType == 1 ? "school" : post.postAuthorType == 2 ? "class" : post.postAuthorType == 3 ? "course" : post.postAuthorType == 4 ? "user" : undefined
@@ -1622,7 +1606,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
 
   editCourseCertificate(courseCertificateInfo: any) {
-    debugger
     // dob = dob.substring(0, dob.indexOf('T'));     
 
     var issuedDate = courseCertificateInfo.issuedDate.substring(0, courseCertificateInfo.issuedDate.indexOf('T'));
@@ -1649,7 +1632,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
 
   saveCourseCertificate() {
-    debugger
     this.isSubmitted = true;
     if (!this.courseCertificateForm.valid) {
       return;
@@ -1680,7 +1662,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     // this.userCertificateForm.updateValueAndValidity();
 
     this._courseService.saveCourseCertificates(this.certificateToUpload).subscribe((response: any) => {
-      debugger
       this.closeCertificatesModal();
       this.isSubmitted = false;
       this.certificateToUpload = new FormData();
@@ -1706,7 +1687,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
 
   openCourseCertificate(certificateInfo: any) {
-    debugger
     this.certificateToUpload.set('certificateImage', '');
     this.courseCertificateInfo = certificateInfo;
     this.openCourseOwnCertificate.nativeElement.click();
@@ -1725,7 +1705,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   uploadImageName: string = "";
   avatarImage!: any;
   handleCourseCertificate(event: any) {
-    debugger
     this.certificateToUpload.append("certificateImage", event.target.files[0], event.target.files[0].name);
     this.uploadImageName = event.target.files[0].name;
     const reader = new FileReader();
@@ -1754,9 +1733,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       courseId: this.course.courseId,
       rating:this.rateNumber
     }
-    debugger
     this._courseService.courseRating(this.courseRatingView).subscribe((response) => {
-      debugger;
       this.isRatedByUser = true;
       this.course.rating = response.courseRating;
       this.cd.detectChanges();
@@ -1821,10 +1798,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   userIsBanned:boolean=false;
   isUserBannedId:string='';
   checkIfUserIsBanned(){
-    debugger;
     this.loadingIcon = true;
     this._userService.isUserBanned(this.userId, this.isUserBannedId, PostAuthorTypeEnum.Course).subscribe((response)=>{
-      debugger;
       this.loadingIcon = false;
       if(response.data == true){
         this.userIsBanned = true
@@ -1835,7 +1810,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   joinFreeCourse(){
     this.loadingIcon = true;
     this._courseService.joinFreeCourse(this.course.courseId).subscribe((response)=>{
-      debugger;
       this.loadingIcon = false;
       this.course.isCourseStudent = true;
       const translatedInfoSummary = this.translateService.instant('Success');

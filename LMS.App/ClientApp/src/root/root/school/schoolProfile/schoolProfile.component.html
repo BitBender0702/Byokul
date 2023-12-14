@@ -593,7 +593,7 @@
           <div class="filter-main d-flex">
             <div class="btn-filter1 align-items-center">
               <button
-                *ngIf="isOwner || hasCreateEditClassPermission"
+                *ngIf="(isOwner || hasCreateEditClassPermission) && school.isSchoolSubscribed"
                 [routerLink]="['/user/createClass', school.schoolId]"
                 type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2"
@@ -601,7 +601,7 @@
                 {{ "CreateClass" | translate }}
               </button>
               <button
-                *ngIf="isOwner || hasCreateEditCoursePermission"
+                *ngIf="(isOwner || hasCreateEditCoursePermission) && school.isSchoolSubscribed"
                 [routerLink]="['/user/createCourse', school.schoolId]"
                 type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2"

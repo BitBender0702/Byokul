@@ -17,13 +17,16 @@ import { MessageService } from 'primeng/api';
 
 
 import { DatePipe } from '@angular/common';
+import { ClassCourseModalComponent } from '../ClassCourseModal/classCourseModal.component';
+import { ClassService } from 'src/root/service/class.service';
+import { CourseService } from 'src/root/service/course.service';
 
 
 export const unreadNotificationResponse = new Subject<{ type: string }>();
 
 
 @Component({
-  selector: 'payment',
+  selector: 'notification',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css'],
   providers: [MessageService],
@@ -34,6 +37,8 @@ export class NotificationsComponent extends MultilingualComponent implements OnI
   private _postService;
   private _bigBlueButtonService;
   private _userService;
+  private _classService;
+  private _courseService;
   notifications: any;
   notificationSettings: any;
   loadingIcon: boolean = false;
@@ -53,12 +58,14 @@ export class NotificationsComponent extends MultilingualComponent implements OnI
   hamburgerCount:number = 0;
 
 
-  constructor(injector: Injector, public messageService: MessageService, private datePipe: DatePipe, userService: UserService, private fb: FormBuilder, notificationService: NotificationService, private router: Router, postService: PostService, private bsModalService: BsModalService, bigBlueButtonService: BigBlueButtonService) {
+  constructor(injector: Injector, public messageService: MessageService, private datePipe: DatePipe, userService: UserService, classService: ClassService, courseService: CourseService, private fb: FormBuilder, notificationService: NotificationService, private router: Router, postService: PostService, private bsModalService: BsModalService, bigBlueButtonService: BigBlueButtonService) {
     super(injector);
     this._notificationService = notificationService;
     this._postService = postService;
     this._bigBlueButtonService = bigBlueButtonService;
     this._userService = userService;
+    this._classService = classService;
+    this._courseService = courseService;
   }
 
   notificationAvatar: any;
@@ -69,13 +76,7 @@ export class NotificationsComponent extends MultilingualComponent implements OnI
     this.gender = localStorage.getItem("gender") ?? '';
     this.translate.use(selectedLang ?? '');
     this._notificationService.getNotifications(this.notificationPageNumber).subscribe((notificationsResponse) => {
-      debugger
       this.notifications = notificationsResponse;
-
-
-      // this.notificationAvatar = this.notifications[0]?.user.avatar
-      // this.dateForNotification = this.datePipe.transform(this.notifications.dateTime, 'yyyy-MM-dd');
-
       var notifications: any[] = this.notifications;
       var unreadNotifications = notifications.filter(x => !x.isRead);
       if (unreadNotifications.length > 0) {
@@ -89,7 +90,6 @@ export class NotificationsComponent extends MultilingualComponent implements OnI
     try {
       if (!this.notificationResponseSubscription) {
         this.notificationResponseSubscription = notificationResponse.subscribe(response => {
-          debugger
           this.notifications.push(response);
           unreadNotificationResponse.next({ type: "add" });
         });
@@ -112,7 +112,6 @@ export class NotificationsComponent extends MultilingualComponent implements OnI
 
     if (!this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-        debugger
         this.hamburgerCount = response.hamburgerCount;
       });
     }
@@ -212,7 +211,6 @@ export class NotificationsComponent extends MultilingualComponent implements OnI
 
   getNotifications() {
     this._notificationService.getNotifications(this.notificationPageNumber).subscribe((notificationsResponse) => {
-      debugger
       if(notificationsResponse.length > 0){
         this.notifications = [...this.notifications, ...notificationsResponse];
         this.scrollNotificationResponseCount = notificationsResponse.length;
@@ -223,13 +221,10 @@ export class NotificationsComponent extends MultilingualComponent implements OnI
   }
 
   joinMeeting(userId: string, meetingId: string, postId: string) {
-    debugger
     this._postService.getPostById(postId).subscribe((response) => {
-      debugger
       if (response.isLive) {
         this.initializeJoinMeetingViewModel();
         this._userService.getUser(userId).subscribe((result) => {
-          debugger
           this.joinMeetingViewModel.name = result.firstName + " " + result.lastName;
           this.joinMeetingViewModel.meetingId = meetingId;
           this.joinMeetingViewModel.postId = postId;
@@ -269,13 +264,11 @@ export class NotificationsComponent extends MultilingualComponent implements OnI
   opeStream(postId: string, chatType: number) {
     this._postService.getPostById(postId).subscribe((response) => {
       if(response.isLiveStreamEnded == false){
-        debugger;
         this._postService.enableLiveStream(postId).subscribe((responses)=>{
           if(responses.success){
             response.isLive = true;
           }
           if (response.isLive) {
-            debugger;
             var from = chatType == 1 ? "user" : chatType == 3 ? "school" : chatType == 4 ? "class" : "";
             this.router.navigate(
               [`liveStream`, postId, from]
@@ -303,6 +296,29 @@ export class NotificationsComponent extends MultilingualComponent implements OnI
     //     [`liveStream`,postId,from]
     // );
 
+  }
+
+  openClassCourseViewModal(item: any): void {
+    if(item.chatType == 4){
+      this._classService.getClassPopupDetails(item.chatTypeId).subscribe((classResponse)=>{
+        const initialState = {
+          classCourseItem: classResponse,
+        };
+        this.bsModalService.show(ClassCourseModalComponent, { initialState });
+      });
+    }
+    else{
+      this._courseService.getCoursePopupDetails(item.chatTypeId).subscribe((CourseResponses)=>{
+        const initialState = {
+          classCourseItem: CourseResponses,
+        };
+        this.bsModalService.show(ClassCourseModalComponent, { initialState });
+      });
+    }
+    const initialState = {
+      classCourseItem: item,
+    };
+    this.bsModalService.show(ClassCourseModalComponent, { initialState });
   }
 
 }

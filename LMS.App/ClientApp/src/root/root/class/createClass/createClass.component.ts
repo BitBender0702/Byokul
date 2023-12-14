@@ -220,14 +220,12 @@ if(!this.changeLanguageSubscription){
 
 if (!this.hamburgerCountSubscription) {
   this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-    debugger
     this.hamburgerCount = response.hamburgerCount;
   });
 }
 
 if(!this.thumbnailUploadSubscription) {
 this.thumbnailUploadSubscription = thumbnailUploadResponse.subscribe(response => {
-  debugger
   this.isNextButtonDisabled = false;
   this.fileToUpload.append("thumbnailUrl", response.thumbnailUrl);
 });
@@ -249,7 +247,6 @@ ngOnDestroy(): void {
 
 getSchoolsForDropdown(){
   this._classService.getAllSchools().subscribe((response) => {
-    debugger
     this.schools = response;
     this.createClassForm1.controls['schoolId'].setValue(this.schools[0].schoolId, {onlySelf: true});
     this.createClassForm1.controls['schoolName'].setValue(this.schools[0].schoolName, {onlySelf: true});
@@ -259,7 +256,6 @@ getSchoolsForDropdown(){
 
 getSelectedSchool(schoolId:string){
   this._classService.getSelectedSchool(schoolId).subscribe((response) => {
-    debugger
     this.selectedSchool = response;
     this.createClassForm1.controls['schoolId'].setValue(this.selectedSchool.schoolId, {onlySelf: true});
     this.createClassForm1.controls['schoolName'].setValue(this.selectedSchool.schoolName, {onlySelf: true});
@@ -270,9 +266,7 @@ getSelectedSchool(schoolId:string){
 
 
 dateLessThan(from: string, to: string, currentDate:string) {
-  debugger
   return (group: FormGroup): {[key: string]: any} => {
-    debugger
    let f = group.controls[from];
    let t = group.controls[to];
    const startDateParts = f.value.split('/');
@@ -345,7 +339,6 @@ captureTeacherId(event: any) {
   }
 
   // handleImageInput(event: any) {
-  //   debugger
   //   if(event.target.files[0].type == "video/mp4"){
   //     const videoElement = document.createElement('video');
   //     // videoElement.src = videoUrl;
@@ -360,7 +353,6 @@ captureTeacherId(event: any) {
 
   videoLengthExceeded:boolean=false;
   // handleImageInput(event: any) {
-  //   debugger;
   
   //   if (event.target.files[0].type === "video/mp4") {
   //     const videoElement = document.createElement('video');
@@ -376,13 +368,11 @@ captureTeacherId(event: any) {
   //       }
   //     });
   //   }
-  //   debugger
   //   this.fileToUpload.append("thumbnail", event.target.files[0], event.target.files[0].name);
   //   this.uploadImageName = event.target.files[0].name;
   // }
   
   handleImageInput(event: any) {
-    debugger
     this.isNextButtonDisabled = true;
     if (event.target.files[0].type === "video/mp4") {
       const videoElement = document.createElement('video');
@@ -438,8 +428,9 @@ captureTeacherId(event: any) {
     window.history.back();
   }
 
+  isSubscriptionEnded:boolean = false;
   forwardStep() {
-    debugger
+    this.isSubscriptionEnded = false;
     this.isStepCompleted = true;
     this.class=this.createClassForm1.value;
 
@@ -461,6 +452,45 @@ captureTeacherId(event: any) {
       return; 
     }
 
+    var freeTrialInfo = JSON.parse(localStorage.getItem("freeTrialInfo")??'');
+    const parsedDate = new Date(freeTrialInfo.trialSchoolCreationDate);
+    const year = parsedDate.getFullYear();
+    const month = parsedDate.getMonth() + 1; // Months are zero-based
+    const day = parsedDate.getDate();
+    const hours = parsedDate.getHours();
+    const minutes = parsedDate.getMinutes();
+    const seconds = parsedDate.getSeconds();
+    var trialSchoolCreationDate = new Date(year, month - 1, day, hours, minutes, seconds);    
+    var currentDate = new Date();
+    const timeDifference = currentDate.getTime() - trialSchoolCreationDate.getTime();
+    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+    if(this.selectedSchool != undefined){
+      if(!this.selectedSchool.isSchoolSubscribed){
+        if(freeTrialInfo.isTrialSchoolPaymentDone == 'False' && daysDifference < 40){
+          this.isSubscriptionEnded = false;
+        }
+        else{
+          this.isSubscriptionEnded = true;
+          return;
+        }
+      }
+    }
+
+    if(this.schools != undefined){
+      var school = this.schools.find((x: { schoolId: string; }) => x.schoolId == this.class.schoolId);
+      if(!school.isSchoolSubscribed){
+        if(freeTrialInfo.isTrialSchoolPaymentDone == 'False' && daysDifference < 40){
+          this.isSubscriptionEnded = false;
+        }
+        else{
+          this.isSubscriptionEnded = true;
+          return;
+        }
+      }
+    }
+  
+
 
     // var schoolId = this.createClassForm1.get('schoolId')?.value;
     //this.class=this.createClassForm1.value;
@@ -481,7 +511,6 @@ captureTeacherId(event: any) {
     this.fileToUpload.append('classTags', JSON.stringify(this.tagList))
     // this.schoolName = this.class.schoolId.schoolName.split(' ').join('');
     this._classService.isClassNameExist(this.class.className).subscribe((response) => {
-      debugger
       if(!response){
         this.createClassForm1.setErrors({ unauthenticated: true });
         return;
@@ -576,6 +605,10 @@ captureTeacherId(event: any) {
    
     
 
+  }
+
+  initializeSchoolSubscription(){
+    this.isSubscriptionEnded = false;
   }
 
   getSchoolName(schoolName:string){
@@ -796,7 +829,6 @@ captureTeacherId(event: any) {
   }
 
   onFileChange(event: any): void {
-    debugger
     this.isSelected = true;
     this.imageChangedEvent = event;
     this.hiddenButtonRef.nativeElement.click();
@@ -819,7 +851,6 @@ captureTeacherId(event: any) {
   }
 
   imageCropped(event: ImageCroppedEvent) {
-    debugger
     this.selectedImage = event.blob;
     this.croppedImage = this.domSanitizer.bypassSecurityTrustResourceUrl(
       event.objectUrl!
@@ -836,7 +867,6 @@ captureTeacherId(event: any) {
   }
 
   applyCropimage() {
-    debugger
     this.classAvatar = this.croppedImage.changingThisBreaksApplicationSecurity;
     this.cropModalRef.hide();
   }

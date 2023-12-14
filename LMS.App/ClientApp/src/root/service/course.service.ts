@@ -171,4 +171,8 @@ export class CourseService{
         return this.http.post(`${this.apiUrl}/course/joinFreeCourse` + '?courseId=' + courseId,'',{headers: this.headers});
     }
 
+    getCoursePopupDetails(courseId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/course/getCoursePopupDetails` + '?courseId=' + courseId,{headers: this.headers});
+    }
+
 }

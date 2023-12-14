@@ -6,6 +6,7 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { notificationResponse } from 'src/root/service/signalr.service';
 import { NotificationViewModel } from 'src/root/interfaces/notification/notificationViewModel';
 import { paymentStatusResponse } from '../payment/payment.component';
+import { hideSubscriptionNotiBand } from '../freeTrial/freeTrial.component';
 
 @Component({
     selector: 'fileStorage',
@@ -27,12 +28,18 @@ export class PaymentResponseModalComponent extends MultilingualComponent impleme
   }
 
   ngOnInit(): void {
-    debugger
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
     this.translate.use(this.selectedLanguage?? '');
     this.loadingIcon = false;
     var paymentInfo = this.options.initialState;
     var paymentStatus = paymentInfo?.paymentDetails;
+
+    var freeTrialInfo = JSON.parse(localStorage.getItem("freeTrialInfo")??'');
+    if(freeTrialInfo != '' && this.isPaymentSuccess){
+
+      hideSubscriptionNotiBand.next({});
+    }
+
     // var test = this.isPaymentSuccess;
     paymentStatusResponse.next({loadingIcon: false});
     notificationResponse.next(this.notificationViewModel);

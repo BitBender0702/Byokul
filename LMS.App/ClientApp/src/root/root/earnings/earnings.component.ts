@@ -75,7 +75,6 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
     }
   
     ngOnInit(): void {
-      debugger
       this.loadingIcon = true;
       this.isOpenOwnedSchoolTab = true;
       this.gender = localStorage.getItem("gender")??'';
@@ -125,7 +124,6 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
 
       if (!this.hamburgerCountSubscription) {
         this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-          debugger
           this.hamburgerCount = response.hamburgerCount;
         });
       }
@@ -150,9 +148,7 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
     }
 
     initialTransactionDetails(transactionParamViewModel:TransactionParamViewModel){
-      debugger
       this._paymentService.transactionDetails(transactionParamViewModel).subscribe((response) => {
-        debugger
         this.transactionDetails = response;
         this.isDataLoaded = true;
         this.loadingIcon = false;
@@ -324,7 +320,7 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
     this.transactionParamViewModel.pageNumber = this.pageNumber;
     this.transactionParamViewModel.searchString = this.searchString;
     this._paymentService.transactionDetails(this.transactionParamViewModel).subscribe((response) => {
-      this.transactionDetails.transactions =[...this.transactionDetails.transactions, ...response.transactions];
+      this.transactionDetails.ownedSchoolTransactions =[...this.transactionDetails.ownedSchoolTransactions, ...response.ownedSchoolTransactions];
       this.scrollLoadingIcon = false;
       this.transactionsResponseCount = response.length; 
       this.scrolled = false;
@@ -346,7 +342,7 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
     this.transactionParamViewModel.pageNumber = this.allTransactionPageNumber;
     this.transactionParamViewModel.searchString = this.searchString;
     this._paymentService.allTransactionDetails(this.transactionParamViewModel).subscribe((response) => {
-      this.allTransactionDetails.transactions =[...this.allTransactionDetails.transactions, ...response.transactions];
+      this.allTransactionDetails =[...this.allTransactionDetails, ...response.allTransactions];
       this.scrollLoadingIcon = false;
       this.allTransactionsResponseCount = response.length; 
       this.allScrolled = false;
@@ -354,12 +350,10 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
   }
 
   getClassCourseDetails(){
-    debugger
     this.transactionParamViewModel.pageNumber = this.classCoursePageNumber;
     this.transactionParamViewModel.searchString = this.searchString;
     this._paymentService.classCourseTransactionDetails(this.transactionParamViewModel).subscribe((response) => {
-      debugger
-      this.classCourseDetails.transactions =[...this.classCourseDetails, ...response.classCourseTransactions];
+      this.classCourseDetails =[...this.classCourseDetails, ...response.classCourseTransactions];
       this.scrollLoadingIcon = false;
       this.allTransactionsResponseCount = response.length; 
       this.allScrolled = false;
@@ -484,7 +478,6 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
     }
 
     isClassCourseTab(){
-      debugger
       this.isOpenOwnedSchoolTab = false;
       this.isOpenAllTab = false;
       this.isOpenWithdrawTab = false;

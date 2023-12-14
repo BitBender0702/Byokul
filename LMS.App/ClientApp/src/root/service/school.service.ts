@@ -32,6 +32,8 @@ export class SchoolService{
     }
 
     getCountryList():Observable<any>{
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         return this.http.get(`${this.apiUrl}/users/getCountries`,{headers: this.headers});
     }
 

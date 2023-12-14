@@ -71,7 +71,6 @@ export class SchoolVideoLibraryComponent extends MultilingualComponent implement
   }
 
   ngOnInit(): void {
-    debugger
     this.schoolId = this.activatedRoute.snapshot.paramMap.get('schoolId')??'';
     this.selectedSchoolForStream = this.schoolId;
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
@@ -79,14 +78,12 @@ export class SchoolVideoLibraryComponent extends MultilingualComponent implement
     
 
     this._videoLibraryService.getSchoolLibraryVideos(this.schoolId).subscribe((response) => {
-      debugger
       this.libraryVideoes = response;
       this.totalVideoRecords = this.libraryVideoes.length;
       this.getFilesSelectedPage();
     });
 
     this._schoolService.getSchool(this.schoolId).subscribe((response: any) => {
-      debugger
       this.availableSpace = response.availableStorageSpace;
     });
     
@@ -104,7 +101,6 @@ export class SchoolVideoLibraryComponent extends MultilingualComponent implement
 
     if(!this.videoAddedResponseSubscription){
       this.videoAddedResponseSubscription = addVideoInLibraryResponse.subscribe(result => {
-        debugger
         this.isSubmitted = false;
         this.loadingIcon = false;
         this.libraryVideoes.unshift(result.addVideoInLibraryResponse);
@@ -154,7 +150,6 @@ export class SchoolVideoLibraryComponent extends MultilingualComponent implement
       const file = event.target.files[0];
       const videoUrl = URL.createObjectURL(file);
       this.getVideoThumbnail(videoUrl, file.name, (thumbnailUrl) => {
-        debugger
         this.videoObject.videoUrl = thumbnailUrl;
         this.videoObject.name = file.name;
         this.videoObject.type = file.type;
@@ -231,8 +226,6 @@ export class SchoolVideoLibraryComponent extends MultilingualComponent implement
   }
 
   saveVideo(){
-    debugger
-
     this.isSubmitted = true;
     if (!this.videoLibraryForm.valid) {
       return;
@@ -263,10 +256,8 @@ export class SchoolVideoLibraryComponent extends MultilingualComponent implement
   }
 
   deleteFile(){
-    debugger
     this.loadingIcon = true;
     this._videoLibraryService.deleteFile(this.deletedVideoId).subscribe((response: any) => {
-      debugger
       this.libraryVideoes = this.libraryVideoes.filter((x: { id: any; }) => x.id !== this.deletedVideoId);
       this.videoRecords = this.videoRecords.filter((x: { id: any; }) => x.id !== this.deletedVideoId);
       this.loadingIcon = false;
@@ -277,11 +268,9 @@ export class SchoolVideoLibraryComponent extends MultilingualComponent implement
   }
 
   getSchoolClassList(){
-    debugger
     this.isSchoolSelected = false;
     if(this.classList == undefined){
     this._schoolService.getClassListBySchoolId(this.schoolId).subscribe((response: any) => {
-      debugger
       this.classList = response;
     });
   }
@@ -292,7 +281,6 @@ export class SchoolVideoLibraryComponent extends MultilingualComponent implement
   }
 
   streamVideo(){
-    debugger
     this.closeStreamVideoModal.nativeElement.click();
     if(this.isSchoolSelected){
       var schoolId = this.selectedSchoolForStream;
@@ -326,12 +314,10 @@ export class SchoolVideoLibraryComponent extends MultilingualComponent implement
   }
 
   getClassId(event:any){
-    debugger
     this.selectedClassForStream = event.value;
   }
 
   getSelectedVideo(file:any){
-    debugger
    this.selectedVideo = file;
    this.selectedSchoolForStream = this.schoolId;
    this.isSchoolSelected = true;
@@ -339,7 +325,6 @@ export class SchoolVideoLibraryComponent extends MultilingualComponent implement
 
 
   resetUploadFileModal(){
-    debugger
     this.isSubmitted = false;
     this.videoLibraryForm.patchValue({
       title: ""

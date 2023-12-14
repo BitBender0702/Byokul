@@ -260,7 +260,11 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
       let decodedJwtData = JSON.parse(decodedJwtJsonData)
         var freetrialInfo = {
           trialSchoolCreationDate: decodedJwtData.trialSchoolCreationDate,
-          userSchoolsCount: decodedJwtData.userSchoolsCount
+          userSchoolsCount: decodedJwtData.userSchoolsCount,
+          trialSchoolId: decodedJwtData.schoolId,
+          trialSchoolName: decodedJwtData.schoolName,
+          trialSchoolAvatar: decodedJwtData.avatar,
+          isTrialSchoolPaymentDone: decodedJwtData.isTrialSchoolPaymentDone
         }
         localStorage.setItem("freeTrialInfo", JSON.stringify(freetrialInfo));
       return decodedJwtData;
@@ -285,8 +289,8 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
           this.sendMail.email = email;
         }
       this._authService.resendEmail(this.sendMail).pipe(finalize(()=> this.loadingIcon = false)).subscribe({
-          next: (response: AuthenticatedResponse) => {
-          if(response.result != "success"){
+          next: (response: any) => {
+          if(!response.success){
           }
           else{
           this.isSubmitted = false;

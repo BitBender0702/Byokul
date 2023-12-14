@@ -84,7 +84,6 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
 
     this.selectedSchools.push(this.schoolId);
     this._schoolService.getSchoolClassCourseForOfficials(this.schoolId).subscribe((result) => {
-      debugger
       this.classList = result.classes;
       this.courseList = result.courses;
     });

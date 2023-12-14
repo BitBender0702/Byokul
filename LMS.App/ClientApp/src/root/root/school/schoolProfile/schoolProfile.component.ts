@@ -258,7 +258,7 @@ export class SchoolProfileComponent
   videoFileUrl: string = '';
 
   userPermissionSubscription!:Subscription;
-  paymentStatusSubscription!: Subscription;
+  // paymentStatusSubscription!: Subscription;
   deleteModalPostSubscription!: Subscription;
   paymentResponseSubscription!: Subscription;
   isStorageUnAvailable:boolean=false;
@@ -317,7 +317,6 @@ export class SchoolProfileComponent
     this._userService = userService;
     this._signalrService = signalRService;
     this.schoolParamsData$ = this.route.params.subscribe((routeParams) => {
-      debugger
       this.schoolName = routeParams.schoolName;
       if (!this.loadingIcon && this.isOnInitInitialize) {
         this.ngOnInit();
@@ -364,9 +363,9 @@ export class SchoolProfileComponent
     if (this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription.unsubscribe();
     }
-    if (this.paymentStatusSubscription) {
-      this.paymentStatusSubscription.unsubscribe();
-    }
+    // if (this.paymentStatusSubscription) {
+    //   this.paymentStatusSubscription.unsubscribe();
+    // }
     if (this.paymentResponseSubscription) {
       this.paymentResponseSubscription.unsubscribe();
     }
@@ -396,11 +395,7 @@ export class SchoolProfileComponent
     var selectedLang = localStorage.getItem('selectedLanguage');
     this.translate.use(selectedLang ?? '');
 
-debugger
-
     this._schoolService.getSchoolById(this.schoolName.replace(/\s/g, '').toLowerCase()).subscribe(async (response) => {
-      debugger
-
       this.frontEndPageNumber = 1;
       this.reelsPageNumber = 1;
       this.school = response;
@@ -417,6 +412,7 @@ debugger
       this.noOfAppliedClassFilters = this.school.noOfAppliedClassFilters;
       this.noOfAppliedCourseFilters = this.school.noOfAppliedCourseFilters;
       this.addEventListnerOnCarousel();
+      this.checkSchoolHasTrial();
       
       isUserSchoolOrNotResponse.next({isUserSchool:this.isOwner});
       this.isUserBannedId = response.schoolId
@@ -552,7 +548,6 @@ debugger
 
     if (!this.addPostSubscription) {
       this.addPostSubscription = addPostResponse.subscribe((postResponse: any) => {
-        debugger
         // if(postResponse.response.postType == 1){
         //   var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
         // }
@@ -653,7 +648,6 @@ debugger
 
     if (!this.addTeacherSubscription) {
       this.addTeacherSubscription = addTeacherResponse.subscribe(response => {
-        debugger
         const translatedSummary = this.translateService.instant('Success');
         if(!response.isEdit){
           var translatedMessage = this.translateService.instant('OfficialAddedSuccessfully');
@@ -720,7 +714,6 @@ debugger
 
     if(!this.userPermissionSubscription){
       this.userPermissionSubscription = userPermission.subscribe(data=>{
-        debugger;
         window.location.reload();
       })
     }
@@ -733,29 +726,31 @@ debugger
 
     if (!this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-        debugger
         this.hamburgerCount = response.hamburgerCount;
       });
     }
     notifyMessageAndNotificationCount.next({});
 
-    this.paymentStatusSubscription = paymentStatusResponse.subscribe(response => {
-      if(response.loadingIcon){
-        this.loadingIcon = true;
-        const translatedSummary = this.translateService.instant('Success');
-        const translatedMessage = this.translateService.instant('PaymentProcessingMessage');
-        this.messageService.add({ severity: 'info', summary: translatedSummary, life: 6000, detail: translatedMessage });
-      }
-      else{
-        this.loadingIcon = false;
-      }
-    });
+  //   if (!this.paymentStatusSubscription) {
+  //   this.paymentStatusSubscription = paymentStatusResponse.subscribe(response => {
+  //     if(response.loadingIcon){
+  //       this.loadingIcon = true;
+  //       const translatedSummary = this.translateService.instant('Success');
+  //       const translatedMessage = this.translateService.instant('PaymentProcessingMessage');
+  //       this.messageService.add({ severity: 'info', summary: translatedSummary, life: 6000, detail: translatedMessage });
+  //     }
+  //     else{
+  //       this.loadingIcon = false;
+  //     }
+  //   });
+  //  }
 
     if (!this.paymentResponseSubscription) {
       this.paymentResponseSubscription = paymentResponse.subscribe(response => {
-        debugger
         this.loadingIcon = false;
-        this.school.isSchoolSubscribed = true;
+        if(response.isPaymentSuccess){
+          this.school.isSchoolSubscribed = true;
+        }
         const initialState = {
           isPaymentSuccess: response.isPaymentSuccess,
           from: Constant.School
@@ -778,7 +773,6 @@ debugger
   }
 
   addEventListnerOnCarousel() {
-    debugger
     if (this.carousel != undefined) {
       if ($('carousel')[0].querySelectorAll('a.carousel-control-next')[0]) {
         $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
@@ -787,7 +781,6 @@ debugger
             this.reelsLoadingIcon = true;
           }
           this._schoolService.getReelsBySchoolId(this.school.schoolId, this.reelsPageNumber).subscribe((response) => {
-            debugger
             this.school.reels = [...this.school.reels, ...response];
             this.reelsLoadingIcon = false;
           });
@@ -804,9 +797,26 @@ debugger
     };
   }
 
+  checkSchoolHasTrial(){
+  var freeTrialInfo = JSON.parse(localStorage.getItem("freeTrialInfo")??'');
+    if(Number(freeTrialInfo.userSchoolsCount) == 1){
+      var trialSchoolCreationDate = new Date(freeTrialInfo.trialSchoolCreationDate);
+      // const [datePart, timePart] = freeTrialInfo.trialSchoolCreationDate.split(' ');
+      // const [day, month, year] = datePart.split('-').map(Number);
+      // const [hours, minutes, seconds] = timePart.split(':').map(Number);
+      // var trialSchoolCreationDate = new Date(year, month - 1, day, hours, minutes, seconds);
+
+      var currentDate = this.currentDate;
+      const timeDifference = this.currentDate.getTime() - trialSchoolCreationDate.getTime();
+      const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+      if(daysDifference < 40){
+        this.school.isSchoolSubscribed = true;
+      }
+    }
+  }
+
   @HostListener("window:scroll", [])
   onWindowScroll() {
-    debugger
     const scrollPosition = window.pageYOffset;
     const windowSize = window.innerHeight;
     const bodyHeight = document.body.offsetHeight;
@@ -840,7 +850,6 @@ debugger
   }
 
   addDescriptionMetaTag(description: string) {
-    debugger
     const existingTag = this.meta.getTag('name="description"');
     if (existingTag) {
       this.meta.updateTag({ name: 'description', content: description });
@@ -913,7 +922,6 @@ debugger
   currentDate:Date = new Date();
   showSubscriptionBtn: boolean = false;
   isOwnerOrNot() {
-    debugger
     var validToken = localStorage.getItem('jwt');
     if (validToken != null) {
       let jwtData = validToken.split('.')[1];
@@ -943,7 +951,6 @@ debugger
     var userPermissions: any[] = this.userPermissions;
 
     userPermissions.forEach(element => {
-      debugger
       if ((element.typeId == this.school.schoolId || element.typeId == PermissionNameConstant.DefaultSchoolId) && element.ownerId == this.school.createdById && element.permissionType == PermissionTypeEnum.School && element.permission.name == PermissionNameConstant.Post) {
         this.hasPostPermission = true;
       }
@@ -1008,7 +1015,6 @@ debugger
 
   initializeNotificationViewModel(userid: string, notificationType: NotificationType, notificationContent: string, postId: string, schoolId?: string, postType?: number, post?: any) {
     this._userService.getUser(this.userId).subscribe((response) => {
-      debugger
       this.notificationViewModel = {
         id: '00000000-0000-0000-0000-000000000000',
         userId: userid,
@@ -1049,19 +1055,15 @@ debugger
   }
 
   getSchoolDetails(schoolId: string) {
-    debugger;
     this._schoolService.getSchoolEditDetails(schoolId).subscribe((response) => {
-      debugger
       this.editSchool = response;
       this.initializeEditFormControls();
     });
   }
 
   initializeEditFormControls() {
-    debugger
     // if(this.getCountriesSubscription == null){
     this.getCountriesSubscription = this._userService.getCountryList().subscribe((response) => {
-      debugger
       this.countries = response;
       this.requiredCountry = this.countries.find((x: { countryName: string; }) => x.countryName == this.school.countryName);
       this.schoolAvatar = this.school.avatar;
@@ -1117,7 +1119,6 @@ debugger
 
   dateLessThan(from: string, to: string) {
     return (group: FormGroup): { [key: string]: any } => {
-      debugger
       let f = group.controls[from];
       const dateParts = to.split('-');
       let t = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
@@ -1132,7 +1133,6 @@ debugger
 
   resetImage() { }
   updateSchool() {
-    debugger
     var phoneNumber = this.editSchoolForm.get('phoneNumber')?.value;
 
     this.isSubmitted = true;
@@ -1173,7 +1173,6 @@ debugger
     this._schoolService
       .editSchool(this.fileToUpload)
       .subscribe((response: any) => {
-        debugger
         this.closeModal();
         this.isSubmitted = false;
         this.schoolName = this.updateSchoolDetails.schoolName;
@@ -1547,7 +1546,6 @@ debugger
       });
     }
     else {
-      debugger;
       var postAttachments = this.filteredAttachments.filter(x => x.postId == posts.id);
       const initialState = {
         posts: posts,
@@ -1591,7 +1589,6 @@ debugger
     if (this.classCourseList == undefined || appliedFilters) {
       this.loadingIcon = true;
       this._schoolService.getSchoolClassCourseList(schoolId, this.classCoursePageNumber).subscribe((response) => {
-        debugger
         this.classCourseList = response;
         this.loadingIcon = false;
       });
@@ -1600,7 +1597,6 @@ debugger
 
   isClassList!:boolean | undefined;
     GetSchoolClassesList(schoolId: string, appliedFilters?: boolean, pageNumber?: number) {
-      debugger
       this.isClassList = true;
     // var school = this.school;
     this.isFeedHide = true;
@@ -1611,7 +1607,6 @@ debugger
     if (this.classList == undefined || appliedFilters) {
       this.loadingIcon = true;
       this._schoolService.getSchoolClassesList(schoolId, this.classPageNumber).subscribe((response) => {
-        debugger
         this.classList = response;
         this.loadingIcon = false;
       });
@@ -1619,7 +1614,6 @@ debugger
   }
 
   GetSchoolCoursesList(schoolId: string, appliedFilters?: boolean, pageNumber?: number) {
-    debugger
     this.isClassList = false;
   // var school = this.school;
   this.isFeedHide = true;
@@ -1630,7 +1624,6 @@ debugger
   if (this.courseList == undefined || appliedFilters) {
     this.loadingIcon = true;
     this._schoolService.getSchoolCoursesList(schoolId, this.coursePageNumber).subscribe((response) => {
-      debugger
       this.courseList = response;
       this.loadingIcon = false;
     });
@@ -1743,7 +1736,6 @@ debugger
 
 
   showPostDiv(post: any) {
-    debugger
     $('.imgDisplay').attr("style", "display:none;")
     $('.' + post.id).prevAll('.imgDisplay').first().attr("style", "display:block;");
 
@@ -1769,7 +1761,6 @@ debugger
       this.cd.detectChanges();
       // });
       // this.videoPlayers.forEach(player => {
-      //   debugger
       //   const videoElement = player.nativeElement;
       //   const vjsPlayer = videojs(videoElement, { autoplay: false });
       // });
@@ -1844,6 +1835,11 @@ debugger
           this.isClassCourseLiked = true;
           // if (item.type == 1) {
             this.likesClassCourseLength = item.classLikes.length + 1;
+            if(item.createdById != this.userId){
+              var notificationContent = `liked your class(${item.name})`;
+              this._notificationService.initializeNotificationViewModel(item.createdById, NotificationType.Likes, notificationContent, this.userId, null, 0, null, null,4,item.id).subscribe((_response) => {
+              });
+            }
           // } else {
           //   this.likesClassCourseLength = item.courseLikes.length + 1;
           // }
@@ -1884,6 +1880,11 @@ debugger
           //   this.likesClassCourseLength = item.classLikes.length + 1;
           // } else {
             this.likesClassCourseLength = item.courseLikes.length + 1;
+            if(item.createdById != this.userId){
+              var notificationContent = `liked your course(${item.name})`;
+              this._notificationService.initializeNotificationViewModel(item.createdById, NotificationType.Likes, notificationContent, this.userId, null, 0, null, null,5,item.id).subscribe((_response) => {
+              });
+            }
           // }
 
           item.isLikedByCurrentUser = true;
@@ -2002,7 +2003,6 @@ debugger
 
   saveClassFilters() {
     this._classService.saveClassFilters(this.classFilterList).subscribe((response) => {
-      debugger
       this.classFilterList = [];
       this.GetSchoolClassesList(this.school.schoolId, true, 1);
     });
@@ -2030,7 +2030,6 @@ debugger
   }
 
   openSharePostModal(postId: string, postType: number, title: string, description: string): void {
-    debugger
     var image: string = '';
     if (postType == 1) {
       var post = this.school.posts.find((x: { id: string; }) => x.id == postId);
@@ -2050,7 +2049,6 @@ debugger
   }
 
   openProfileShareModal(): void {
-    debugger
     const initialState = {
       schoolId: this.school.schoolId,
       schoolName: this.school.schoolName,
@@ -2208,7 +2206,6 @@ debugger
   }
 
   unableDisableSchool() {
-    debugger;
     this.loadingIcon = true;
     this._schoolService.enableDisableSchool(this.school.schoolId).subscribe((response) => {
       const translatedInfoSummary = this.translateService.instant('Success');
@@ -2228,7 +2225,6 @@ debugger
   }
 
   openShareClassCourseModal(schoolName: string, name: string, type: number, description: string, image: string) {
-    debugger
     var initialState: any;
     if (type == 1) {
       initialState = {
@@ -2276,7 +2272,6 @@ debugger
   // }
 
   imageCropped(event: ImageCroppedEvent) {
-    debugger
     this.selectedImage = event.blob;
     this.croppedImage = this.domSanitizer.bypassSecurityTrustResourceUrl(
       event.objectUrl!
@@ -2297,7 +2292,6 @@ debugger
   }
 
   onFileChange(event: any): void {
-    debugger
     this.isSelected = true;
     this.imageChangedEvent = event;
     this.hiddenButtonRef.nativeElement.click();
@@ -2317,7 +2311,6 @@ debugger
   }
 
   changeCountryIsoCode(event: any) {
-    debugger
     var countryName = event.value;
     this.selectedCountryISO = CountryISO[countryName as keyof typeof CountryISO];
 
@@ -2332,13 +2325,11 @@ debugger
   }
 
   onPhoneNumberChange(value: any) {
-    debugger
     var phoneNumber = this.formatPhoneNumber(value.number);
     // this.propagateChange(this.phoneNumber);
   }
 
   formatPhoneNumber(value: string): string {
-    debugger
     if (!value) {
       return '';
     }
@@ -2370,12 +2361,10 @@ debugger
 
   postDivId: string = "";
   openDialouge(event: any, post: any) {
-    debugger;
     const parts = event.currentTarget.className.split(' ');
     this.postDivId = parts[3];
     if (post.postAttachments != undefined) {
       var postAttach = post.postAttachments[0];
-      debugger
       if (postAttach != undefined) {
         if (postAttach.fileType != 1) {
           if (this.postDivId != "") {
@@ -2426,13 +2415,11 @@ debugger
   }
 
   formatDescription(description: string): string {
-    debugger
     var result = description.replace(/\n/g, '<br/>');
     return result;
   }
 
   getDeletedPostId(id: string) {
-    debugger
     this.loadingIcon = true;
     this._postService.deletePost(id).subscribe((_response) => {
       this.loadingIcon = false;
@@ -2441,7 +2428,6 @@ debugger
   }
 
   openEditPostModal(post: any) {
-    debugger
     const initialState = {
       editPostId: post.id,
       from: post.postAuthorType == 1 ? "school" : post.postAuthorType == 2 ? "class" : post.postAuthorType == 3 ? "course" : post.postAuthorType == 4 ? "user" : undefined
@@ -2475,7 +2461,6 @@ debugger
   // }
 
   saveSchoolCertificates() {
-    debugger;
     this.isSubmitted = true;
     if (!this.schoolCertificateForm.valid) {
       return;
@@ -2510,7 +2495,6 @@ debugger
   uploadImageName: string = "";
   avatarImage!: any;
   handleSchoolCertificate(event: any) {
-    debugger
     this.certificateToUpload.append("certificateImage", event.target.files[0], event.target.files[0].name);
     this.uploadImageName = event.target.files[0].name;
     const reader = new FileReader();
@@ -2531,7 +2515,6 @@ debugger
   }
 
   saveSchoolCertificate() {
-    debugger
     this.isSubmitted = true;
     if (!this.schoolCertificateForm.valid) {
       return;
@@ -2562,7 +2545,6 @@ debugger
     // this.userCertificateForm.updateValueAndValidity();
 
     this._schoolService.saveSchoolCertificates(this.certificateToUpload).subscribe((response: any) => {
-      debugger
       this.closeCertificatesModal();
       this.isSubmitted = false;
       this.certificateToUpload = new FormData();
@@ -2587,7 +2569,6 @@ debugger
   }
 
   editSchoolCertificate(schoolCertificateInfo: any) {
-    debugger
     // dob = dob.substring(0, dob.indexOf('T'));     
 
     var issuedDate = schoolCertificateInfo.issuedDate.substring(0, schoolCertificateInfo.issuedDate.indexOf('T'));
@@ -2613,7 +2594,6 @@ debugger
   }
 
   openSchoolCertificate(certificateInfo: any) {
-    debugger
     this.certificateToUpload.set('certificateImage', '');
     this.schoolCertificateInfo = certificateInfo;
     this.openSchoolOwnCertificate.nativeElement.click();
@@ -2639,7 +2619,6 @@ debugger
 
   cancelSubscription(){
     this._iyizicoService.cancelSubscription(this.cancelSchoolSubscriptionId).subscribe((response: any) => {
-      debugger
       if(response.errorMessage == Constant.Success){
         var message = "Subscription cenceled successfully"
         this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: message });
@@ -2657,7 +2636,6 @@ debugger
 
   renewSubscription(){
     this._iyizicoService.renewSubscription(this.renewSchoolSubscriptionId).subscribe((response: any) => {
-      debugger
     });
   }
 
@@ -2718,10 +2696,8 @@ debugger
   userIsBanned:boolean=false;
   isUserBannedId:string='';
   checkIfUserIsBanned(){
-    debugger;
     this.loadingIcon = true
     this._userService.isUserBanned(this.userId, this.isUserBannedId, PostAuthorTypeEnum.School).subscribe((response)=>{
-      debugger;
       this.loadingIcon = false;
       if(response.data == true){
         this.userIsBanned = true;

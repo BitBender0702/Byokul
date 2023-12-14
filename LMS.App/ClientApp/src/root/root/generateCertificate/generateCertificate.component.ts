@@ -16,7 +16,7 @@ import { MultilingualComponent, changeLanguage } from '../sharedModule/Multiling
 export const generateCertificateResponse =new Subject<{isCertificateSendToAll: boolean,studentName:string}>(); 
 
 @Component({
-    selector: 'payment',
+    selector: 'generate-Certificate',
     templateUrl: './generateCertificate.component.html',
     styleUrls: ['./generateCertificate.component.css'],
     providers: [MessageService]

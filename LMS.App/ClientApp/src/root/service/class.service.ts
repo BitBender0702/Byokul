@@ -178,5 +178,9 @@ export class ClassService{
         return this.http.post(`${this.apiUrl}/class/joinFreeClass` + '?classId=' + classId,'',{headers: this.headers});
     }
 
+    getClassPopupDetails(classId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/class/getClassPopupDetails` + '?classId=' + classId,{headers: this.headers});
+    }
+
 
 }

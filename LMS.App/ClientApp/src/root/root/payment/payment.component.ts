@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { HtmlParser, Parser } from '@angular/compiler';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { TranslateService } from '@ngx-translate/core';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { MessageService } from 'primeng/api';
 import { Subject, Subscription, subscribeOn } from 'rxjs';
 import { IyizicoService } from 'src/root/service/iyizico.service';
@@ -41,69 +42,59 @@ export const paymentStatusResponse =new Subject<{ loadingIcon: boolean}>();
     subscriptionPlanId!: string;
     IsSaveCardCheckboxSelected: boolean = false;
     isUserAcceptByOkulAgreement: boolean = false;
+    isPaymentPopup: boolean = true;
+    deletedCardUserKey: string = "";
+    deletedCardToken: string = "";
     close3dsPopupSubscription!: Subscription;
     closeIyizicoWindowSubscription!: Subscription;
+    attachmentModalRef!: BsModalRef;
+    @Input() school:any;
+    @Output() childEvent = new EventEmitter<any>();
 
-    constructor(public messageService:MessageService,private http: HttpClient,private fb: FormBuilder,private bsModalService: BsModalService,public options: ModalOptions,paymentService:PaymentService, iyizicoService:IyizicoService, private cd: ChangeDetectorRef) {
+    constructor(public messageService:MessageService,private translateService: TranslateService,private http: HttpClient,private fb: FormBuilder,private bsModalService: BsModalService,public options: ModalOptions,paymentService:PaymentService, iyizicoService:IyizicoService, private cd: ChangeDetectorRef) {
       this._paymentService = paymentService;
       this._iyizicoService = iyizicoService;
     }
 
     ngOnInit(): void {
-      debugger
-      // this.openWindow();
+      var schoolss = this.school;
       this.parentInfo = this.options.initialState;
+      if(this.parentInfo == undefined){
+         this.isPaymentPopup = false;
+      }
+ 
+      if(this.school != undefined){
+        this.parentInfo = {
+          paymentDetails:{}
+        }
+        this.isPaymentPopup = false;
+        this.parentInfo.paymentDetails = this.school;
+      }
       this.isDataLoaded = true;
-
       this.currentDate = this.getCurrentDate();
       this.InitializePaymentForm();
-
       this._iyizicoService.getUserSavedCardsList().subscribe((response) => {
-        debugger
         this.userSavedCardsList = response;
         this.cd.detectChanges();
       });
      
       if(this.parentInfo.paymentDetails.type == 1){
         this._iyizicoService.getSubscriptionPlans().subscribe((response) => {
-          debugger
           this.subscriptionPlans = response;
         }); 
       }
       else{
         this.closeIyizicoWindowSubscription = closeIyizicoThreeDAuthWindow.subscribe((response:any) => {
-          debugger
           this.paymentConfirmationWindow?.close();
         });
       }
 
-      // this._paymentService.stripeWebhook().subscribe((response: any) => {
-  
-      //  });
-
-      // this._paymentService.webhookSubject.asObservable().subscribe(response => {
-      //   // Handle the webhook response here
-      // });
-
-      // this.http.post('https://66c8-122-160-143-16.ngrok-free.app/stripe/webhook', {}).subscribe(
-      //   (response) => {
-      //     console.log(response);
-      //     // Handle success response
-      //   },
-      //   (error) => {
-      //     console.error(error);
-      //     // Handle error response
-      //   }
-      // );
-
       if (!this.close3dsPopupSubscription) {
         this.close3dsPopupSubscription = close3dsPopup.subscribe(response => {
-          debugger
          this.loadingIcon = true;
          this.paymentConfirmationWindow?.close();
         });
       }
-
     }
 
     InitializePaymentForm(){
@@ -113,35 +104,28 @@ export const paymentStatusResponse =new Subject<{ loadingIcon: boolean}>();
             expiresOn: this.fb.control('',[Validators.required, Validators.minLength(4)]),
             securityCode: this.fb.control('',[Validators.required]),
             cardHolderName: this.fb.control('',[Validators.required]),
-            // firstName: this.fb.control('',[Validators.required]),
-            // lastName: this.fb.control('',[Validators.required]),
             parentId: this.fb.control(this.parentInfo.paymentDetails.id),
             parentName: this.fb.control(this.parentInfo.paymentDetails.name),
             parentType: this.fb.control(this.parentInfo.paymentDetails.type),
             amount: this.fb.control(this.parentInfo.paymentDetails.amount),
-            currency: this.fb.control(this.parentInfo.paymentDetails.currency)
+            currency: this.fb.control(this.parentInfo.paymentDetails.currency),
           }
           , {validator: this.isValidExpiresOn('expiresOn',this.currentDate)}
           );
     }
 
-    
     isValidExpiresOn(expiresOn: string, currentDate:string){
       return (group: FormGroup): {[key: string]: any} => {
         let monthYear = group.controls[expiresOn].value;
         if(monthYear.length == 5){
           const yearIndex = monthYear.indexOf('-');
           const year = monthYear.substring(yearIndex + 1);
-
           const currentYearIndex = currentDate.indexOf('-');
           const currentYear = currentDate.substring(currentYearIndex + 1);
-
           const monthIndex = monthYear.indexOf('-');
           const month = monthYear.substring(0, monthIndex);
-
           const currentMonthIndex = currentDate.indexOf('-');
           const currentMonth = currentDate.substring(0, currentMonthIndex);
-          
           if(year < currentYear || (year == currentYear && month < currentMonth) || month > 12){
             return { dates: `Please enter valid expiresOn`};
           }
@@ -177,7 +161,6 @@ export const paymentStatusResponse =new Subject<{ loadingIcon: boolean}>();
 
 
 // openWindow() {
-//   debugger
 //   // window.open(this.winUrl);
 //   //window.open(this.winUrl, "", "width=200,height=100");
 
@@ -188,16 +171,24 @@ export const paymentStatusResponse =new Subject<{ loadingIcon: boolean}>();
 // }
 
     addPayment(){
-      debugger
+      // this.subscriptionPlanId
       this.paymentViewModel = {};
       this.isSubmitted=true;
       if(!this.isUserAcceptByOkulAgreement){
         return;
       }
 
+      if(this.cardUserKey == undefined && !this.isShowCardDetailsForm){
+        return;
+      }
+
+      if(this.subscriptionPlanId == undefined && this.subscriptionPlans != undefined){
+        return;
+      }
+
       if(this.isShowCardDetailsForm){
         if(!this.paymentForm.valid){
-
+          return;
         }
         var paymentDetails =this.paymentForm.value;
         this.paymentViewModel.cardNumber = paymentDetails.cardNumber;
@@ -247,7 +238,8 @@ export const paymentStatusResponse =new Subject<{ loadingIcon: boolean}>();
     }
 
     closeModal(){
-      this.bsModalService.hide(this.bsModalService.config.id);
+      // this.attachmentModalRef.hide();
+      this.bsModalService.hide();
     }
 
     formatCardNumber(event:any) {
@@ -284,14 +276,12 @@ export const paymentStatusResponse =new Subject<{ loadingIcon: boolean}>();
       }
 
       getSavedCardInfo(cardUserKey:string, cardToken:string){
-        debugger
         this.isShowCardDetailsForm = false;
         this.cardUserKey = cardUserKey;
         this.cardToken = cardToken;
       }
 
       showCardDetailsForm(){
-        debugger
         this.isShowCardDetailsForm = true;
         this.cd.detectChanges();
       }
@@ -305,13 +295,43 @@ export const paymentStatusResponse =new Subject<{ loadingIcon: boolean}>();
       }
 
       byOkulAgreement(){
-        debugger
         this.isUserAcceptByOkulAgreement = !this.isUserAcceptByOkulAgreement;
       }
 
       getSchoolSubscriptionPlanId(subscriptionPlanId:string, amount:number){
-        debugger
         this.subscriptionPlanId = subscriptionPlanId;
         this.parentInfo.paymentDetails.amount = amount;
+      }
+
+      sendDataToParent() {
+        this.childEvent.emit("back step");
+      }
+
+      removeCard(){
+        this._paymentService.removeCard(encodeURIComponent(this.deletedCardUserKey),encodeURIComponent(this.deletedCardToken)).subscribe((response: any) => {
+          this.closeRemoveCardModal();
+          if(response.success){
+            this.userSavedCardsList = this.userSavedCardsList.data.filter((x: { cardUserKey: string; }) => x.cardUserKey !== this.deletedCardUserKey);
+            const translatedSummary = this.translateService.instant('Success');
+            const translatedMessage = this.translateService.instant('CardRemovedSuccessfully');
+            this.messageService.add({ severity: 'success', summary: translatedSummary, life: 6000, detail: translatedMessage });
+          }
+          else{
+            const translatedSummary = this.translateService.instant('Error');
+            const translatedMessage = this.translateService.instant('CardDetailsInvalid');
+            this.messageService.add({ severity: 'error', summary: translatedSummary, life: 6000, detail: translatedMessage });
+          }
+          
+        });
+      }
+
+      removeCardPopupOpen(template: TemplateRef<any>, cardUserKey:string, cardToken:string) {
+        this.attachmentModalRef = this.bsModalService.show(template);
+        this.deletedCardUserKey = cardUserKey;
+        this.deletedCardToken = cardToken;
+      }
+
+      closeRemoveCardModal(){
+        this.attachmentModalRef.hide();
       }
 }

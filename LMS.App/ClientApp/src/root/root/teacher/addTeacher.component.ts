@@ -216,13 +216,11 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
     }  
 
         this._teacherService.addTeacher(this.addTeacherViewmodel).subscribe((result) => {
-            debugger
             this.router.navigateByUrl(`user/userProfile/${this.loginUserId}`);
             var notificationContent = "has added you as Teacher."
             console.log(notificationContent)
             var postId = '00000000-0000-0000-0000-000000000000';
             this.initializeNotificationViewModel(this.existingUserId, NotificationType.TeacherAdded, notificationContent, postId);
-            debugger;
             addTeacherResponse.next({isEdit:true}); 
             this._signalrService.addTeacher(result);
         });
@@ -359,7 +357,6 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
     //  }
 
     omit_special_char(event: any) {
-        debugger
         const regex = /[\p{L}\p{M}\s]/u;
         if (event.key && event.key.match(regex)) {
             return true;
@@ -370,7 +367,6 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
 
     
   initializeNotificationViewModel(userid: string, notificationType: NotificationType, notificationContent: string, postId: string, postType?: number, post?: any) {
-    debugger
     this._userService.getUser(this.loginUserId).subscribe((response) => {
       this.notificationViewModel = {
         id: '00000000-0000-0000-0000-000000000000',
@@ -385,7 +381,6 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
         post: post,
         followersIds: null
       }
-      debugger;
       this._signalrService.sendNotification(this.notificationViewModel);
     });
   }

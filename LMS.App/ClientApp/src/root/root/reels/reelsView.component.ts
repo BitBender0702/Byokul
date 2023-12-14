@@ -98,9 +98,7 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this._reelsService.getReelById(this.attachmentId).subscribe((response) => {
-      debugger
       this.reels = response;
-      debugger
       if (this.reels.post.postAuthorType == 2 || this.reels.post.postAuthorType == 3) {
 
         const byteArray = new Uint8Array(atob(this.reels.byteArray).split('').map(char => char.charCodeAt(0)));
@@ -113,7 +111,6 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
         const blob = new Blob([byteArray], { type: type });
         const reader = new FileReader();
         reader.onloadend = () => {
-          debugger
           this.reels.fileUrl = reader.result as string;
           this.initializeVideoPlayer();
           this.cd.detectChanges();
@@ -171,7 +168,6 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
     commentDeleteResponse.subscribe(response =>{
-      debugger;
       let indexOfComment = this.reels.post.comments.findIndex((x:any) => x.id == response.commentId)
       this.reels.post.comments.splice(indexOfComment, 1)
     })
@@ -190,7 +186,6 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   initializeVideoPlayer() {
-    debugger
     this.cd.detectChanges();
     const player = videojs(this.videoPlayer.nativeElement, {
       autoplay: true, controls: false, plugins: {
@@ -267,7 +262,6 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getLoginUserId() {
-    debugger
     var validToken = localStorage.getItem("jwt");
     if (validToken != null) {
       let jwtData = validToken.split('.')[1]
@@ -278,11 +272,9 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   savePreferences(title: string, description: string, postTags: any) {
-    debugger
     var tagString = '';
     if (postTags != null) {
       postTags.forEach(function (item: any) {
-        debugger
         tagString = tagString + item.postTagValue
       });
     }
@@ -324,7 +316,6 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
         var translatedMessage = this.translateService.instant('commented your reel');
       var notificationContent = translatedMessage;
       this._notificationService.initializeNotificationViewModel(this.reels.post.createdBy, NotificationType.CommentSent, notificationContent, this.sender.id, this.reels.post.id, this.reels.post.postType,null,this.reels.id).subscribe((response) => {
-        debugger;
       });
     }
     });
@@ -446,7 +437,6 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.signalRService.notifyCommentLike(this.commentLikeUnlike);
     if(isCommentLiked.user.id != this.sender.id && this.commentLikeUnlike.isLike){
-      debugger
       var translatedMessage = this.translateService.instant('liked your comment');
       var notificationContent = translatedMessage;
       this._notificationService.initializeNotificationViewModel(isCommentLiked.user.id, NotificationType.CommentSent, notificationContent, this.sender.id, this.reels.post.id, this.reels.post.postType, null, null).subscribe((response) => {
@@ -567,7 +557,6 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
   getDeletedPostId(id: string) {
     this.loadingIcon = true;
     this._postService.deletePost(id).subscribe((response) => {
-      debugger
       this.close();
       this.loadingIcon = false;
       deleteReelResponse.next({ postId: id });
@@ -580,7 +569,6 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   deleteComment(item:any){
-    debugger;
     // this.initializeCommentLikeUnlike();
     // this.commentLikeUnlike.userId = item.userId;
     // this.commentLikeUnlike.commentId = item.id;

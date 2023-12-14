@@ -81,7 +81,6 @@ export class ResetPasswordComponent extends MultilingualComponent implements OnI
     }
 
     resetPassword(){
-      debugger
       this.isSubmitted = true;
       if (!this.resetPasswordForm.valid) {
         return;}
@@ -94,14 +93,13 @@ export class ResetPasswordComponent extends MultilingualComponent implements OnI
       this.user.passwordResetToken = this.route.snapshot.paramMap.get('id');
       this._authService.resetPassword(this.user).subscribe({ 
                 next: (response) => {
-                  debugger
-                  if(response.token == "reset token expired"){
+                  if(response.message == "reset token expired"){
                     this.resetPasswordForm.setErrors({ tokenExpire: true });
                     this.loadingIcon = false;
-                  } else if(response.token == "Object reference not set to an instance of an object."){
+                  } else if(response.message == "Object reference not set to an instance of an object."){
                     this.resetPasswordForm.setErrors({ resetPasswordLinkExpired: true });
                     this.loadingIcon = false;
-                  } else if(response.token == "New Password and confirm password did not match"){
+                  } else if(response.message == "New Password and confirm password did not match"){
                     this.resetPasswordForm.setErrors({passwordMismatch: true});
                     this.loadingIcon = false;
                   }

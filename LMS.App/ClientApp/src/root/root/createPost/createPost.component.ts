@@ -184,7 +184,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   forPost: boolean = false
   noLive:boolean=true
   ngOnInit(): void {
-    debugger
     this.isOwnerOrNot();
     var initialValue = this.options.initialState;
     if(initialValue?.from == "user"){
@@ -194,7 +193,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
     if (this.editPostId != undefined) {
       this._postService.getPostById(this.editPostId).subscribe((response) => {
-        debugger
         this.editPostDetails = response;
         this.isEditPost = true;
         // if(this.editPostDetails?.postType == 1){
@@ -240,7 +238,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         }
 
         if (this.selectedVideoFromLibrary != undefined) {
-          debugger
           this.isVideoUpload = true;
           this.videoObject.videoUrl = this.selectedVideoFromLibrary.fileThumbnail;
           this.videoObject.name = this.selectedVideoFromLibrary.fileName;
@@ -262,7 +259,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
           this.profileShared(shareProfileData, response.avatar)
         }
         if (this.selectedVideoFromLibrary != undefined) {
-          debugger
           this.isVideoUpload = true;
           this.videoObject.videoUrl = this.selectedVideoFromLibrary.fileThumbnail;
           this.videoObject.name = this.selectedVideoFromLibrary.fileName;
@@ -275,7 +271,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     if (initialValue?.from == "user") {
       this.userId = initialValue.userId;
       this._postService.getUser(this.userId).subscribe((response) => {
-        debugger
         this.parentDetails = response;
 
       });
@@ -347,10 +342,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     });
 
     createReel.subscribe(postResponse => {
-      debugger
       this.postToUpload.append('blobUrlsJson', JSON.stringify(postResponse.uploadVideoUrlList));
       this._postService.createPost(this.postToUpload).subscribe((response: any) => {
-        debugger
         this.isSubmitted = false;
         this.loadingIcon = false;
         this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Reel created successfully' });
@@ -367,10 +360,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     });
 
     createLive.subscribe(postResponse => {
-      debugger
       this.postToUpload.append('blobUrlsJson', JSON.stringify(postResponse.uploadVideoUrlList));
       this._postService.createPost(this.postToUpload).subscribe((response: any) => {
-        debugger
         this.isSubmitted = false;
         this.loadingIcon = false;
         //addPostResponse.next({response});
@@ -396,14 +387,12 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
 
     createPost.subscribe(postResponse => {
-      debugger
       this.close();
       this.isSubmitted = false;
       this.loadingIcon = false;
       // this.postToUpload.append('blobUrlsJson', JSON.stringify(postResponse.uploadVideoUrlList));
       // if(postResponse.type == 1 ){
       // this._postService.createPost(this.postToUpload).subscribe((response:any) => {
-      //   debugger
       //   this.close();
       //   this.onClose.emit(response);
       //   this.isSubmitted=false;
@@ -423,10 +412,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
 
     // this.createReelSubscription = createReels.subscribe(postResponse => {
-    //   debugger
     //   // this.postToUpload.append('blobUrlsJson', JSON.stringify(postResponse.uploadVideoUrlList));
     //   // this._postService.createPost(this.postToUpload).subscribe((response:any) => {
-    //   //   debugger
     //   //   this.isSubmitted=false;
     //   //   this.loadingIcon = false;
     //   //   this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel created successfully'});
@@ -502,7 +489,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.editPostDetails.postAttachments
       .filter((attachment: { fileType: number; }) => attachment.fileType === 1)
       .forEach((attachment: { fileUrl: any; fileName: any; }) => {
-        debugger
         const imageObject = {
           imageUrl: attachment.fileUrl,
           name: attachment.fileName
@@ -522,7 +508,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.editPostDetails.postAttachments
       .filter((attachment: { fileType: number; }) => attachment.fileType === 2)
       .forEach((attachment: { fileThumbnail: any; fileName: any; fileUrl: any }) => {
-        debugger
         const imageObject = {
           videoUrl: attachment.fileThumbnail,
           name: attachment.fileName
@@ -542,7 +527,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.editPostDetails.postAttachments
       .filter((attachment: { fileType: number; }) => attachment.fileType === 3)
       .forEach((attachment: { fileUrl: any; fileName: any; }) => {
-        debugger
         const imageObject = {
           name: attachment.fileName
         };
@@ -567,7 +551,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    debugger;
     if (this.createPostSubscription) {
       this.createPostSubscription.unsubscribe();
     }
@@ -603,7 +586,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   isVideoSelected:boolean = false;
   noOfSelectedImagesExceeds:boolean = false;
   handleImageInput(event: any) {
-    debugger;
     if(this.images.length  >= 15){
       var translatedMessage = this.translateService.instant('NoOfSelectedImagesExceeds');
       var translateSummery = this.translateService.instant('Info');
@@ -629,7 +611,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     }
     var selectedFiles = event.target.files;
     for (let i = 0; i < selectedFiles.length; i++) {
-      debugger;
       const originalFile = selectedFiles[i];
       const alteredName = originalFile.name + `_index${this.postIndexing}`;
       const newFile = new File([originalFile], alteredName, { type: originalFile.type });
@@ -638,7 +619,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       const reader = new FileReader();
       reader.onload = ((fileIndex) => {
         return () => {
-          debugger
           const imageUrl = reader.result?.toString();
           const imageName = newFile.name;
           const imageObject = { imageUrl, name: imageName };
@@ -694,7 +674,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   numberOfVideo: number = 0;
   numberOfImages: number = 0
   handleVideoInput2(file: any) {
-    debugger
     if (this.numberOfVideo >= 2) {
       // this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Only 1 video per post is allowed' });
       return;
@@ -707,7 +686,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     // this.videos.push(file);
     const videoUrl = URL.createObjectURL(newFile);
     this.getVideoThumbnail(videoUrl, newFile.name, (thumbnailUrl) => {
-      debugger
       this.videoObject.videoUrl = thumbnailUrl;
       this.videoObject.name = newFile.name;
       this.videoObject.type = newFile.type;
@@ -723,7 +701,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
 
   removeUploadImage(image: any) {
-    debugger
     var noOfImages = this.images.length;
     if(noOfImages == 1){
      this.isVideoSelected = false;
@@ -778,7 +755,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     }
     var selectedFiles = event.target.files;
     for (let i = 0; i < selectedFiles.length; i++) {
-      debugger;
       const originalFile = selectedFiles[i];
       const alteredName = originalFile.name + `_index${this.postIndexing}`;
       const newFile = new File([originalFile], alteredName, { type: originalFile.type });
@@ -788,7 +764,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       this.postIndexing++;
       const videoUrl = URL.createObjectURL(newFile);
       this.getVideoThumbnail(videoUrl, newFile.name, (thumbnailUrl) => {
-        debugger
         this.videoObject.videoUrl = thumbnailUrl;
         this.videoObject.name = newFile.name;
         this.videoObject.type = newFile.type;
@@ -903,7 +878,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   handleAttachmentInput2(file: any) {
-    debugger
     this.attachment.push(file);
   }
 
@@ -957,7 +931,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   handleReels(event: any) {
-    debugger
     // this.postToUpload.append('uploadVideos', event.target.files[0]);
     this.reel = event.target.files[0];
     const videoUrl = URL.createObjectURL(this.reel);
@@ -977,7 +950,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     videoElement.src = videoUrl;
 
     videoElement.addEventListener('loadedmetadata', () => {
-      debugger
       if (videoElement.duration > 180) {
         this.isVideoDurationExceed = true;
         // Video duration is greater than 3 minutes
@@ -1012,8 +984,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   blobVideoThumbnails: any[] = [];
   totalUploadFilesSize:number = 0;
   async savePost() {
-    debugger
-
     if (this.userId == undefined) {
       this.createPostForm.get('title')?.setValidators([Validators.required]);
     } else {
@@ -1033,7 +1003,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         return;
       }
       else {
-        debugger
         const date = new Date(this.scheduleTime);
         this.postToUpload.append('dateTime', date.toISOString());
         console.log(date.toISOString());
@@ -1051,7 +1020,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     else {
       this.loadingIcon = true;
       setTimeout(() => {
-        debugger
         this.close();
         this.loadingIcon = false;
         postProgressNotification.next({ from: Constant.Post });
@@ -1075,9 +1043,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     // for(var i=0; i<this.images.length; i++){
     //   this.postToUpload.append('uploadImages', this.images[i]);
     // }
-
-    debugger;
-
     // const uploadPromises = combinedFiles.map((file) => {
     //   if (this.videos.includes(file)) {
     //     return this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
@@ -1098,7 +1063,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
 
     // for (let i = 0; i < this.uploadVideoUrlList.length; i++) {
-    //   debugger
     //   const uploadVideo = this.uploadVideoUrlList[i];
 
     //   for (const blobVideo of this.blobVideoThumbnails) {
@@ -1154,7 +1118,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     postUploadOnBlob.next({ postToUpload: this.postToUpload, combineFiles: combinedFiles, videos: this.videos, images: this.images, attachment: this.attachment, type: 1, reel: null, uploadedUrls: this.uploadVideoUrlList, videoThumbnails: this.videoThumbnails, checkLimitSchoolId: this.postCheckForLimitSchoolId });
 
     // this._postService.createPost(this.postToUpload).subscribe((response:any) => {
-    //   debugger
     //   this.close();
     //   this.onClose.emit(response);
     //   this.isSubmitted=false;
@@ -1173,7 +1136,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   postCheckForLimitSchoolId: any;
   postFrom() {
-    debugger
     if (this.profileShare) {
       this.appendData(this.loginUserId, this.loginUserId, this.loginUserId, PostAuthorTypeEnum.User.toString());
     }
@@ -1206,7 +1168,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   appendData(authorId: string, parentId: string, ownerId: string, postAuthorType: string) {
     // this.postToUpload.append('authorId', authorId);
-    debugger
     this.postToUpload.append('parentId', parentId);
     // this.postToUpload.append('ownerId', ownerId);
     this.postToUpload.append('postAuthorType', postAuthorType);
@@ -1215,7 +1176,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   async saveReels() {
-    debugger
+    
     // this.uploadVideoUrlList = [];
     this.isSubmitted = true;
     this.isShowingProgressBar = true;
@@ -1270,7 +1231,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     // reelUploadOnBlob.next({postToUpload:this.postToUpload,reel:this.reel});
     postUploadOnBlob.next({ postToUpload: this.postToUpload, combineFiles: combinedFiles, videos: this.videos, images: null, attachment: null, type: 2, reel: this.reel, uploadedUrls: this.uploadVideoUrlList, videoThumbnails: this.videoThumbnails, checkLimitSchoolId: this.postCheckForLimitSchoolId });
     // this._postService.createPost(this.postToUpload).subscribe((response:any) => {
-    //   debugger
     //   this.isSubmitted=false;
     //   this.loadingIcon = false;
     //   this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel created successfully'});
@@ -1434,7 +1394,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   initialReelVideos:any [] = [];
   reelsTab() {
-    debugger
     this.totalFilesLength = 0;
     // if(this.videos.length != 0 && this.isPostTabOpen){
     //   this.initialPostVideos = this.videos;
@@ -1455,7 +1414,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   initialPostVideos:any [] = [];
   isPostTabOpen:boolean = false;
   postTab() {
-    debugger
     // if(this.videos.length != 0 && this.isOpenReelsTab){
     //   this.initialReelVideos = this.videos;
     //   this.videos = [...this.videos,...this.initialPostVideos];
@@ -1509,7 +1467,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   liveStream() {
-    debugger
     this.uploadVideoUrlList = [];
     this.isSubmitted = true;
 
@@ -1606,7 +1563,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       this.saveLiveStream(this.selectedVideoFromLibrary);
     }
     //   this._postService.createPost(this.postToUpload).subscribe((response:any) => {
-    //     debugger
     //     this.isSubmitted=false;
     //     this.loadingIcon = false;
     //     //addPostResponse.next({response});
@@ -1638,7 +1594,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   saveLiveStream(selectedVideoFromLibrary: any) {
-    debugger
     var prefix = "videos";
     const id = uuidv4();
     const blobName = `${prefix}/${id.toString()}${selectedVideoFromLibrary.fileName.substring(selectedVideoFromLibrary.fileName.lastIndexOf('.'))}`;
@@ -1656,7 +1611,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.postToUpload.set('blobUrlsJson', JSON.stringify(uploadVideo));
 
     this._postService.createPost(this.postToUpload).subscribe((response: any) => {
-      debugger
       this.isSubmitted = false;
       this.loadingIcon = false;
       //addPostResponse.next({response});
@@ -1719,7 +1673,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     var videoFiles = [];
     this.numberOfImages = this.images.length;
     this.numberOfVideo = this.videos.length;
-    debugger;
     if (files) {
      
       
@@ -1816,9 +1769,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   uploadVideoUrlList: any[] = [];
 
   public async uploadVideosOnBlob(file: File, fileType: number) {
-    debugger
-
-    // Replace with your SAS token or connection string
     const sasToken = Constant.SASToken;
     var prefix = "attachments";
     if (fileType == UploadTypeEnum.Image)
@@ -1834,7 +1784,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
     await this.uploadBlobTest(file, blobName, containerClient)
       .then((response) => {
-        debugger
         var uploadVideoObject =
         {
           id: id,
@@ -1858,7 +1807,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   private async uploadBlobTest(content: Blob, name: string, client: ContainerClient) {
-    debugger
     try {
       let blockBlobClient = client.getBlockBlobClient(name);
       // blockBlobClient.uploadData(content, { blobHTTPHeaders: { blobContentType: content.type } })
@@ -1878,7 +1826,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   characterCount: number = 0;
   updateCharacterCount() {
-    debugger
     const titleControl = this.createPostForm.get('title');
     if (titleControl?.value.length > 45) {
       titleControl?.setValue(titleControl.value.slice(0, 45));
@@ -1888,7 +1835,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
 
   profileShared(initialValue: any, thumbnailUrl: any) {
-    debugger
     this.createPostForm = this.fb.group({
       title: this.fb.control(initialValue?.title, [Validators.required]),
       bodyText: this.fb.control(initialValue?.bodyTest, [Validators.required]),
@@ -1923,7 +1869,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
 
   initializeEditReelForm(thumbnailUrl?: any) {
-    debugger
     this.isOpenReelsTab = true;
     this.createReelForm = this.fb.group({
       title: this.fb.control(this.editPostDetails.title, [Validators.required]),

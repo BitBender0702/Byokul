@@ -242,7 +242,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
   isUserBannedId: string = '';
   ngOnInit(): void {
-    debugger
     this.checkScreenSize();
     if (this.isScreenMobile) {
       this.itemsPerSlide = 2;
@@ -266,7 +265,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     this.isUserBannedId = id ?? "";
 
     this._userService.getUserById(this.userId).subscribe((response) => {
-      debugger
       this.frontEndPageNumber = 1;
       this.reelsPageNumber = 1;
       this.user = response;
@@ -299,7 +297,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     //   this._userService.getUserBannedFollowers(this.userId,1,this.searchString).subscribe(response => {
     //     this.userBannedFollowers = response.data;
     //     // this.followersTab = false;
-    //     // debugger
     //   })
     // }
 
@@ -343,7 +340,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
     if (!this.addPostSubscription) {
       this.addPostSubscription = addPostResponse.subscribe((postResponse: any) => {
-        debugger
         // this.loadingIcon = true;
         // if(postResponse.response.postType == 1){
         //   var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
@@ -357,7 +353,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
         // const translatedSummary = this.translateService.instant('Success');
         // this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
         this._userService.getUserById(this.userId).subscribe((response) => {
-          debugger
           this.user = response;
           this.titleService.setTitle(this.user.firstName + " " + this.user.lastName);
           this.addDescriptionMetaTag(this.user.description);
@@ -495,7 +490,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
     if (!this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-        debugger
         this.hamburgerCount = response.hamburgerCount;
       });
     }
@@ -535,7 +529,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
     const buttons = document.querySelectorAll(".videoChange");
     buttons.forEach(button => {
-      debugger;
       button.addEventListener("click", () => {
         let VideoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
         VideoElement.pause();
@@ -568,7 +561,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       return;
     }
     this._userService.getPostsByUserId(this.userId, this.frontEndPageNumber).subscribe((response) => {
-      debugger;
       var result = this.getFilteredAttachments(response);
       this.user.posts = [...this.user.posts, ...result];
       this.postLoadingIcon = false;
@@ -667,7 +659,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
   getNextSavedPosts() {
     this._postService.getSavedPostsByUser(this.userId, this.savedPostsPageNumber, 1).subscribe((response) => {
-      debugger;
       if(response.length > 0){
         this.savedPostsList = [...this.savedPostsList, ...response];
       }
@@ -714,7 +705,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     if (this.carousel != undefined) {
       if ($('carousel')[0].querySelectorAll('a.carousel-control-next')[0]) {
         $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
-          debugger
           this.reelsPageNumber++;
           if (this.reelsPageNumber == 2) {
             this.reelsLoadingIcon = true;
@@ -728,7 +718,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
           if (this.isSavedPostTab) {
             this._postService.getSavedPostsByUser(this.user.id, this.reelsPageNumber, 3).subscribe((response) => {
-              debugger;
               this.savedReelsList = [...this.savedReelsList, ...response];
               this.reelsLoadingIcon = false;
             });
@@ -778,7 +767,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   isOwnerOrNot() {
-    debugger
     var validToken = localStorage.getItem("jwt");
     if (validToken != null) {
       let jwtData = validToken.split('.')[1]
@@ -799,7 +787,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
 
         this._userService.isFollowerBan(this.loginUserId, this.user.id).subscribe((response: any) => {
-          debugger
           // this.isBanFollower = response.
         });
         this.isFollowedOwnerOrNot(decodedJwtData.jti);
@@ -875,7 +862,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   followUser(userId: string, from: string) {
-    debugger;
     if (this.validToken == '') {
       window.open('user/auth/login', '_blank');
     }
@@ -929,7 +915,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   initializeEditFormControls() {
-    debugger
     this.uploadImage = '';
     this.imageFile.nativeElement.value = "";
     this.fileToUpload.set('avatarImage', '');
@@ -954,7 +939,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     });
 
     this._userService.getCountryList().subscribe((response) => {
-      debugger
       this.countries = response;
       this._userService.getStateList(this.user.countryName).subscribe((response) => {
         this.states = response;
@@ -1002,7 +986,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   updateUser() {
-    debugger
     this.isSubmitted = true;
     if (!this.editUserForm.valid) {
       return;
@@ -1030,7 +1013,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     // this.user.countryName = this.updateUserDetails.country;
     // this.user.cityName = this.updateUserDetails.city;
     this._userService.editUser(this.fileToUpload).subscribe((response: any) => {
-      debugger
       this.closeModal();
       this.isSubmitted = true;
       this.user.avatar = response.avatar;
@@ -1063,7 +1045,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   //   return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32) && !(k >= 48 && k <= 57);
   // }
   omit_special_char(event: any) {
-    debugger
     const regex = /[\p{L}\p{M}\s]/u;
     if (event.key && event.key.match(regex)) {
       return true;
@@ -1228,7 +1209,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   openReelsViewModal(postAttachmentId: string, postId: string): void {
-    debugger
     const screenWidthThreshold = 768;
     const isMobileOrTab = window.innerWidth < screenWidthThreshold;
     // if (isMobileOrTab) {
@@ -1243,7 +1223,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
 
     if(this.isPostTab){
-      debugger;
       this.router.navigate(
         [`user/reelsView/${this.user.id}/user/${postAttachmentId}/${postId}`],
         { state: { post: { postId: postId } } });
@@ -1303,7 +1282,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
         this.isLiked = true;
         this.likesLength = item.likes.length + 1;
         item.isPostLikedByCurrentUser = true;
-        debugger
         if (post.createdBy != this.loginUserId) {
           var notificationType = NotificationType.Likes;
           var notificationContent = "liked your post";
@@ -1343,12 +1321,10 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   showPostDiv(post: any) {
-    debugger
     $('.imgDisplay').attr("style", "display:none;")
     $('.' + post.id).prevAll('.imgDisplay').first().attr("style", "display:block;");
     // if(post.postAttachments != undefined){
     //   var postAttach = post.postAttachments[0];
-    //   debugger
     //   if(postAttach != undefined){
     //     if(postAttach.fileType != 1){
     //         try{
@@ -1515,7 +1491,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   GetSavedPostsByUser(userId: string, isSavedPostList?: boolean) {
-    debugger
     this.loadingIcon = true;
     this.isPostTab = false;
     this.isSavedClassCourseTab = false;
@@ -1531,7 +1506,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     this.savedPostsPageNumber = 1;
     this.reelsPageNumber = 1;
     this._postService.getSavedPostsByUser(userId, this.savedPostsPageNumber, 1).subscribe((response) => {
-      debugger
       this.savedPostsList = response;
       const allAttachments = this.savedPostsList.flatMap((x: { postAttachments: any; }) => x.postAttachments);
       this.filteredSavedPostAttachments = allAttachments.filter((x: { fileType: number; }) => x.fileType == 3);
@@ -1543,7 +1517,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     });
 
     this._postService.getSavedPostsByUser(userId, this.savedPostsPageNumber, 3).subscribe((response) => {
-      debugger
       this.savedReelsList = response;
       this.cd.detectChanges();
       this.addEventListnerOnCarousel();
@@ -1848,7 +1821,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   // getFilteredAttachments(feeds: any): any {
-  //   debugger
   //   const allAttachments = feeds.flatMap((post: { postAttachments: any; }) => post.postAttachments);
   //   var result = allAttachments.filter((attachment: { fileType: number; }) => attachment.fileType === 3);
   //   this.filteredAttachments = [...this.filteredAttachments, ...result];
@@ -1861,7 +1833,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
 
   getFilteredAttachments(feeds: any): any {
-    debugger;
     const allAttachments = feeds.flatMap((post: { postAttachments: any[]; }) => post.postAttachments);
     this.filteredAttachments = allAttachments.filter((attachment: { fileType: number; }) => attachment.fileType === 3);
     let result = allAttachments.filter((attachment: { fileType: number; fileName: string; }) => {
@@ -1885,7 +1856,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
 
   removeLogo() {
-    debugger;
     if (this.user.avatar != null) {
       this.userAvatar = '';
     }
@@ -1929,17 +1899,13 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   getStateByCountry(event: any) {
-    debugger
     var countryName = event.value;
     this._userService.getStateList(countryName).subscribe((response) => {
-      debugger
       this.states = response;
-      // this.editUserForm.get('city')?.setValue('');
     });
   }
 
   imageCropped(event: ImageCroppedEvent) {
-    debugger
     this.selectedImage = event.blob;
     this.croppedImage = this.domSanitizer.bypassSecurityTrustResourceUrl(
       event.objectUrl!
@@ -1960,7 +1926,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   onFileChange(event: any): void {
-    debugger
     this.isSelected = true;
     this.imageChangedEvent = event;
     this.hiddenButtonRef.nativeElement.click();
@@ -1975,18 +1940,15 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   applyCropimage() {
-    debugger
     this.uploadImage = this.croppedImage;
     this.cropModalRef.hide();
   }
 
   getDeletedCertificate(deletedCertificate: string) {
-    debugger
     this.deleteCertificate.certificateId = deletedCertificate;
   }
 
   resetCertificateModal() {
-    debugger
     this.isSubmitted = false;
     this.userCertificate.certificates = [];
     this.uploadImageName = "";
@@ -2098,12 +2060,10 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
   postDivId: string = "";
   openDialouge(event: any, post: any) {
-    debugger;
     const parts = event.currentTarget.className.split(' ');
     this.postDivId = parts[3];
     if (post.postAttachments != undefined) {
       var postAttach = post.postAttachments[0];
-      debugger
       if (postAttach != undefined) {
         if (postAttach.fileType != 1) {
           if (this.postDivId != "") {
@@ -2150,7 +2110,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   uploadImageName: string = "";
   avatarImage!: any;
   handleUserCertificate(event: any) {
-    debugger
     this.certificateToUpload.append("certificateImage", event.target.files[0], event.target.files[0].name);
     this.uploadImageName = event.target.files[0].name;
     const reader = new FileReader();
@@ -2190,7 +2149,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   saveUsercertificcate() {
-    debugger
     this.isSubmitted = true;
     if (!this.userCertificateForm.valid) {
       return;
@@ -2220,7 +2178,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     // this.userCertificateForm.updateValueAndValidity();
 
     this._userService.saveUserCertificates(this.certificateToUpload).subscribe((response: any) => {
-      debugger
       this.closeCertificatesModal();
       this.isSubmitted = false;
       this.certificateToUpload = new FormData();
@@ -2246,7 +2203,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   openUserOwnCertificateModal(certificateInfo: any) {
-    debugger
     this.certificateToUpload.set('certificateImage', '');
     this.userCertificateInfo = certificateInfo;
     this.openUserOwnCertificate.nativeElement.click();
@@ -2255,7 +2211,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   editUserCertificate(userCertificateInfo: any) {
-    debugger
     var issuedDate = userCertificateInfo.issuedDate.substring(0, userCertificateInfo.issuedDate.indexOf('T'));
     issuedDate = this.datePipe.transform(issuedDate, 'dd/MM/yyyy');
 
@@ -2278,7 +2233,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   getDeletedPostId(id: string) {
-    debugger
     this.loadingIcon = true;
     this._postService.deletePost(id).subscribe((_response) => {
       this.loadingIcon = false;
@@ -2287,7 +2241,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   openEditPostModal(post: any) {
-    debugger
     const initialState = {
       editPostId: post.id,
       from: post.postAuthorType == 1 ? "school" : post.postAuthorType == 2 ? "class" : post.postAuthorType == 3 ? "course" : post.postAuthorType == 4 ? "user" : undefined
@@ -2340,7 +2293,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       if (this.carousel != undefined) {
         const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-prev')[0] as HTMLButtonElement
         if (nextButton) {
-          debugger
           nextButton.click();
         }
       }
@@ -2354,10 +2306,8 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
   userIsBanned: boolean = false;
   checkIfUserIsBanned() {
-    debugger;
     this.loadingIcon = true;
     this._userService.isUserBanned(this.loginUserId, this.isUserBannedId, PostAuthorTypeEnum.User).subscribe((response) => {
-      debugger;
       this.loadingIcon = false;
       if (response.data == true) {
         this.userIsBanned = true;
@@ -2385,7 +2335,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
         if(x){
           x.parentNode?.removeChild(x);
         }
-        debugger;
       }
 
     })

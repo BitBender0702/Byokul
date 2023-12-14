@@ -127,7 +127,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   ngOnInit() {
-    debugger
     var selectedLang = localStorage.getItem("selectedLanguage");
     this.translate.use(selectedLang ?? '');
     // this.post = history.state.post;
@@ -197,7 +196,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     this.gender = localStorage.getItem("gender") ?? '';
     if (!this.commentResponseSubscription) {
       this.commentResponseSubscription = commentResponse.subscribe(response => {
-        debugger;
         var comment: any[] = this.reel.comments;
         var commentObj = { id: response.id, content: response.message, likeCount: 0, isCommentLikedByCurrentUser: false, userAvatar: response.senderAvatar, userName: response.userName, userId: response.userId, isUserVerified: response.isUserVerified };
         comment.push(commentObj);
@@ -208,7 +206,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
     if(!this.commentDeletdResponseSubscription){
       commentDeleteResponse.subscribe(response =>{
-        debugger;
         let indexOfComment = this.reel.comments.findIndex((x:any) => x.id == response.commentId)
         this.reel.comments.splice(indexOfComment, 1);
         this.reel.commentsCount--;
@@ -233,7 +230,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       var index = this.reels.findIndex((x:any)=> x.id == response.response.id)
       if(isReelExist != null){
         this._postService.getPostById(isReelExist.id).subscribe(response =>{
-          debugger
           isReelExist = response;
           // this.reels.splice(index, 1, isReelExist);
           this.reels[index].title=response.title;
@@ -251,12 +247,10 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
               }
             }
           }
-          debugger;
           this.cd.detectChanges();
         })
       }
       // let filteredReel = this.reels.forEach((element:any) => {
-      //   debugger
       //   if(element.id == newReel.response){
       //     var index = this.reels.findIndex((x:any)=> x.id == element.id)
       //     this._postService.getPostById(element.id).subscribe(response =>{
@@ -290,7 +284,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getReelsByUser(userId: string) {
-    debugger;
     this._userService.GetSliderReelsByUserId(userId, this.reelId, 3).subscribe((response) => {
       this.reels = response;
       this.selectedReel = this.reels[0];
@@ -326,9 +319,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
 
   getSavedReelsByUser(userId:string){
-    debugger;
     this._postService.GetSavedSliderReelsByUserId(userId, this.reelId, 3).subscribe((response) => {
-      debugger
       this.reels = response;
       this.selectedReel = this.reels[0];
       this.lastPostId = this.reels[this.reels.length - 1].id;
@@ -362,9 +353,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getSharedReelsByUser(userId:string){
-    debugger;
     this._postService.GetSharedSliderReelsByUserId(userId, this.reelId, 3).subscribe((response) => {
-      debugger
       this.reels = response;
       this.selectedReel = this.reels[0];
       this.lastPostId = this.reels[this.reels.length - 1].id;
@@ -398,9 +387,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getLikedReelsByUser(userId:string){
-    debugger;
     this._postService.GetLikedSliderReelsByUserId(userId, this.reelId, 3).subscribe((response) => {
-      debugger
       this.reels = response;
       this.selectedReel = this.reels[0];
       this.lastPostId = this.reels[this.reels.length - 1].id;
@@ -468,7 +455,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getReelsByClass(classId: string) {
-    debugger;
     this._classService.GetSliderReelsByClassId(classId, this.reelId, 3).subscribe((response) => {
       this.reels = response;
       this.postForComment = response;
@@ -562,7 +548,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
       this.selectedReelIndex = index;
       this.carouselConfig.initialSlide = this.selectedReelIndex;
-      debugger
       this.getReelsById(this.reels, this.selectedReelIndex);
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
@@ -835,10 +820,8 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
 
   onSlideUp() {
-    debugger
     if (this.from == "user") {
       this._userService.GetSliderReelsByUserId(this.userId, this.firstPostId, 1).subscribe((response: any) => {
-        debugger
         this.reels.unshift(...response);
         this.lastPostId = this.reels[this.reels.length - 1].id;
         this.firstPostId = this.reels[0].id;
@@ -955,7 +938,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   currentSlide: any;
   onSlideDown() {
     // if(!this.isReelLoad){
-      debugger
     if (this.from == "user" && !this.isFinishDownReels) {
       this._userService.GetSliderReelsByUserId(this.userId, this.lastPostId, 2).subscribe((response: any) => {
         
@@ -1174,7 +1156,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   // for like
 
   likeUnlikePosts(postId: string, isLike: boolean, postType: number, post: any) {
-    debugger;
     this.currentLikedPostId = postId;
     var likes: any[] = post.likes;
     var isLiked = likes?.filter(x => x.userId == this.userId && x.postId == postId);
@@ -1266,7 +1247,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   openSharePostModal(post: any, postType: number, title: string, description: string): void {
-    debugger
     if (post?.name == Constant.Private || post?.serviceType == Constant.Paid) {
       sharePostResponse.next({});
     }
@@ -1292,7 +1272,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
   isModalOpen:boolean = false;
   openCommentsSection(reel: any) {
-    debugger;
     this.isModalOpen = true;
     this.reel = reel;
     this.commentsPageNumber = 1;
@@ -1334,7 +1313,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getNextComments() {
-    debugger;
     this._chatService.getComments(this.reel.id, this.commentsPageNumber).subscribe((response) => {
       this.reel.comments = response.concat(this.reel.comments);
       this.cd.detectChanges();
@@ -1362,7 +1340,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   private checkScreenSize() {
-    debugger;
     const screenWidth = window.innerWidth;
     if (screenWidth >= 992) {
       this.isMobileView = false;
@@ -1387,7 +1364,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   //   }
 
   sendToGroup(reel: any) {
-    debugger;
     let message = this.messageToGroup;
     if(!message || message.trim().length == 0){
       return;
@@ -1403,7 +1379,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     this.messageToGroup = "";
     this.commentViewModel.id = Constant.defaultGuid;
     this._chatService.addComments(this.commentViewModel).subscribe((response) => {
-      debugger;
       comment.push(response);
       reel.commentsCount = comment.length;
       this.cd.detectChanges();
@@ -1573,7 +1548,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       this.loadingIcon = false;
       deleteReelResponse.next({});
       if(this.index == this.reels.length){
-        debugger
         let newUrl = `/user/reelsView/${this.ownerId}/${this.from}/${this.reels[this.index - 1].postAttachments[0].id}/${this.reels[this.index - 1].id}`
         history.replaceState({}, '', newUrl);
         return;
@@ -1584,9 +1558,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   openPostModal(post: any) {
-    debugger
-    // this.bsModalService.hide(this.bsModalService.config.id);
-    // this.cd.detectChanges();
     const initialState = {
       editPostId: post.id,
       type:Constant.Reel,
@@ -1604,9 +1575,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   postForComment: any;
   isBanned:boolean=false;
   isUserBanned(){
-    debugger;
     this._studentService.isStudentBannedFromClassCourse(this.ownerId, this.fromForComment, this.parentId).subscribe((response:any)=>{
-      debugger;
       if(response == true){
         this.isBanned = true;
       } else{
@@ -1629,7 +1598,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   deleteComment(item:any){
-    debugger;
     // this.initializeCommentLikeUnlike();
     // this.commentLikeUnlike.userId = this.userId;
     // this.commentLikeUnlike.commentId = item.id;
@@ -1648,7 +1616,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
   parentId:string=''
   getReelsById(reels:any, index:any){
-    debugger;
     this._reelsService.getReelById(reels[index]?.postAttachments[0]?.id).subscribe((response:any) => {
       this.postForComment = response;
       if(response.class != null || response.course != null){
@@ -1674,7 +1641,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   // playPause(e: any) {
-  //   debugger;
   //   if (e.target.nodeName === 'VIDEO') {
   //     if (!this.videoComp.player.paused()) {
   //       this.videoComp.player.pause();
@@ -1745,7 +1711,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   likeUnlikeComments(commentId: string, _isLike: boolean, _isCommentLikedByCurrentUser: boolean, _likeCount: number, reel?:any) {
-    debugger;
     var comment: any[] = reel.comments;
     var isCommentLiked = comment.find(x => x.id == commentId);
     this.initializeCommentLikeUnlike();

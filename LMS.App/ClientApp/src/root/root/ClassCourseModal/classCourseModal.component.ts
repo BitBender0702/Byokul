@@ -20,6 +20,9 @@ import { CourseService } from 'src/root/service/course.service';
 import { FormGroup } from '@angular/forms';
 import { PaymentComponent } from '../payment/payment.component';
 import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
+import { NotificationService } from 'src/root/service/notification.service';
+import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
+import { TranslateService } from '@ngx-translate/core';
 export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,type:string}>();  
 
 
@@ -43,6 +46,7 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     private _userService;
     private _classService;
     private _courseService;
+    private _notificationService;
     reels:any;
     isOpenSidebar:boolean = false;
     isDataLoaded:boolean = false;
@@ -72,13 +76,14 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     @ViewChild('openCourseOwnCertificate') openCourseOwnCertificate!: ElementRef;
     @ViewChild('groupChatList') groupChatList!: ElementRef;
 
-    constructor(private bsModalService: BsModalService,classService:ClassService,courseService:CourseService,chatService:ChatService,schoolService: SchoolService,public options: ModalOptions,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute) { 
+    constructor(private bsModalService: BsModalService,private translateService: TranslateService,notificationService: NotificationService,classService:ClassService,courseService:CourseService,chatService:ChatService,schoolService: SchoolService,public options: ModalOptions,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute) { 
         this._schoolService = schoolService;
         this._chatService = chatService;
         this._signalRService = signalRService;
         this._userService = userService;
         this._classService = classService;
         this._courseService = courseService;
+        this._notificationService = notificationService;
       }
 
      ngOnInit(): void {
@@ -188,11 +193,22 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
           this.classCourseDetails.classCourseItem.isLikedByCurrentUser = false;
         } else {
           this.isClassCourseLiked = true;
-          if (this.classCourseDetails.classCourseItem.type == 1) {
-            this.likesClassCourseLength = this.classCourseDetails.classCourseItem.classLikes.length + 1;
-          } else {
-            this.likesClassCourseLength = this.classCourseDetails.classCourseItem.courseLikes.length + 1;
-          }
+
+
+            if (this.classCourseDetails.classCourseItem.type == 1) {
+              this.likesClassCourseLength = this.classCourseDetails.classCourseItem.classLikes.length + 1;
+              var notificationContent = `liked your class(${this.classCourseDetails.classCourseItem.name})`;
+              var chatType = 4;
+            } else {
+              this.likesClassCourseLength = this.classCourseDetails.classCourseItem.courseLikes.length + 1;
+              var notificationContent = `liked your course(${this.classCourseDetails.classCourseItem.name})`;
+              var chatType = 5;
+            }
+
+            if(this.classCourseDetails.classCourseItem.createdById != this.userId){
+              this._notificationService.initializeNotificationViewModel(this.classCourseDetails.classCourseItem.createdById, NotificationType.Likes, notificationContent, this.userId, null, 0, null, null,5,this.classCourseDetails.classCourseItem.id).subscribe((_response) => {
+              });
+            }
 
           this.classCourseDetails.classCourseItem.isLikedByCurrentUser = true;
         }
@@ -270,6 +286,19 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
       comment.push(response);
       this.commentViewModel.id = response.id;
       this._signalRService.sendToGroup(this.commentViewModel);
+      if(this.classCourseDetails.classCourseItem.createdById != this.userId){
+        if(this.classCourseDetails.classCourseItem.type == 1){
+          var translatedMessage = this.translateService.instant('CommentedOnYourClass');
+          var chatType = 4;
+        }
+        else{
+          var translatedMessage = this.translateService.instant('CommentedOnYourCourse');
+          var chatType = 5;
+        }
+        var notificationContent = translatedMessage;
+        this._notificationService.initializeNotificationViewModel(this.classCourseDetails.classCourseItem.createdById, NotificationType.CommentSent, notificationContent, this.sender.id, null, 0,null,null,chatType,this.classCourseDetails.classCourseItem.id).subscribe((response) => {
+        });
+        }
       });
   }
 

@@ -59,7 +59,6 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
   }
 
   ngOnInit(): void {
-    debugger
     this.loadingIcon = true;
     var selectedLang = localStorage.getItem('selectedLanguage');
     this.translate.use(selectedLang ?? '');
@@ -68,7 +67,6 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
     this.type = Number(type);
     if (this.type == 1) {
       this._studentService.getSchoolStudents(this.id, this.studentsPageNumber, this.searchString).subscribe((response) => {
-        debugger
         this.students = response;
         this.loadingIcon = false;
         this.isDataLoaded = true;
@@ -77,7 +75,6 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
 
     if (this.type == 2) {
       this._studentService.getClassStudents(this.id, this.studentsPageNumber, this.searchString).subscribe((response) => {
-        debugger
         this.students = response;
         this.loadingIcon = false;
         this.isDataLoaded = true;
@@ -86,7 +83,6 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
 
     if (this.type == 3) {
       this._studentService.getCourseStudents(this.id, this.studentsPageNumber, this.searchString).subscribe((response) => {
-        debugger
         this.students = response;
         this.loadingIcon = false;
         this.isDataLoaded = true;
@@ -102,7 +98,6 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
 
     if (!this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-        debugger
         this.hamburgerCount = response.hamburgerCount;
       });
     }
@@ -222,7 +217,6 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
   // }
 
   banFollower(studentId: string, classOrCourseId: string) {
-    debugger;
     if (this.type == 2) {
       this.classOrCourseData = {
         studentId: studentId,
@@ -232,7 +226,6 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
       }
 
       this._classService.banUnbanStudentFromClass(this.classOrCourseData).subscribe((response) => {
-        debugger;
         if (response.message == "Student is banned") {
           const translatedInfoSummary = this.translateService.instant('Success');
           const translatedMessage = this.translateService.instant('Student is banned');
@@ -260,7 +253,6 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
 
 
       this._courseService.banUnbanStudentFromCourse(this.classOrCourseData).subscribe((response) => {
-        debugger;
         if (response.message == "Student is banned") {
           const translatedInfoSummary = this.translateService.instant('Success');
           const translatedMessage = this.translateService.instant('Student is banned');

@@ -21,3 +21,11 @@
     cursor: pointer;
 }
   
+.trash-icon {
+    background-color: transparent;
+}
+  
+.trash-icon svg {
+    width: 20px;
+    height: 20px;
+}

@@ -20,7 +20,6 @@ export class SharedSSCComponent extends MultilingualComponent implements OnInit,
   }
 
   ngOnInit(): void {
-    debugger
     var a = this.sharedProfileUrl;
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
     this.translate.use(this.selectedLanguage?? '');

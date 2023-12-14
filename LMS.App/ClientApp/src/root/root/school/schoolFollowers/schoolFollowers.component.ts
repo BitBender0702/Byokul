@@ -74,9 +74,7 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
       this.schoolId = this.route.snapshot.paramMap.get('schoolId') ?? '';
 
       this._schoolService.getSchoolFollowers(this.schoolId,this.schoolFollowersPageNumber,this.searchString).subscribe((response) => {
-        debugger
         this.schoolFollowers = response;
-        
         this.loadingIcon = false;
         this.isDataLoaded = true;
         this.isOwnerOrNot(this.schoolFollowers[0].school.createdById);
@@ -98,7 +96,6 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
 
       if (!this.hamburgerCountSubscription) {
         this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-          debugger
           this.hamburgerCount = response.hamburgerCount;
         });
       }
@@ -174,10 +171,8 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
   }
 
   banFollower(userId:string,schoolId:string){
-    debugger
     this.loadingIcon = true;
     this._schoolService.banFollower(userId,schoolId).subscribe((response) => {
-      debugger
       this.ngOnInit();
       const translatedMessage = this.translateService.instant('BannedSuccessfully');
       const translatedSummary = this.translateService.instant('Success');
@@ -187,7 +182,6 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
   }
 
   getReportFollower(id:string,followerName:string){
-    debugger
     this.reportedFollowerId = id;
     this.followerName = followerName;
     this.isSubmitted = false;
@@ -197,7 +191,6 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
   }
 
   reportFollower(){
-    debugger
     this.isSubmitted = true;
     if (!this.reportFollowerForm.valid) {
       return;
@@ -212,7 +205,6 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
     this.reportFollowerViewModel.followerName = this.followerName;
     this.reportFollowerViewModel.reportReason = this.reportFollowerForm.get('reportContent')?.value;
     this._userService.reportFollower(this.reportFollowerViewModel).subscribe((response) => {
-      debugger
       this.closeReportsModal();
       this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Report submitted successfully'});
     });
@@ -237,7 +229,6 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
   }
 
   isOwnerOrNot(ownerId:string){
-    debugger
     var validToken = localStorage.getItem("jwt");
       if (validToken != null) {
         let jwtData = validToken.split('.')[1]
@@ -269,20 +260,16 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
 
 
   getBannedUser(){
-    debugger;
     this._schoolService.getBannedUser(this.schoolId, this.schoolBannedPageNumber,this.searchString).subscribe(response =>{
       this.bannedFollower = response.data;
       this.isFollowersTab = false;
-      debugger;
     })
   }
 
 
   unBanFollower(userId:string,schoolId:string){
-    debugger
     this.loadingIcon = true;
     this._schoolService.unBanFollower(userId,schoolId).subscribe((response) => {
-      debugger
       const translatedMessage = this.translateService.instant('UnBannedSuccessfully');
       const translatedSummary = this.translateService.instant('Success');
       this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage});

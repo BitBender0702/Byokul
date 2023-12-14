@@ -40,7 +40,6 @@ export class DeleteOrDisableComponent extends MultilingualComponent implements O
     changeLanguageSubscription!:Subscription;
 
     ngOnInit(): void {
-        debugger;
         var selectedLang = localStorage.getItem('selectedLanguage');
         this.translate.use(selectedLang ?? '');
         this.route.params.subscribe(params => {

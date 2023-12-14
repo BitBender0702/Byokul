@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, ContentChild, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { AuthService } from '../service/auth.service';
-import { SignalrService, notiFyTeacherResponse } from '../service/signalr.service';
+import { SignalrService, notiFyTeacherResponse, paymentResponse } from '../service/signalr.service';
 import { Meta } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, NavigationExtras, Params, Router } from '@angular/router';
 import { Constant } from '../interfaces/constant';
@@ -24,6 +24,9 @@ import { addVideoInLibraryResponse } from './schoolVideoLibrary/schoolVideoLibra
 import { SchoolService } from '../service/school.service';
 import { banUnbanUserProgression } from '../admin/registeredUsers/registeredUsers.component';
 import { thumbnailUploadResponse } from './class/createClass/createClass.component';
+import { paymentStatusResponse } from './payment/payment.component';
+import { PaymentResponseModalComponent } from './paymentResponseModal/paymentResponseModal.component';
+import { BsModalService } from 'ngx-bootstrap/modal';
 // import { userPermission } from './class/classProfile/classProfile.component';
 export const userPermission = new Subject<{ userPermissions: any }>();
 export const deleteReelResponse = new Subject();
@@ -83,6 +86,9 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   overallProgress: number = 0;
   loadBytes:any = 0;
   progressValue: number = 0;
+  loadingIcon: boolean = false;
+  paymentStatusSubscription!: Subscription;
+  paymentResponseSubscription!: Subscription;
   @ViewChild('openProgressBar') openProgressBar!: ElementRef;
   @ViewChild('paymentConfirmationBtn') paymentConfirmationBtn!: ElementRef;
 
@@ -94,7 +100,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   private _schoolService;
   private _authService;
 
-  constructor(injector: Injector, private cd: ChangeDetectorRef,private fileStorageService: FileStorageService, private userService: UserService, private notificationService: NotificationService, private signalRService: SignalrService, public messageService: MessageService, private translateService: TranslateService, private meta: Meta,private authService: AuthService, private router: Router, private route: ActivatedRoute, postService: PostService, videoLibraryService: VideoLibraryService, schoolService: SchoolService) {
+  constructor(injector: Injector, private cd: ChangeDetectorRef,private bsModalService: BsModalService,private fileStorageService: FileStorageService, private userService: UserService, private notificationService: NotificationService, private signalRService: SignalrService, public messageService: MessageService, private translateService: TranslateService, private meta: Meta,private authService: AuthService, private router: Router, private route: ActivatedRoute, postService: PostService, videoLibraryService: VideoLibraryService, schoolService: SchoolService) {
     super(injector);
     this._postService = postService;
     this._notificationService = notificationService;
@@ -146,9 +152,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
 
     if (!this.uploadClassCourseThumbSubscription) {
       this.uploadClassCourseThumbSubscription = uploadClassOrCourseThumbail.subscribe(async (uploadResponse) => {
-        debugger
         this._userService.getBlobSasToken().subscribe(async (response: any) => {
-          debugger
           this.cd.detectChanges();
           this.loadBytes = 0;
           this.totalFileSize = 0;
@@ -171,7 +175,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   }
     if (!this.paymentConfirmSubscription) {
       this.paymentConfirmSubscription = deleteReelResponse.subscribe(response => {
-        debugger
         const translatedSummary = this.translateService.instant('Success');
         var translatedMessage = this.translateService.instant('ReelDeletedSuccessfully');
         this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
@@ -190,9 +193,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
 
     if (!this.notifyTeacherSubscription) {
       this.notifyTeacherSubscription = notiFyTeacherResponse.subscribe(response => {
-        debugger
         this._userService.getUserPermissions(response.userId).subscribe((response) => {
-          debugger
           var userPermissions = JSON.parse(localStorage.getItem('userPermissions') ?? '');
           localStorage.setItem("userPermissions", JSON.stringify(response));
           userPermission.next(userPermissions);
@@ -202,13 +203,11 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
 
     if (!this.paymentConfirmSubscription) {
       this.paymentConfirmSubscription = paymentConfirmDialoge.subscribe(response => {
-        debugger
         this.paymentConfirmationBtn.nativeElement.click();
       })
     }
     if (!this.postProgressSubscription) {
       this.postProgressSubscription = postProgressNotification.subscribe(response => {
-        debugger
         if (response.from == Constant.Post) {
           var translatedMessage = this.translateService.instant('PostProgressMessage');
         }
@@ -225,11 +224,9 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
 
     if (!this.postUploadOnBlobSubscription) {
       this.postUploadOnBlobSubscription = postUploadOnBlob.subscribe(async (uploadResponse) => {
-        debugger
         // this.cd.detectChanges();
         // this.openProgressBar.nativeElement.click();
         this._userService.getBlobSasToken().subscribe(async (response: any) => {
-          debugger
           this.cd.detectChanges();
           this.loadBytes = 0;
           this.totalFileSize = 0;
@@ -249,7 +246,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
           this.uploadVideoUrlList = [];
 
           uploadResponse.combineFiles.forEach((file: { size: any; }) => {
-            debugger;
             this.totalFileSize += file.size;
           });
 
@@ -281,7 +277,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
             // var totalThumbnails = uploadUrls.filter(x => x.fileType == UploadTypeEnum.Thumbnail);
 
             // totalThumbnails.forEach((item:any) => {
-            //   debugger
             //   const lastDotIndex = item.blobName.lastIndexOf('.');
             //   const thumbnailName = item.blobName.substring(0, lastDotIndex);
             //   var video = uploadUrls.find(x => x.blobName.substring(0,lastDotIndex) == thumbnailName  && x.fileType == 2);
@@ -299,7 +294,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
             
             if(this.checkLimitSchoolId != null || this.checkLimitSchoolId != undefined){
               this._schoolService.isAvailableStorageSpace(this.checkLimitSchoolId, filesSizeInGb).subscribe(response => {
-                debugger
                 if (response.success) {
                   if(response.data.availableSpace < 5 && !response.data.isStorageFullNotification){
                     var translatedMessage = this.translateService.instant('Your school has storage is less than 5%');
@@ -308,7 +302,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
                       });
                   }
                   this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
-                    debugger
                     this.totalFileSize = 0;
                     this.overallProgress = 0;
                     if(response.updatedOn==null){
@@ -343,7 +336,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
               })
             } else{
               this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
-                debugger
                 if(response.updatedOn==null){
                   var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
                 }
@@ -363,7 +355,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
             }
 
             // this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
-            //   debugger
             //   var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
             //   const translatedSummary = this.translateService.instant('Success');
             //   this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage, });
@@ -400,14 +391,11 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
             uploadResponse.postToUpload.append('blobUrlsJson', JSON.stringify(uploadUrls));
 
             var filesSizeInGb = this.totalUploadFilesSizeLimitCheck / (1024 * 1024 * 1024);
-            debugger;
            
             if(this.checkLimitSchoolId != null || this.checkLimitSchoolId != undefined){
               this._schoolService.isAvailableStorageSpace(this.checkLimitSchoolId, filesSizeInGb).subscribe(response => {
-                debugger
                 if (response.success) {
                   this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
-                    debugger
                     this.totalUploadFilesSize = 0;
                     this.overallProgress = 0;
                     // var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
@@ -446,9 +434,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
                 }
               })
             } else{
-              debugger
               this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
-                debugger
                 if(response.updatedOn==null){
                   var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
                 }
@@ -474,7 +460,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
 
 
             // this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
-            //   debugger
             //   var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
             //   const translatedSummary = this.translateService.instant('Success');
             //   this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage, });
@@ -498,9 +483,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
           }
 
           if (uploadResponse.type == 3) {
-            debugger;
             const uploadPromises = uploadResponse.combineFiles.map((file: any) => {
-              debugger
               if (uploadResponse.videos.includes(file)) {
                 return this.uploadVideosOnBlob(file, UploadTypeEnum.Video, response.sasToken,this.totalFileSize);
               }
@@ -519,17 +502,8 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
             uploadResponse.postToUpload.append('blobUrlsJson', JSON.stringify(this.uploadVideoUrlList));
             
             this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
-              debugger
-
               var from = response.postAuthorType == 1 ? "school" : response.postAuthorType == 2 ? "class" : response.postAuthorType == 4 ? "user" : undefined;
               var chatType = from == "user" ? 1 : from == "school" ? 3 : from == "class" ? 4 : undefined;
-
-              // this.isSubmitted=false;
-              // this.loadingIcon = false;
-              //addPostResponse.next({response});
-              // this.postToUpload = new FormData();
-              // this.close();
-              // this.uploadVideoUrlList = [];
               if (uploadResponse.videos.length != 0) {
                 const translatedSummary = this.translateService.instant('Success');
                 var translatedMessage = this.translateService.instant('VideoReadyToStream');
@@ -555,7 +529,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
 
           if (uploadResponse.type == 4) {
             const uploadPromises = uploadResponse.combineFiles.map((file: any) => {
-              debugger
               this.uploadVideoUrlList = [];
               var index = file.type.indexOf('/');
               if (index > 0) {
@@ -607,7 +580,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
           }
 
           if (uploadResponse.type == 5) {
-            debugger
             // var file = uploadResponse.videos;
             // await this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
             const uploadPromises = uploadResponse.combineFiles.map((file: any) => {
@@ -633,7 +605,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
 
     // if(!this.addPostSubscription){
     //   this.addPostSubscription = addPostResponse.subscribe((postResponse:any) => {
-    //     debugger
     //      // this.loadingIcon = true;
     //      if(postResponse.response.postType == 1){
     //        var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
@@ -651,7 +622,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
 
     // if(!this.reelUploadOnBlobSubscription){
     //   this.reelUploadOnBlobSubscription = reelUploadOnBlob.subscribe(async (response) => {
-    //     debugger
     //     await this.uploadVideosOnBlob(response.reel,UploadTypeEnum.Video);
     //     createPost.next({postToUpload:response.postToUpload,uploadVideoUrlList:this.uploadVideoUrlList,type:2});
     //   })
@@ -662,15 +632,37 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     if (selectedLang == null || selectedLang == "") {
       this.translate.use("en");
     }
+
+    if (!this.paymentStatusSubscription) {
+      this.paymentStatusSubscription = paymentStatusResponse.subscribe(response => {
+        if(response.loadingIcon){
+          this.loadingIcon = true;
+          const translatedSummary = this.translateService.instant('Success');
+          const translatedMessage = this.translateService.instant('PaymentProcessingMessage');
+          this.messageService.add({ severity: 'info', summary: translatedSummary, life: 6000, detail: translatedMessage });
+        }
+        else{
+          this.loadingIcon = false;
+        }
+      });
+     }
+
+     if (!this.paymentResponseSubscription) {
+      this.paymentResponseSubscription = paymentResponse.subscribe(response => {
+        this.loadingIcon = false;
+        const initialState = {
+          isPaymentSuccess: response.isPaymentSuccess,
+          from: Constant.School
+        };
+        this.bsModalService.show(PaymentResponseModalComponent, { initialState });
+      });
+    }
   }
 
 
   saveFilesInFileStorge(uploadResponse: any) {
-    debugger
-
     var filesSizeInGb = this.totalUploadFilesSize / (1024 * 1024 * 1024);
     this._schoolService.isAvailableStorageSpace(this.schoolId, filesSizeInGb).subscribe(response => {
-      debugger
       if (response.success) {
         if(response.data.availableSpace < 5 && !response.data.isStorageFullNotification){
           var translatedMessage = this.translateService.instant('Your school has storage is less than 5%');
@@ -681,7 +673,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         var files = this.uploadVideoUrlList;
         uploadResponse.postToUpload.set('blobUrlsJson', JSON.stringify(files));
         this._fileStorageService.saveFiles(uploadResponse.postToUpload).subscribe(response => {
-          debugger
           this.uploadVideoUrlList = [];
           uploadResponse.postToUpload = new FormData();
           fileStorageResponse.next({ fileStorageResponse: response, availableSpace: filesSizeInGb });
@@ -715,7 +706,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     // var files = this.uploadVideoUrlList;
     // uploadResponse.postToUpload.set('blobUrlsJson', JSON.stringify(files));
     //   this._fileStorageService.saveFiles(uploadResponse.postToUpload).subscribe(response => {
-    //     debugger
     //     this.uploadVideoUrlList = [];
     //     uploadResponse.postToUpload = new FormData();
     //     fileStorageResponse.next({fileStorageResponse:response});
@@ -739,10 +729,8 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   }
 
   saveFilesInVideoLibrary(uploadResponse: any) {
-    debugger
     var filesSizeInGb = this.totalUploadFilesSize / (1024 * 1024 * 1024);
     this._schoolService.isAvailableStorageSpace(this.schoolId, filesSizeInGb).subscribe(response => {
-      debugger
       if (response.success) {
         this.getThumbnailUrl(this.uploadVideoUrlList);
         var files = this.uploadVideoUrlList[0];
@@ -751,7 +739,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
           console.log(pair[0] + ', ' + pair[1]);
         }
         this._videoLibraryService.saveFile(uploadResponse.postToUpload).subscribe(response => {
-          debugger
           uploadResponse.postToUpload = new FormData();
           addVideoInLibraryResponse.next({ addVideoInLibraryResponse: response, availableSpace: filesSizeInGb });
           const translatedSummary = this.translateService.instant('Success');
@@ -798,6 +785,12 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     }
     if (this.uploadClassCourseThumbSubscription) {
       this.uploadClassCourseThumbSubscription.unsubscribe();
+    }
+    if (this.paymentStatusSubscription) {
+      this.paymentStatusSubscription.unsubscribe();
+    }
+    if (this.paymentResponseSubscription) {
+      this.paymentResponseSubscription.unsubscribe();
     }
   }
 
@@ -848,8 +841,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
 
 fileUploadProgress: { [key: string]: number } = {};
   public async uploadVideosOnBlob(file: File, fileType: number, token: string, totalFileSize:number,isThumbnail?:boolean) {
-    debugger
-
     var sasToken = "?" + token;
     const id = uuidv4();
 
@@ -954,7 +945,6 @@ fileUploadProgress: { [key: string]: number } = {};
       // const uploadOptions = {
       //   blobHTTPHeaders,
       //   onProgress: (event:any) => {
-      //     debugger
       //     // var loadBytes = this.loadBytes;
       //     // this.loadBytes = event.loadedBytes; 
       //     // let newLoadedBytes = event.loadedBytes - this.loadBytes;
@@ -968,7 +958,6 @@ fileUploadProgress: { [key: string]: number } = {};
       //     let initialPercentage = percentage;
       //     if(this.percentForLoading != 0){
       //       if(this.percentForLoading > initialPercentage){
-      //         debugger;
       //         // const percentage = (this.loadedBytes / this.totalFileSize) * 100;
       //         this.percentForLoading += percentage;
       //       } else{
@@ -1022,7 +1011,6 @@ fileUploadProgress: { [key: string]: number } = {};
     var totalThumbnails = uploadUrls.filter((x: { fileType: UploadTypeEnum; }) => x.fileType == UploadTypeEnum.Thumbnail);
 
     totalThumbnails.forEach((item: any) => {
-      debugger
       const lastDotIndex = item.blobName.lastIndexOf('.');
       const thumbnailName = item.blobName.substring(0, lastDotIndex);
       var video = uploadUrls.find((x: { blobName: string; fileType: number; }) => x.blobName.substring(0, lastDotIndex) == thumbnailName && x.fileType == 2);

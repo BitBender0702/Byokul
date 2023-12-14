@@ -56,7 +56,6 @@ export class UploadCertificateComponent implements OnInit {
   }
 
   editUserCertificate(userCertificateInfo:any){
-    debugger
     var issuedDate = userCertificateInfo.issuedDate.substring(0, userCertificateInfo.issuedDate.indexOf('T'));     
     issuedDate = this.datePipe.transform(issuedDate, 'MM/dd/yyyy');
 
@@ -117,7 +116,6 @@ export class UploadCertificateComponent implements OnInit {
   }
 
   openUserOwnCertificateModal(certificateInfo:any){
-    debugger
     this.certificateToUpload.set('certificateImage','');
     this.userCertificateInfo = certificateInfo;
     this.openUserOwnCertificate.nativeElement.click();
@@ -125,7 +123,6 @@ export class UploadCertificateComponent implements OnInit {
   }
 
   saveUsercertificcate(){
-    debugger
     this.isSubmitted = true;
       if (!this.userCertificateForm.valid) {
         return;
@@ -152,7 +149,6 @@ export class UploadCertificateComponent implements OnInit {
     this.certificateToUpload.append('description', formValue.description);
     
     this._userService.saveUserCertificates(this.certificateToUpload).subscribe((response:any) => {
-      debugger
       this.closeCertificatesModal();
       this.isSubmitted = false;
       this.certificateToUpload = new FormData();

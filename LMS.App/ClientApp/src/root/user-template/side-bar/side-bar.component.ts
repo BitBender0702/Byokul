@@ -315,7 +315,6 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
 
     if (!this.followedClassResponseSubscription) {
       this.followedClassResponseSubscription = followedClassResponse.subscribe(response => {
-        debugger
         let classObj = {
           classId:response.classId,
           avatar:response.classAvatar,
@@ -331,7 +330,6 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
 
     if (!this.followedCourseResponseSubscription) {
       this.followedCourseResponseSubscription = followedCourseResponse.subscribe(response => {
-        debugger
         let courseObj = {
           courseId:response.courseId,
           avatar:response.courseAvatar,

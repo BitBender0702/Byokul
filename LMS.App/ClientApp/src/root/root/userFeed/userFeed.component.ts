@@ -142,7 +142,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   }
 
   ngOnInit(): void {
-    debugger
     this.checkScreenSize();
     if(this.isScreenMobile){
       this.itemsPerSlide = 2;
@@ -219,7 +218,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
 
     if (!this.addPostSubscription) {
       this.addPostSubscription = addPostResponse.subscribe((postResponse: any) => {
-        debugger
         var feedTab = localStorage.getItem('feedTab');
         feedTab = 'myFeed';
         localStorage.setItem('feedTab', feedTab);
@@ -297,7 +295,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
 
     if (!this.deleteModalPostSubscription) {
       this.deleteModalPostSubscription = deletePostResponse.subscribe(response => {
-        debugger
         const translatedSummary = this.translateService.instant('Success');
         const translatedMessage = this.translateService.instant('PostDeletedSuccessfully');
         this.isGridItemInfo = false;
@@ -341,7 +338,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
 
     if (!this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-        debugger
         this.hamburgerCount = response.hamburgerCount;
       });
     }
@@ -349,7 +345,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
 
     const buttons = document.querySelectorAll(".videoChange");
     buttons.forEach(button => {
-      debugger;
       button.addEventListener("click", () => {
         let VideoElement:HTMLVideoElement | null = document.getElementById('#displayVideo') as HTMLVideoElement
         VideoElement.pause();
@@ -367,7 +362,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   }
 
   checkMyFeedExist() {
-    debugger
     if (this.isMyFeedPostsExist && this.isMyFeedReelsExist) {
       this.isDataLoaded = true;
       this.loadingIcon = false;
@@ -438,7 +432,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   }
 
   addGlobalFeedListenerToNextButton() {
-    debugger
     if (this.globalReelCarousel != undefined) {
 
       setTimeout(() => {
@@ -519,7 +512,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   }
 
   profileList() {
-    debugger
     this.isProfileGrid = false;
     this.isGridItemInfo = true;
     this.isGridItemInfoForGlobal = true;
@@ -585,7 +577,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     if (this.globalFeeds == undefined) {
       this.loadingIcon = true;
       this._userService.getGlobalFeed(1, this.globalFeedsPageNumber, this.searchString).subscribe((response) => {
-        debugger
         this.globalFeeds = response;
         this.globalFeeds = this.getFilteredAttachments(this.globalFeeds, "globalFeed");
         // this.loadingIcon = false;
@@ -596,7 +587,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
       });
     }
     this._userService.getGlobalFeed(3, this.globalReelsPageNumber, this.searchString).subscribe((result) => {
-      debugger
       this.globalFeedReels = result;
       // this.loadingIcon = false;
       // this.isDataLoaded = true;
@@ -610,7 +600,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   }
 
   checkGlobalFeedExist() {
-    debugger
     if (this.isGlobalPostsExist && this.isGlobalReelsExist) {
       this.isDataLoaded = true;
       this.loadingIcon = false;
@@ -735,7 +724,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   }
 
   showPostDiv(post: any, From: string) {
-    debugger
     if (From == 'FromMyFeeds') {
       $('.imgDisplay').attr("style", "display:none;")
       $('.' + post.id).prevAll('.imgDisplay').first().attr("style", "display:block;");
@@ -743,7 +731,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
       this.gridItemInfo = post;
       this.isGridItemInfo = true;
       this.cd.detectChanges();
-      debugger
       // const player = videojs(this.myFeedPlayer.nativeElement, {autoplay: false});
       this.addPostView(this.gridItemInfo.id, From);
       var postValueTag = this.gridItemInfo.postTags[0].postTagValue;
@@ -758,7 +745,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
       this.gridItemInfoForGlobal = post;
       this.isGridItemInfoForGlobal = true;
       this.cd.detectChanges();
-      debugger
       // const player = videojs(this.globalFeedPlayer.nativeElement, {autoplay: false});
       this.addPostView(this.gridItemInfoForGlobal.id, From);
       var postValueTag = this.gridItemInfoForGlobal.postTags[0].postTagValue;
@@ -953,7 +939,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
       this.loadingIcon = true;
       this._userService.getMyFeed(1, this.myFeedsPageNumber, this.searchString).subscribe((response) => {
         if(response){
-          debugger;
           this.isGlobalFeed = false;
           this.postLoadingIcon = false;
           this.myFeeds = response;
@@ -1073,7 +1058,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
 
   // @HostListener('document:click', ['$event'])
   // clickOutside(event: MouseEvent) {
-  //   debugger
   //   this.cd.detectChanges();
   //   if (!this.searchInput.nativeElement.contains(event.target) && !this.globalSearchResults.nativeElement.contains(event.target)) {
   //     this.showSearchResults = false;
@@ -1103,13 +1087,11 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
 
   postDivId: string = "";
   openDialouge(event: any, post: any) {
-    debugger
     const parts = event.currentTarget.className.split(' ');
     this.postDivId = parts[3];
 
     if (post.postAttachments != undefined) {
       var postAttach = post.postAttachments[0];
-      debugger
       if (postAttach != undefined) {
         if (postAttach.fileType != 1) {
           if (this.postDivId != "") {
@@ -1279,14 +1261,12 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
 
 
   hideSearchSection(){
-    debugger
     this.showSearchResults = false;
   }
 
   showSearchButtonForMobile:boolean=false;
 
   openSearch(){
-    debugger;
     this.showSearchButtonForMobile=true;
   }
 

@@ -103,7 +103,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isBanned:boolean = false;
   ngOnInit(): void {
-    debugger
     this.getSenderInfo();
     var id = this.activatedRoute.snapshot.paramMap.get('id');
     if (id != null) {
@@ -111,7 +110,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.postPageView = true;
     }
     else {
-      debugger
       this.posts = this.options.initialState;
       this.post = this.posts.posts;
 
@@ -152,9 +150,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.getComments();
     }
 
-    debugger
     this._postService.getPostById(this.postId).subscribe((response) => {
-      debugger
       this.postForComment = response;
       this.isUserBanned();
       if (id != null) {
@@ -173,7 +169,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
         else {
           this.initializeJoinMeetingViewModel();
           this._userService.getUser(this.userId).subscribe((result) => {
-            debugger
             this.joinMeetingViewModel.name = result.firstName + " " + result.lastName;
             var params = new URLSearchParams(this.post.streamUrl.split('?')[1]);
             this.joinMeetingViewModel.meetingId = params.get('meetingID')?.replace("meetings", "") ?? '';
@@ -199,7 +194,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.createGroupName();
         this.commentResponse();
         this.commentLikeResponse();
-        debugger
         if (this.post.postId != null) {
           this.addPostView(this.post.postId);
         }
@@ -210,7 +204,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // if(this.post.postAuthorType == 2 || this.post.postAuthorType == 3){
         //   this.post.postAttachments.forEach((item: any) => {
-        //     debugger
         //   const byteArray = new Uint8Array(atob(item.byteArray).split('').map(char => char.charCodeAt(0)));
         //   if(item.fileType == 1){
         //     var type = 'image/png';
@@ -221,7 +214,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
         //   const blob = new Blob([byteArray], { type: type });
         //   const reader = new FileReader();
         //   reader.onloadend = () => {
-        //     debugger
         //     item.fileUrl = reader.result as string;
         //     this.isDataLoaded = true;
         //     this.initializeVideoPlayer();
@@ -309,7 +301,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   savePreferences(title: string, description: string, postTags: any) {
-    debugger
     var tagString = '';
     postTags.forEach(function (item: any) {
       tagString = tagString + item.postTagValue
@@ -329,7 +320,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   commentResponse() {
     if (!this.commentResponseSubscription) {
       this.commentResponseSubscription = commentResponse.subscribe(response => {
-        debugger
         var comment: any[] = this.post.comments;
         var commentObj = { id: response.id, content: response.message, likeCount: 0, isCommentLikedByCurrentUser: false, userAvatar: response.senderAvatar, userName: response.userName, userId: response.userId, isUserVerified: response.isUserVerified };
         comment.push(commentObj);
@@ -341,7 +331,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   commentLikeResponse() {
     commentLikeResponse.subscribe(response => {
-      debugger;
       var comments: any[] = this.post.comments;
       var reqComment = comments.find(x => x.id == response.commentId);
       if (response.isLike) {
@@ -355,13 +344,11 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getComments() {
     this._chatService.getComments(this.post.id, this.pageNumber).subscribe((response) => {
-      debugger
       this.post.comments = response;
     });
   }
 
   getSenderInfo() {
-    debugger
     var validToken = localStorage.getItem("jwt");
     if (validToken != null) {
       let jwtData = validToken.split('.')[1]
@@ -370,7 +357,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.userId = decodedJwtData.jti;
 
       this._userService.getUser(this.userId).subscribe((response) => {
-        debugger;
         this.sender = response;
       });
     }
@@ -446,7 +432,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   addPostView(postId: string) {
-    debugger;
     if (this.userId != undefined) {
       this.postView.postId = postId;
       this._postService.postView(this.postView).subscribe((response) => {
@@ -456,7 +441,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   sendToGroup() {
-    debugger
     if(!this.messageToGroup || this.messageToGroup.trim().length == 0){
       return;
     }
@@ -471,7 +455,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.messageToGroup = "";
     this.commentViewModel.id = '00000000-0000-0000-0000-000000000000';
     this._chatService.addComments(this.commentViewModel).subscribe((response) => {
-      debugger
       comment.push(response);
       this.post.commentsCount = comment.length;
       this.cd.detectChanges();
@@ -482,7 +465,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
         var translatedMessage = this.translateService.instant('commented your post');
       var notificationContent = translatedMessage;
       this._notificationService.initializeNotificationViewModel(this.post.createdBy, NotificationType.CommentSent, notificationContent, this.userId, this.post.id, this.post.postType, null, null).subscribe((response) => {
-        debugger;
       });
       }
       // initializeNotificationViewModel(userid:string,notificationType:NotificationType,notificationContent:string,loginUserId:string,postId?:string | null,postType?:number,post?:any,reelId?:string | null,chatType?:number,chatTypeId?:string| null):Observable<any>{
@@ -504,7 +486,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   likeUnlikeComments(commentId: string, _isLike: boolean, _isCommentLikedByCurrentUser: boolean, _likeCount: number) {
-    debugger;
     var comment: any[] = this.post.comments;
     var isCommentLiked = comment.find(x => x.id == commentId);
     this.initializeCommentLikeUnlike();
@@ -562,7 +543,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openSharePostModal(postId: string, postType: number, title: string, description: string): void {
-    debugger
     if (this.posts?.accessibility == Constant.Private || this.posts?.serviceType == Constant.Paid) {
       sharePostResponse.next({});
     }
@@ -642,7 +622,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getDeletedPostId(id: string) {
-    // debugger
     // this.loadingIcon = true;
     // this._postService.deletePost(id).subscribe((_response) => {
     //   this.close();
@@ -675,7 +654,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openPostModal(post: any) {
-    debugger
     this.bsModalService.hide(this.bsModalService.config.id);
     this.cd.detectChanges();
     const initialState = {
@@ -692,7 +670,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   from:any;
   postForComment: any;
   isUserBanned(){
-    debugger;
     if(this.post?.postAuthorType ==2 || this.post?.postAuthorType ==3){
       if(this.post?.postAuthorType == 2){
         this.from= ClassCourseEnum.Class
@@ -702,7 +679,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
       }
   
       this._studentService.isStudentBannedFromClassCourse(this.sender.id, this.from, this.postForComment.parentId).subscribe((response)=>{
-        debugger;
         if(response == true){
           this.isBanned = true;
         } else{
@@ -750,12 +726,10 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
     // if (this.carouselForPostView != undefined) {
     //   let carousel :any
     //   if ($('carousel')[1].querySelectorAll('a.carousel-control')[1]) {
-    //     debugger;
     //     let isButton = $('carousel')[1].querySelectorAll('a.carousel-control-next')[0] as HTMLButtonElement;
     //     isButton.addEventListener('click', () => {
     //       carousel = this.carouselForPostView;
     //       let index = carousel.customActiveSlide 
-    //       debugger;
     //       const initialVideoElement = document.getElementById(`video-${index}`);
     //       if(initialVideoElement){
     //         const firstElement = initialVideoElement.children[0];
@@ -794,7 +768,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   // deleteId:any;
   // getDeleteId(deleteId:any){
   //   this.deleteId = deleteId;
-  //   debugger;
   // }
 
   pauseVideo(index:any){
@@ -812,7 +785,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   deleteComment(item:any){
-    debugger;
     // this.initializeCommentLikeUnlike();
     // this.commentLikeUnlike.userId = this.userId;
     // this.commentLikeUnlike.commentId = item.id;
@@ -826,7 +798,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.bsModalService.show(DeleteConfirmationComponent, { initialState });
     // if(!this.deleteCommentResponseSubscription){
     //   deleteCommentResponse.subscribe(response =>{
-    //     debugger;
     //     setTimeout(() => {
     //       let indexOfComment = this.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId)
     //       this.post.comments.splice(indexOfComment, 1)

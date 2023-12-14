@@ -64,7 +64,6 @@ export class UserFollowingsComponent extends MultilingualComponent implements On
 
       if (!this.hamburgerCountSubscription) {
         this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-          debugger
           this.hamburgerCount = response.hamburgerCount;
         });
       }
@@ -80,7 +79,6 @@ export class UserFollowingsComponent extends MultilingualComponent implements On
       }
       if (!this.hamburgerCountSubscription) {
         this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-          debugger
           this.hamburgerCount = response.hamburgerCount;
         });
       }
@@ -150,7 +148,6 @@ export class UserFollowingsComponent extends MultilingualComponent implements On
   }
 
   followUser(userId:string,from:string){
-    debugger
     var followingUser = this.userFollowings.find((x: { userId: string; }) => x.userId == userId);
 
     this.InitializeFollowUnfollowUser();

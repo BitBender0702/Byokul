@@ -460,6 +460,9 @@
             </form>
           </div>
 
+          <div [ngClass]="step == 2 ? 'tab tab-pane active' : 'tab tab-pane'">
+            <payment *ngIf="schoolInfo != undefined" [school]="schoolInfo" (childEvent)="onChildEvent($event)"></payment>
+          </div>
  <!-- <div [ngClass]="step == 2 ? 'tab tab-pane active' : 'tab tab-pane'"
         >
           <h2 class="font_24 fw-bold text_dark text-center my_32 mt-1">
@@ -560,7 +563,7 @@
     -->
           <div
             [ngClass]="
-              step == 2
+              step == 3
                 ? 'tab tab-pane active final-multiple-step'
                 : 'tab tab-pane final-multiple-step'
             "

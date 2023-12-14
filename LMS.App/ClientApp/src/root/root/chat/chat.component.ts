@@ -261,7 +261,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
   }
 
   ngOnInit() {
-    debugger;
     this.checkScreenSize();
 
     if(this.isScreenMobile){
@@ -356,7 +355,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
       // this.getChatUsersList(this.senderId);
 
       this._userService.getUser(this.senderId).subscribe((response) => {
-        debugger
         this.sender = response;
         this.getChatUsersList(this.senderId);
         // this.getChatsFurtherProcess();
@@ -365,7 +363,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
       this._schoolService
         .getUserAllSchools(this.senderId)
         .subscribe((response) => {
-          debugger
           this.userSchoolsList = response;
           if(this.userSchoolsList.length>0 && this.userSchoolsList!=undefined) this.totalUnreadMessageCount = this.userSchoolsList[0]?.totalSchoolsUnreadMessageCount
         });
@@ -376,8 +373,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
     this.uploadAttachments = [];
 
     signalRResponse.subscribe((response) => {
-      
-      debugger;
       this.cd.detectChanges();
 
       // var user = {
@@ -510,7 +505,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
         }
       }
       if (response.chatType == '1') {
-        debugger
         if (this.allChatUsers == undefined) {
           this.allChatUsers = [];
         }
@@ -524,7 +518,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
         );
         if (isuserExist == undefined) {
           this._userService.getUser(response.senderId).subscribe((result) => {
-            debugger
             var userDetails = {
               userName: result.firstName + ' ' + result.lastName,
               userID: response.senderId,
@@ -537,7 +530,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
               unreadMessageCount: (this.chatHeadId == response.chatHeadId || this.chatHeadId == '1') ? 0 : 1
             };
 
-            debugger
             if(this.chatHeadId != '1'){
               this.allChatUsers.unshift(userDetails);  
             }
@@ -638,7 +630,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
         }
       }
       if (response.chatType == '3') {
-        debugger;
         var a = this.isSchoolOwner;
         if (this.schoolInboxList == undefined) {
           this.schoolInboxList = [];
@@ -657,7 +648,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
           if (isuserExist == undefined) {
             if(response.isSchoolOwner){
               this._userService.getUser(response.senderId).subscribe((result) => {
-                debugger
                 var userDetails = {
                   userName: result.firstName + ' ' + result.lastName,
                   userID: response.senderId,
@@ -670,7 +660,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
                   unreadMessageCount: (this.chatHeadId == response.chatHeadId || this.chatHeadId == '1') ? 0 : 1
                 };
     
-                debugger
                 if(this.chatHeadId != '1'){
                   this.allChatUsers.unshift(userDetails);  
                 }
@@ -760,8 +749,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
                   userDetails.userName =
                   userDetails.userName + '(' + schoolDeatail.schoolName + ')';
                  }
-  
-                    debugger;
                     if(this.schoolInboxList.length==0 || userDetails.school.schoolId == this.schoolInboxList[0].schoolId) this.schoolInboxList.unshift(userDetails);
   
                   this.topSchoolInboxChatHeadUser=this.schoolInboxList[0];
@@ -1027,8 +1014,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
       }
 
       if (response.chatType == '4') {
-        
-        debugger;
         var a = this.isSchoolOwner;
         if (this.classInboxList == undefined) {
           this.classInboxList = [];
@@ -1052,7 +1037,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
 
               if(response.isSchoolOwner){
                 this._userService.getUser(response.senderId).subscribe((result) => {
-                  debugger
                   var userDetails = {
                     userName: result.firstName + ' ' + result.lastName,
                     userID: response.senderId,
@@ -1064,8 +1048,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
                     gender:result.gender,
                     unreadMessageCount: (this.chatHeadId == response.chatHeadId || this.chatHeadId == '1') ? 0 : 1
                   };
-      
-                  debugger
                   if(this.chatHeadId != '1'){
                     this.allChatUsers.unshift(userDetails);  
                   }
@@ -1152,22 +1134,15 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
                       }
       
                       this.classInboxList.unshift(userDetails);
-                      debugger
                      if(this.schoolInboxList.length==0 || userDetails.class.schoolId == this.schoolInboxList[0].schoolId) this.schoolInboxList.unshift(userDetails);
-      
                       this.topSchoolInboxChatHeadUser=this.schoolInboxList[0];
-      
-                     
                       this.totalUnreadMessageCount += 1;
                       this.userSchoolsList.forEach((element:any) => {
                        
                           if(element.schoolId == response.schoolId){
                             element.schoolUnreadMessageCount += 1;
                           }
-                        
                       });
-                     
-      
                       var users: any[] = this.allChatUsers;
                       var receiverLastMessage = users.find(
                         (x) =>
@@ -1427,7 +1402,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
       }
 
       if (response.chatType == '5') {
-        debugger;
         if (this.courseInboxList == undefined) {
           this.courseInboxList = [];
         }
@@ -1445,10 +1419,8 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
               x.chatHeadId == response.chatHeadId
           );
           if (isuserExist == undefined) {
-            debugger
             if(response.isSchoolOwner){
               this._userService.getUser(response.senderId).subscribe((result) => {
-                debugger
                 var userDetails = {
                   userName: result.firstName + ' ' + result.lastName,
                   userID: response.senderId,
@@ -1460,8 +1432,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
                   gender:result.gender,
                   unreadMessageCount: (this.chatHeadId == response.chatHeadId || this.chatHeadId == '1') ? 0 : 1
                 };
-    
-                debugger
                 if(this.chatHeadId != '1'){
                   this.allChatUsers.unshift(userDetails);  
                 }
@@ -1829,7 +1799,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
 
     if (!this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-        debugger
         this.hamburgerCount = response.hamburgerCount;
       });
     }
@@ -1837,7 +1806,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
 
     if (!this.unreadChatSubscription) {
       this.unreadChatSubscription = unreadChatResponse.subscribe((response) => {
-        debugger;
         if (response.readMessagesCount != undefined) {
           if (response.type == 'add') {
             // var firstDate = Object.keys(this.firstuserChats)[0];
@@ -1887,19 +1855,14 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
   }
 
   getChatUsersList(senderId: string) {
-    debugger;
     this.loadingIcon = true;
     this._chatService
       .getAllChatUsers(senderId, this.chatHeadsPageNumber, this.searchString)
       .subscribe((response) => {
-        debugger;
         this.allChatUsers = response;
-      
         this.loadingIcon = false;
         this.isDataLoaded = true;
-
         this.initialChatUsersData = response;
-
        if(this.allChatUsers!=undefined && this.allChatUsers.length>0){
         this.topChatHeadUser = this.allChatUsers[0];
         this.topChatViewIcon=this.allChatUsers[0]?.profileURL;
@@ -1927,12 +1890,7 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
         this.schoolInboxes = this.schoolInboxList;
 
         if (this.userId != null && this.chatType == '3') {
-          debugger
           var chatUsers: any[] = this.allChatUsers;
-          // var chats = chatUsers.filter(x => x.chatType == 3 && x.school.ownerId == this.sender.id);
-          // chats = chats.filter(x => x.chatType == 4 && x.class.ownerId == this.sender.id);
-          // chats = chats.filter(x => x.chatType == 5 && x.course.ownerId == this.sender.id);
-
           var isuserExist = chatUsers.find(
             (x) => x.userID == this.userId && x.chatType == '3' && x.chatTypeId == this.schoolInfo.chatTypeId
           );
@@ -1967,9 +1925,7 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
           }
 
          else{
-          debugger
             this._chatService.getParticularChatUser(this.sender.id,this.userId,3,this.schoolInfo.chatTypeId).subscribe(res=>{
-              debugger
               if(res.message==Constant.ChatExists){
               isuserExist = res.data;
               this.allChatUsers.unshift(isuserExist);
@@ -2001,7 +1957,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
         }
 
         if (this.userId != null && this.chatType == '4') {
-          debugger
           var chatUsers: any[] = this.allChatUsers;
           var isuserExist = chatUsers.find(
             (x) => x.userID == this.userId && x.chatType == '4' && x.chatTypeId == this.classInfo.chatTypeId
@@ -2027,7 +1982,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
               this.allChatUsers.unshift(isuserExist);
               }
              else{
-              debugger
                 this.classInfo.chatType = 4;
                 this.allChatUsers.unshift(this.classInfo);
                 this.topChatHeadUser = this.allChatUsers[0];
@@ -2045,7 +1999,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
         }
 
         if (this.userId != null && this.chatType == '5') {
-          debugger
           var chatUsers: any[] = this.allChatUsers;
           var isuserExist = chatUsers.find(
             (x) => x.userID == this.userId && x.chatType == '5' && x.chatTypeId == this.courseInfo.chatTypeId
@@ -2146,7 +2099,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
           }
 
          else{
-            debugger
               this._chatService.getParticularChatUser(this.sender.id,this.userId,1,this.chatTypeId).subscribe(res=>{
 
                 if(res.message==Constant.ChatExists){
@@ -2185,12 +2137,7 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
                   this.topChatViewIsSchoolVerified=this.allChatUsers[0].isVerified;
                   this.topChatViewIsUserVerified=this.allChatUsers[0].isUserVerified;
                   this.topChatViewChatType = this.allChatUsers[0].chatType;
-
-                 
-                  
                 } 
-
-                debugger
                 this.getChatsFurtherProcess();
 
               });
@@ -2207,7 +2154,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
   }
 
   getChatsFurtherProcess(){
-    debugger
     this.selectedChatHeadDiv = true;
     this.firstuserChats = this.allChatUsers[0]?.chats;
     if (this.firstuserChats) {
@@ -2240,8 +2186,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
       type: 'remove',
     });
     this.allChatUsers[0].unreadMessageCount = 0;
-
-    debugger
     this.chatHeadId = this.allChatUsers[0].chatHeadId;
     this.cd.detectChanges();
     this.chatList.nativeElement.scrollTop =
@@ -2270,7 +2214,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
     // this.topChatViewIsSchoolVerified=this.allChatUsers[0].isVerified;
     // this.topChatViewIsUserVerified=this.allChatUsers[0].isUserVerified;
     // this.topChatViewChatType = this.allChatUsers[0].chatType;
-    debugger;
   }
 
   clearChat() {
@@ -2291,10 +2234,8 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
   }
 
   getSelectedSchoolInbox(schoolId?: string) {
-    debugger;
     if(schoolId){
       this._chatService.getAllSchoolChatUsers(this.senderId, schoolId, 1, this.searchString).subscribe((response) => {
-       debugger
        this.schoolInboxList = response.filter(
         (x: { chatType: number; school: { ownerId: any; }; }) => x.chatType == 3 && x.school.ownerId == this.sender.id
       );
@@ -2491,7 +2432,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
     // this.schoolInboxList = newList;
     // console.log(this.schoolInboxList)
     // console.log("-----")
-    debugger;
     var schoolIdForCheckingUnreadMessageCount:string
     if(this.schoolInboxList[0].chatType=='3'){
       schoolIdForCheckingUnreadMessageCount = this.schoolInboxList[0].school.schoolId;
@@ -2545,7 +2485,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
     this.topSchoolInboxChatHeadUser = this.schoolInboxList[0];
 
     // this.schoolChatList.nativeElement.scrollTop = this.schoolChatList.nativeElement.scrollHeight;
-    debugger
     this._chatService
       .getUsersChat(
         this.chatHeadId,
@@ -2556,7 +2495,6 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
         1
       )
       .subscribe((response) => {
-        debugger
         this.schoolInboxList[0].chats = null;
         var schoolChats = this.groupBySchoolChat(response);
         this.schoolInboxList[0].chats = schoolChats;
@@ -2603,9 +2541,7 @@ userVerifiedBatch = `<span class="verified-badge" style="font-size: 70%;">
     pageNumber: number,
     school?: any
   ) {
-    debugger;
 
-    
     this.topChatViewIcon=receiverAvatar;
     this.topChatViewName=username;
 
@@ -2757,9 +2693,7 @@ else{
         pageNumber
       )
       .subscribe((response) => {
-        debugger;
         const groupedItems = response.reduce((acc: any, curr: any) => {
-          debugger;
           // const dateTime = new Date(curr.time);
           const date = curr.time.slice(0, 10);
           // const date = dateTime.toISOString().split('T')[0]; // Extracting the date portion
@@ -2891,7 +2825,6 @@ else{
         //   this.userChats = response;
         //  }
       });
-      debugger
       //this.ngOnInit();
   }
 
@@ -3179,7 +3112,6 @@ else{
   }
 
   sendToUser(receiverId: string) {
-    debugger;
     var chatTypeId = '';
     this.isSubmitted = false;
     this.InitializeChatViewModel();
@@ -3382,7 +3314,6 @@ else{
         chatTypeId
       )
       .subscribe((response) => {
-        debugger;
         this.chatViewModel.sender = this.senderId;
         this.chatViewModel.receiver = this.userId;
 
@@ -3480,7 +3411,6 @@ else{
         this.isSubmitted = true;
         this.replyMessageType = null;
         this.isForwarded = false;
-       debugger
         const userIndex = this.allChatUsers.findIndex((x:any) => x.chatHeadId === this.chatHeadId);
         if (userIndex !== -1) {
           const user = this.allChatUsers.find((x: { chatHeadId: string; }) => x.chatHeadId === this.chatHeadId);
@@ -3513,7 +3443,6 @@ else{
   }
 
   generateChatLi(response: any, profileImage: string, chatType: string) {
-    debugger;
     // this.cd.detectChanges();
     const date = new Date();
     const year = date.getUTCFullYear();
@@ -3572,7 +3501,6 @@ else{
             ? response.forwardedFileType
             : this.forwardedFileType,
       };
-      debugger;
       if (chatType == '1' || (chatType == '3' && !response.isSchoolOwner) || (chatType == '4' && !response.isSchoolOwner) || (chatType == '5' && !response.isSchoolOwner)) {
         const chatExists = this.firstuserChats.hasOwnProperty(today);
        if(this.chatHeadId == response.chatHeadId || response.chatHeadId==undefined){
@@ -3593,7 +3521,6 @@ else{
       } else {
         var a = this.schoolInboxList;
         // this.schoolInboxList.find(x => x.)
-        debugger
         if(this.schoolInboxList[0].chats.length==0){
            var selectedSchoolInbox = this.schoolInboxList.find((x: { chatHeadId: string; })=>x.chatHeadId==this.chatHeadId)
            this.schoolInboxList[0].chats = selectedSchoolInbox.chats;
@@ -3778,7 +3705,6 @@ else{
   }
 
   showSchoolInboxDiv() {
-    debugger;
     if(this.schoolInboxList) this.chatType = this.schoolInboxList[0]?.chatType;
   }
 
@@ -3870,7 +3796,6 @@ else{
 
   @HostListener('scroll', ['$event'])
   scrollHandlerForForwardList(event: any){
-    debugger;
     const element = event.target; // get the scrolled element
     const scrollPosition = element.scrollHeight - element.scrollTop;
     const isScrollAtBottom = scrollPosition >= element.scrollHeight - element.clientHeight;
@@ -3882,7 +3807,6 @@ else{
     }
   }
   getNextForwardChatHeads(){
-    debugger
     this._chatService
     .getAllChatUsers(this.senderId, this.forwardMessagePageNumber, '')
     .subscribe((response) => {
@@ -4011,7 +3935,6 @@ else{
 
   @HostListener('scroll', ['$event'])
   scrollSchoolChatHandler(event: any) {
-    debugger
     const element = event.target;
     if (element.scrollTop === 0) {
       if (
@@ -4181,7 +4104,6 @@ else{
   }
 
   groupBySchoolChat(response: any) {
-    debugger
     if(response.length==0) return null;
     var schoolInboxList = this.schoolInboxList.find((x: { chatHeadId: any; }) => x.chatHeadId == response[0].chatHeadId);
     if (schoolInboxList.chats == null) {
@@ -4201,12 +4123,10 @@ else{
   }
 
   redirectToUser(userID:any){
-    debugger;
     this.router.navigate(['/user/userProfile', userID]);
   }
 
   downloadFile(fileUrl: string, fileName: string) {
-    debugger
     const link = document.createElement('a');
     link.href = fileUrl;
     link.download = fileName;

@@ -27,6 +27,9 @@ import { DatePipe } from '@angular/common';
 
 import flatpickr from 'flatpickr';
 import { Country } from 'ngx-intl-tel-input/lib/model/country.model';
+import { paymentResponse } from 'src/root/service/signalr.service';
+import { PaymentResponseModalComponent } from '../../paymentResponseModal/paymentResponseModal.component';
+import { paymentStatusResponse } from '../../payment/payment.component';
 
 export const ownedSchoolResponse = new Subject<{ schoolId: string, schoolAvatar: string, schoolName: string, action: string }>();
 
@@ -110,7 +113,10 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   countryFlag: string = '';
   countryFlag2: string = '';
   hamburgerCountSubscription!: Subscription;
+  paymentResponseSubscription!: Subscription;
+  paymentStatusSubscription!: Subscription;
   hamburgerCount:number = 0;
+  freeTrialInfo:any;
 
 
 
@@ -123,8 +129,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   ngOnInit(): void {
-    debugger
-
+    this.freeTrialInfo = JSON.parse(localStorage.getItem("freeTrialInfo")??'');
 
     // Use the PhoneNumberUtil class to parse the cleaned country code
    
@@ -151,7 +156,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     ];
 
     this._schoolService.getDefaultLogo().subscribe((response) => {
-      debugger;
       this.defaultLogos = response;
     });
 
@@ -168,7 +172,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     });
 
     this._iyizicoService.getSubscriptionPlans().subscribe((response) => {
-      debugger
       this.subscriptionPlans = response;
     });
 
@@ -227,7 +230,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
     if (!this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-        debugger
         this.hamburgerCount = response.hamburgerCount;
       });
     }
@@ -243,6 +245,35 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     },
       { validator: this.isValidExpiresOn('expiresOn', this.currentDate) }
     )
+
+    if (!this.paymentResponseSubscription) {
+      this.paymentResponseSubscription = paymentResponse.subscribe(response => {
+        this.loadingIcon = false;
+        if(response.isPaymentSuccess){
+          this.step += 1;
+          this.isStepCompleted = true;
+        }
+        const initialState = {
+          isPaymentSuccess: response.isPaymentSuccess,
+          from: Constant.School
+        };
+        this.bsModalService.show(PaymentResponseModalComponent, { initialState });
+      });
+    }
+
+    if (!this.paymentStatusSubscription) {
+    this.paymentStatusSubscription = paymentStatusResponse.subscribe(response => {
+      if(response.loadingIcon){
+        this.loadingIcon = true;
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('PaymentProcessingMessage');
+        this.messageService.add({ severity: 'info', summary: translatedSummary, life: 6000, detail: translatedMessage });
+      }
+      else{
+        this.loadingIcon = false;
+      }
+    });
+   }
   }
 
   visibility:any;
@@ -253,6 +284,12 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     }
     if (this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription.unsubscribe();
+    }
+    if (this.paymentResponseSubscription) {
+      this.paymentResponseSubscription.unsubscribe();
+    }
+    if (this.paymentStatusSubscription) {
+      this.paymentStatusSubscription.unsubscribe();
     }
   }
 
@@ -272,12 +309,10 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   handleDefaultImageInput(url: string) {
-    debugger;
     this.logoUrl = url;
   }
 
   handleImageInput(event: any) {
-    debugger
     this.fileToUpload.append("avatarImage", event.target.files[0], event.target.files[0].name);
     this.uploadImageName = event.target.files[0].name;
     const reader = new FileReader();
@@ -305,11 +340,10 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   forwardStep() {
-    debugger
     this.isStepCompleted = true;
-    if (!this.createSchoolForm1.valid) {
-      return;
-    }
+     if (!this.createSchoolForm1.valid) {
+       return;
+     }
 
     var schoolName = this.createSchoolForm1.get('schoolName')?.value;
 
@@ -321,7 +355,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     form1Value.founded = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`;
     this.schoolName = form1Value.schoolName.split(' ').join('');
     this._schoolService.isSchoolNameExist(schoolName).subscribe((response:any) => {
-      debugger
       if(response.result == Constant.SchoolNameExist){
         this.createSchoolForm1.setErrors({ unauthenticated: true });
         return;
@@ -347,7 +380,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
         this.schoolUrl = `${this.apiUrl}/profile/school` + form1Value.schoolName.replace(" ", "").toLowerCase();
         this.step += 1;
         this.isStepCompleted = false;
-        debugger;
       }
     });
 
@@ -356,12 +388,12 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     });
   }
 
+  schoolInfo:any;
   forwardStep2() {
-    debugger
     this.isStepCompleted = true;
-    if (this.logoUrl == undefined && this.avatarImage == undefined) {
-      return;
-    }
+     if (this.logoUrl == undefined && this.avatarImage == undefined) {
+       return;
+     }
     var form2Value = this.createSchoolForm2.value;
     this.fileToUpload.append('avatar', this.logoUrl);
 
@@ -372,25 +404,83 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
     //
     // this.step += 1;
-    this.isStepCompleted = true;
+    // this.isStepCompleted = true;
+    // this.schoolInfo = {
+    //           "id": '1',
+    //           "name": 'ddd',
+    //           "avatar":'',
+    //           "type": 1, 
+    //           "amount":0
+    //         };
 
-    this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
-         var schoolId =  response;
-         this.schoolId = schoolId;
-         this.loadingIcon = false;
-         var form1Value =this.createSchoolForm1.value;
-         ownedSchoolResponse.next({schoolId:response.schoolId, schoolAvatar:response.avatar, schoolName:response.schoolName,action:"add"});
-         this.step += 1;
-         this.isStepCompleted = false;
-         const translatedInfoSummary = this.translateService.instant('Success');
-         const translatedMessage = this.translateService.instant('SchoolCreatedSuccessfully');
-         this.messageService.add({severity:'success', summary:translatedInfoSummary,life: 3000, detail:translatedMessage});
-    });
+     this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
+          var schoolId =  response;
+          this.schoolId = schoolId;
+          this.loadingIcon = false;
+          var form1Value =this.createSchoolForm1.value;
+          ownedSchoolResponse.next({schoolId:response.schoolId, schoolAvatar:response.avatar, schoolName:response.schoolName,action:"add"});
+
+
+          this.freeTrialInfo = JSON.parse(localStorage.getItem("freeTrialInfo")??'');
+          if(this.freeTrialInfo != ''){
+             var noOfSchools = Number(this.freeTrialInfo.userSchoolsCount) + 1;
+             this.freeTrialInfo.userSchoolsCount = noOfSchools.toString();
+             this.freeTrialInfo.userSchoolsCount = noOfSchools.toString();
+             this.freeTrialInfo.trialSchoolId = response.schoolId,
+             this.freeTrialInfo.trialSchoolName = response.schoolName,
+             this.freeTrialInfo.trialSchoolAvatar = response.avatar,
+             this.freeTrialInfo.isTrialSchoolPaymentDone = "False"
+
+
+             if(this.freeTrialInfo.trialSchoolCreationDate == ''){
+              this.freeTrialInfo.trialSchoolCreationDate = new Date();
+            }
+             localStorage.setItem("freeTrialInfo",JSON.stringify(this.freeTrialInfo));
+          }
+
+          // here condition this only execute if first school.
+          if(Number(this.freeTrialInfo.userSchoolsCount) == 1){
+            this.step += 2;
+            this.isStepCompleted = true;
+            const translatedInfoSummary = this.translateService.instant('Success');
+            const translatedMessage = this.translateService.instant('SchoolCreatedSuccessfully');
+            this.messageService.add({severity:'success', summary:translatedInfoSummary,life: 3000, detail:translatedMessage});
+          }
+          else{
+            this.step += 1;
+            this.isStepCompleted = true;
+          }
+          // else{
+          //   const translatedSummary = this.translateService.instant('Success');
+          //   const translatedMessage = this.translateService.instant('PaymentProcessingMessage');
+          //   this.messageService.add({ severity: 'info', summary: translatedSummary, life: 6000, detail: translatedMessage });
+          //   this.schoolInfo = {
+          //     "id": response.schoolId,
+          //     "name": response.schoolName,
+          //     "avatar": response.avatar,
+          //     "type": 1, 
+          //     "amount":0
+          //   };
+          // }
+          this.schoolInfo = {
+            "id": response.schoolId,
+            "name": response.schoolName,
+            "avatar": response.avatar,
+            "type": 1, 
+            "amount":0
+          };
+          
+         
+
+
+          
+
+
+     });
   }
 
   paymentConfirmationWindow:any;
   subscriptionStep(){
-    debugger
     this.isStepCompleted = true;
     if (!this.subscriptionForm.valid) {
       return;
@@ -408,29 +498,29 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     }
     this.fileToUpload.append('SubscriptionDetailsJson', JSON.stringify(subscriptionDetails));
 
-    this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
-      if(response.subscriptionDetails.isInternationalUser){
-        this.paymentConfirmationWindow = window.open("","_blank", "width=500,height=300");
-        this.paymentConfirmationWindow?.document.write(response.subscriptionDetails.subscriptionMessage);
-      }
+    //this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
+    //  if(response.subscriptionDetails.isInternationalUser){
+    //    this.paymentConfirmationWindow = window.open("","_blank", "width=500,height=300");
+    //    this.paymentConfirmationWindow?.document.write(response.subscriptionDetails.subscriptionMessage);
+    //  }
       
-         var schoolId =  response;
-         this.schoolId = schoolId;
-         this.loadingIcon = false;
-         var form1Value =this.createSchoolForm1.value;
-         ownedSchoolResponse.next({schoolId:response.schoolId, schoolAvatar:response.avatar, schoolName:response.schoolName,action:"add"});
-         this.step += 1;
-         this.isStepCompleted = false;
+    //     var schoolId =  response;
+    //     this.schoolId = schoolId;
+    //     this.loadingIcon = false;
+    //     var form1Value =this.createSchoolForm1.value;
+    //     ownedSchoolResponse.next({schoolId:response.schoolId, schoolAvatar:response.avatar, schoolName:response.schoolName,action:"add"});
+    //     this.step += 1;
+    //     this.isStepCompleted = false;
 
-         if(response.subscriptionDetails.subscriptionMessage == Constant.Success){
-          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School created successfully'});
-         }
-         else{
-          if(!response.subscriptionDetails.isInternationalUser){
-          this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:response.subscriptionDetails.subscriptionMessage});         
-          }
-         }
-    });
+    //     if(response.subscriptionDetails.subscriptionMessage == Constant.Success){
+    //      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School created successfully'});
+    //     }
+    //     else{
+    //      if(!response.subscriptionDetails.isInternationalUser){
+    //      this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:response.subscriptionDetails.subscriptionMessage});         
+    //      }
+    //     }
+    //});
 
   }
 
@@ -459,7 +549,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   openSharePostModal(): void {
-    debugger
     const initialState = {
       schoolName: this.schoolName
     };
@@ -469,7 +558,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
 
   // phoneFormatter(event : Event) {
-  //   debugger
   //   const phoneNumberControl = this.createSchoolForm1.get('phoneNumber');
   //   let phoneNumber = phoneNumberControl?.value;
 
@@ -508,7 +596,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   // }
 
   imageCropped(event: ImageCroppedEvent) {
-    debugger
     this.selectedImage = event.blob;
     this.croppedImage = this.domSanitizer.bypassSecurityTrustResourceUrl(
       event.objectUrl!
@@ -529,7 +616,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   onFileChange(event: any): void {
-    debugger
     this.isSelected = true;
     this.imageChangedEvent = event;
   }
@@ -541,7 +627,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   onPhoneNumberChange(value: any) {
-    debugger
     var phoneNumber = this.formatPhoneNumber(value.number);
     this.createSchoolForm1.get("phoneNumber")?.setValue(phoneNumber);
     // this.propagateChange(this.phoneNumber);
@@ -563,7 +648,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   previousString: string = "";
 
   // formatPhoneNumber2(test:any) {
-  //   debugger
   //   if(this.previousString == "" || this.previousString != test.number){
 
   //   let value = test.number;
@@ -579,7 +663,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   // }
 
   formatPhoneNumber2(test: any) {
-    debugger
     if (this.previousString === '' || this.previousString !== test.number) {
       const value = test.number;
       // Remove any non-digit characters from the phone number
@@ -609,7 +692,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   uploadOnBlob() {
-    debugger
     const containerName = 'posts';
     const fileName = this.uploadedFile.name;
 
@@ -626,9 +708,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   async uploadFile1(file: File) {
-    debugger
-
-    // Replace with your SAS token or connection string
     const sasToken = '?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2023-07-28T13:40:03Z&st=2023-07-28T05:40:03Z&spr=https&sig=zRI9R2hIEQ1R2ldT7h4eQOECnrP35PXiElqbbHLmcGI%3D';
     const blobName = file.name;
     const blobStorageName = "byokulstorage";
@@ -637,7 +716,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
     this.uploadBlobTest(file, blobName, containerClient)
       .then((response) => {
-        debugger
         console.log(response);
       })
       .catch((error) => {
@@ -647,7 +725,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   private async uploadBlobTest(content: Blob, name: string, client: ContainerClient) {
-    debugger
     try {
       let blockBlobClient = client.getBlockBlobClient(name);
       // blockBlobClient.uploadData(content, { blobHTTPHeaders: { blobContentType: content.type } })
@@ -699,7 +776,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
   isValidExpiresOn(expiresOn: string, currentDate: string) {
     return (group: FormGroup): { [key: string]: any } => {
-      debugger
       let monthYear = group.controls[expiresOn].value;
       if (monthYear.length == 5) {
 
@@ -726,6 +802,11 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
   get schoolEmailValue(): string {
     return this.createSchoolForm1.get('schoolEmail')?.value;
+  }
+
+  onChildEvent(data: any) {
+    this.step -= 1;
+    console.log(`Data received from child: ${data}`);
   }
   
 

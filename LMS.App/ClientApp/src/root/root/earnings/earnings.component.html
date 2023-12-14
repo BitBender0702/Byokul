@@ -312,14 +312,14 @@
                 <img src="../../../assets/images/Wallet.svg" class="me-2" />
                 {{ "Withdraw" | translate }}
               </span>
-              $0
+              ₺0
             </div>
           </div>
           <div class="col-md-4">
             <div
               class="earning-balance-box text_sec1 fw_600 position-relative d-flex align-items-center justify-content-center mt-3"
             >
-              ${{ transactionDetails.monthlyIncome }}
+            ₺{{ transactionDetails.monthlyIncome }}
             </div>
           </div>
           <div class="col-md-4">
@@ -472,34 +472,95 @@
                   class="rounded-circle me-2 image_style"
                   />
                       <span [innerHTML]="item.message"></span>
-                      <span
-                        *ngIf="
-                          item.class == null && item.course?.avatar != 'null'
-                        "
-                        ><img
+                      <span>
+
+                        <img *ngIf="item.schoolId != null"
+                          [routerLink]="[
+                            '/profile/school',
+                            item?.school.schoolName,
+                          ]"
+                          [src]="item.school?.avatar"
+                          class="rounded-circle ms-2 image_style bg-secondary"/>
+
+
+                          <img *ngIf="item.class != null && item.class.avatar != null && item.class.avatar != 'null'"
+                          [routerLink]="[
+                            '/profile/class',
+                            item.class?.school.schoolName,
+                            item.class?.courseName                         
+                          ]"
+                          [src]="item.class?.avatar"
+                          class="rounded-circle ms-2 image_style"/>
+
+
+                          <img *ngIf="item.classId != null"
+                          [routerLink]="[
+                            '/profile/class',
+                            item.class?.school.schoolName,
+                            item.class?.className                         
+                          ]"
+                          src="../../../../assets/images/classLogo.png"
+                          class="rounded-circle ms-2 image_style"/>
+
+                          <img *ngIf="item.courseId != null && item.course.avatar != null && item.course.avatar != 'null'"
+                          [routerLink]="[
+                            '/profile/course',
+                            item.course?.school.schoolName,
+                            item.course?.courseName                         
+                          ]"
+                          [src]="item.course?.avatar"
+                          class="rounded-circle ms-2 image_style"/>
+
+                          <img *ngIf="item.courseId != null && (item.course.avatar == null || item.course.avatar == 'null')"
+                          [routerLink]="[
+                            '/profile/course',
+                            item.course?.school.schoolName,
+                            item.course?.courseName                         
+                          ]"
+                          src="../../../../assets/images/classLogo.png"
+                          class="rounded-circle ms-2 image_style"/>
+
+
+
+                        <!-- <img *ngIf="item.course != null && item.course?.avatar != null && item.course?.avatar != 'null'"
                           [routerLink]="[
                             '/profile/course',
                             item.course?.school.schoolName,
                             item.course?.courseName
                           ]"
-                          *ngIf="item.course != null"
                           [src]="item.course?.avatar"
+                          class="rounded-circle ms-2 image_style"/>
+                          <img *ngIf="item.course != null && (item.course?.avatar == null || item.course?.avatar == 'null')"
                           class="rounded-circle ms-2 image_style"
-                      /></span>
-                      <span
+                          [routerLink]="[
+                            '/profile/course',
+                            item.course?.school.schoolName,
+                            item.course?.courseName
+                          ]"
+                           src="../../../../assets/images/classLogo.png"/> -->
+                        </span>
+                      <!-- <span
                         *ngIf="
                           item.course == null && item.class?.avatar != 'null'
                         "
-                        ><img
+                        ><img *ngIf="item.class != null && item.class?.avatar != null && item.class?.avatar != 'null'"
+                          class="rounded-circle ms-2 image_style"
                           [routerLink]="[
                             '/profile/class',
                             item.class?.school.schoolName,
                             item.class?.className
                           ]"
-                          *ngIf="item.class != null"
                           [src]="item.class?.avatar"
-                          class="rounded-circle ms-2 image_style"
-                      /></span>
+                          class="rounded-circle ms-2 image_style"/>
+                          <img *ngIf="item.class != null && (item.class?.avatar == null || item.class?.avatar == 'null')"
+                          
+                          [routerLink]="[
+                            '/profile/class',
+                            item.class?.school.schoolName,
+                            item.class?.className
+                          ]"
+                           src="../../../../assets/images/classLogo.png"/>
+                        </span> -->
                     </span>
                     <span
                       class="followe_report d-inline-flex align-items-center"
@@ -574,7 +635,7 @@
                             item.school?.schoolName
                           ]"
                           [src]="item.school?.avatar"
-                          class="rounded-circle ms-2 image_style"
+                          class="rounded-circle ms-2 image_style bg-secondary"
                       /></span>
                     </span>
                     <span
@@ -644,19 +705,29 @@
                       *ngIf="
                         item.class == null && item.course?.avatar != 'null'
                       "
-                      ><img
+                      ><img *ngIf="item.course?.avatar != null && item.course?.avatar != 'null'"
                         [routerLink]="[
-                          '/profile/school',
-                          item.school?.schoolName
+                          '/profile/course',
+                          item.course?.school.schoolName,
+                          item.course?.courseName                 
                         ]"
-                        [src]="item.school?.avatar"
+                        [src]="item.course?.avatar"
                         class="rounded-circle ms-2 image_style"
-                    /></span>
+                    />
+                    <img *ngIf="item.course?.avatar == null || item.course?.avatar == 'null'"
+                    [routerLink]="[
+                          '/profile/course',
+                          item.course?.school.schoolName,
+                          item.course?.courseName                 
+                        ]"
+                    class="rounded-circle ms-2 image_style"
+                    src="../../../../assets/images/classLogo.png"/>
+                  </span>
                     <span
                       *ngIf="
                         item.course == null && item.class?.avatar != 'null'
                       "
-                      ><img
+                      ><img *ngIf="item.class?.avatar != null && item.class?.avatar != 'null'"
                         [routerLink]="[
                           '/profile/class',
                           item.class?.school.schoolName,
@@ -664,7 +735,16 @@
                         ]"
                         [src]="item.class?.avatar"
                         class="rounded-circle ms-2 image_style"
-                    /></span>
+                    />
+                    <img *ngIf="item.class?.avatar == null || item.class?.avatar == 'null'"
+                    [routerLink]="[
+                          '/profile/class',
+                          item.class?.school.schoolName,
+                          item.class?.className
+                        ]"
+                    class="rounded-circle ms-2 image_style"
+                    src="../../../../assets/images/classLogo.png"/>
+                  </span>
                   </span>
                   <span
                     class="followe_report d-inline-flex align-items-center"

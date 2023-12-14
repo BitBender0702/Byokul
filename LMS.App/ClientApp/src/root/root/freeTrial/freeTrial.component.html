@@ -1,15 +1,13 @@
-<!-- <div *ngIf="showFreeTrialPopup" class="upload-notification" style="right: 0%;width: 83.4%;top: 1%">
+<div *ngIf="!isAuthRoute && freeTrialInfo.isTrialSchoolPaymentDone == 'False'">
+  <div *ngIf="showFreeTrialPopup" class="freeTrial-notification" style="right: 0%;width: 83.4%;top: 0%">
    <h6 class="upload-notification__title">You are in {{freeTrialDaysLeft}} day of 30-days free trial.
-    <span  [routerLink]="[
-      '/user/notifications'
-    ]" class="cursor_pointer"><b><u>Subscribe</u></b> 
+    <span (click)="openSchoolPaymentPopup()" class="cursor_pointer"><b><u>Subscribe</u></b> 
    </span> to keep your school active</h6>
-</div>
+  </div>
 
-<div *ngIf="afterFreeTrialPopup" class="upload-notification" style="right: 0%;width: 83.4%;top: 1%">
+  <div *ngIf="afterFreeTrialPopup" class="freeTrial-notification" style="right: 0%;width: 83.4%;top: 0%">
    <h6 class="upload-notification__title">Your 30-day free trial for your school has ended. Please
-    <span  [routerLink]="[
-      '/user/notifications'
-    ]" class="cursor_pointer"><b><u>Subscribe</u></b> 
+    <span (click)="openSchoolPaymentPopup()" class="cursor_pointer"><b><u>Subscribe</u></b> 
    </span> to keep your school active</h6>
-</div> -->
+  </div>
+</div>

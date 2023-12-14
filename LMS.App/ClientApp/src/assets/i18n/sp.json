@@ -485,7 +485,19 @@
   "PaymentFailureMessage": "Your payment is failed, please try again",
   "GoToYour": "Go to your",
   "Profile": "profile",
-  "PaymentProcessingMessage":"Your payment is being processed, please do not close this page until you see the confirmation message."
+  "PaymentProcessingMessage":"Your payment is being processed, please do not close this page until you see the confirmation message.",
+  "Subscribe": "Subscribe",
+  "StoreCardInfo": "If you do not select this option, you will need to renew your subscription manually each time.",
+  "SelectAtLeastOneOption": "Please select atLeast one option",
+  "RemoveCard": "Remove Card",
+  "CardRemovedSuccessfully": "Card removed Successfully",
+  "CardDetailsInvalid": "Card details invalid",
+  "CommentedOnYourClass": "Commented on your class",
+  "CommentedOnYourCourse": "Commented on your course",
+  "PleaseSelectSchool": "Please select school",
+  "SubscriptionEndedMessageForClass": "Please renew/buy school subscription to create class",
+  "SubscriptionEndedMessageForCourse": "Please renew/buy school subscription to create course"
+
 
 
 

@@ -22,7 +22,6 @@ export class PaymentService{
     }
 
     buyClassCourse(paymentDetails:any):Observable<any>{
-      debugger
       return this.http.post(`${this.apiUrl}/iyizico/buySchoolClassCourse`,paymentDetails, {headers: this.headers});
     }
 
@@ -45,5 +44,10 @@ export class PaymentService{
     payout(payoutViewModel:PayoutViewModel): Observable<any> {
       return this.http.post(`${this.apiUrl}/stripe/payout`,payoutViewModel, {headers: this.headers});
     }
+
+    removeCard(cardUserKey:string,cardToken:string): Observable<any> {
+      let queryParams = new HttpParams().append("cardUserKey",cardUserKey).append("cardToken",cardToken);
+      return this.http.post(`${this.apiUrl}/iyizico/removeCard`,null, {params:queryParams,headers: this.headers});
+  }
 
 }

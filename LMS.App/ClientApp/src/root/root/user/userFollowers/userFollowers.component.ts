@@ -72,7 +72,6 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
       this.userId = this.route.snapshot.paramMap.get('userId') ?? '';
 
       this._userService.getUserFollowers(this.userId,this.userFollowersPageNumber,this.searchString).subscribe((response) => {
-        debugger
         this.userFollowers = response;
         this.loadingIcon = false;
         this.isDataLoaded = true;
@@ -86,7 +85,6 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
 
       if (!this.hamburgerCountSubscription) {
         this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-          debugger
           this.hamburgerCount = response.hamburgerCount;
         });
       }
@@ -95,8 +93,6 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
 
       this._userService.getUserBannedFollowers(this.userId,this.userBannedFollowersPageNumber,this.searchString).subscribe(response => {
         this.userBannedFollowers = response.data;
-        // this.followersTab = false;
-        // debugger
       })
 
       this.reportFollowerForm = this.fb.group({
@@ -114,7 +110,6 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
       }
       if (!this.hamburgerCountSubscription) {
         this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-          debugger
           this.hamburgerCount = response.hamburgerCount;
         });
       }
@@ -158,10 +153,8 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
     }
 
     banFollower(folloerId:string,userId:string){
-      debugger
       this.loadingIcon = true;
       this._userService.banFollower(folloerId,userId).subscribe((response) => {
-        debugger
         this.ngOnInit();
         const translatedMessage = this.translateService.instant('BannedSuccessfully');
         const translatedSummary = this.translateService.instant('Success');
@@ -197,7 +190,6 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
   }
 
   getUserFollowers(){
-    debugger
     this._userService.getUserFollowers(this.userId,this.userFollowersPageNumber,this.searchString).subscribe((response) => {
       this.userFollowers =[...this.userFollowers, ...response];
       this.postLoadingIcon = false;
@@ -212,7 +204,6 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
   }
 
   getReportFollower(id:string,followerName:string){
-    debugger
     this.reportedFollowerId = id;
     this.followerName = followerName;
     this.isSubmitted = false;
@@ -222,7 +213,6 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
   }
 
   reportFollower(){
-    debugger
     this.isSubmitted = true;
     if (!this.reportFollowerForm.valid) {
       return;
@@ -237,7 +227,6 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
     this.reportFollowerViewModel.followerName = this.followerName;
     this.reportFollowerViewModel.reportReason = this.reportFollowerForm.get('reportContent')?.value;
     this._userService.reportFollower(this.reportFollowerViewModel).subscribe((response) => {
-      debugger
       this.closeReportsModal();
       this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Report submitted successfully'});
     });
@@ -262,7 +251,6 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
   }
 
   getFollowers(){
-    debugger
     this._userService.getUserFollowers(this.userId,this.userFollowersPageNumber,this.searchString).subscribe((response) => {
       this.userFollowers =[...this.userFollowers];
       this.postLoadingIcon = false;
@@ -273,19 +261,15 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
   }
 
   getBannedUser(){
-    debugger;
     this._userService.getUserBannedFollowers(this.userId,this.userBannedFollowersPageNumber,this.searchString).subscribe(response => {
       this.userBannedFollowers = response.data;
       this.followersTab = false;
-      debugger
     })
   }
 
   unBanFollower(followerId:string,userId:string){
-    debugger
     this.loadingIcon = true;
     this._userService.unBanFollower(followerId,userId).subscribe((response) => {
-      debugger
       this.ngOnInit();
       const translatedMessage = this.translateService.instant('UnBannedSuccessfully');
       const translatedSummary = this.translateService.instant('Success');

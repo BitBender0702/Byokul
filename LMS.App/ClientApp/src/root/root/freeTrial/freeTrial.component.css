@@ -1,3 +1,18 @@
 .cursor_pointer {
     cursor: pointer;
   }
+
+  .freeTrial-notification {
+    position: fixed;
+    top: 50px;
+    right: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background: linear-gradient(90.02deg, #f10c05 0.02%, #f10c05 99.98%);
+    padding: 12px 40px;
+    font-family: "Poppins", sans-serif;
+    border-radius: 16px;
+    z-index: 9999;
+  }
