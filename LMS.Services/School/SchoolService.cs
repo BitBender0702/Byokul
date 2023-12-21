@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using iText.Kernel.Geom;
+using Iyzipay;
+using Iyzipay.Model;
+using Iyzipay.Request;
 using LMS.Common.Enums;
 using LMS.Common.ViewModels;
 using LMS.Common.ViewModels.Chat;
@@ -197,7 +200,54 @@ namespace LMS.Services
             //schoolViewModel.SubscriptionDetails.IsInternationalUser = true;
             //schoolViewModel.SubscriptionDetails.SubscriptionMessage = subscriptionResponse;
             //}
+
+            if (schoolViewModel.IdentityNumber != null && schoolViewModel.IBanNumber != null)
+            {
+                await SaveUserIdentityAndIBan(schoolViewModel.IdentityNumber, schoolViewModel.IBanNumber,createdById);
+            }
             return schoolViewModel;
+        }
+
+
+        public async Task SaveUserIdentityAndIBan(string identityNumber, string iBanNumber, string userId)
+        {
+            var user = _userRepository.GetById(userId);
+            user.IdentityNumber = identityNumber;
+            user.IBanNumber = iBanNumber;
+
+            _userRepository.Update(user);
+            _userRepository.Save();
+
+
+            Options options = new Options
+            {
+                ApiKey = this._config.GetValue<string>("IyzicoSettings:ApiKey"),
+                SecretKey = this._config.GetValue<string>("IyzicoSettings:SecretKey"),
+                BaseUrl = this._config.GetValue<string>("IyzicoSettings:BaseUrl")
+            };
+
+
+            RetrieveSubMerchantRequest request = new RetrieveSubMerchantRequest();
+            request.SubMerchantExternalId = user.IyzicoSubMerchantExternalId;
+            SubMerchant subMerchantInfo = SubMerchant.Retrieve(request, options);
+
+            UpdateSubMerchantRequest updateRequest = new UpdateSubMerchantRequest();
+
+            updateRequest.Locale = Locale.TR.ToString();
+            updateRequest.ConversationId = subMerchantInfo.ConversationId;
+            updateRequest.Address = subMerchantInfo.Address;
+            updateRequest.ContactName = subMerchantInfo.ContactName;
+            updateRequest.ContactSurname = subMerchantInfo.ContactName;
+            updateRequest.Email = subMerchantInfo.Email;
+            updateRequest.GsmNumber = subMerchantInfo.GsmNumber;
+            updateRequest.Name = subMerchantInfo.Name;
+            updateRequest.LegalCompanyTitle = subMerchantInfo.LegalCompanyTitle;
+            updateRequest.IdentityNumber = identityNumber;
+            updateRequest.Currency = subMerchantInfo.Currency;
+            updateRequest.Iban = iBanNumber;
+            updateRequest.SubMerchantKey = subMerchantInfo.SubMerchantKey;
+            SubMerchant subMerchant = SubMerchant.Update(updateRequest, options);
+
         }
 
         public async Task SaveSchoolLanguages(IEnumerable<string> languageIds, Guid schoolId)
@@ -761,9 +811,9 @@ namespace LMS.Services
 
                     var classFilterBySchedule = classListForThisFilterationType.AsEnumerable().Where(x => posts.Any(y => y.ParentId == x.ClassId)).ToList();
                     classListForThisFilterationType = classFilterBySchedule;
-                   // classes.AddRange(classFilterBySchedule);
+                    // classes.AddRange(classFilterBySchedule);
 
-                    
+
                 }
                 if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Scheduled) && filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Live))
                 {
@@ -774,19 +824,19 @@ namespace LMS.Services
 
                     var classFilterByBothLiveAndSchedule = classListForThisFilterationType.AsEnumerable().Where(x => posts.Any(y => y.ParentId == x.ClassId)).OrderBy(x => x.ClassName).ToList();
                     classListForThisFilterationType = classFilterByBothLiveAndSchedule;
-                  //  classes.AddRange(classFilterByBothLiveAndSchedule);
+                    //  classes.AddRange(classFilterByBothLiveAndSchedule);
                 }
 
-                if(filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Name))
+                if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Name))
                 {
                     var classFilterByName = classListForThisFilterationType.Where(x => classIds.Contains((Guid)x.ClassId)).OrderBy(x => x.ClassName).ToList();
                     classListForThisFilterationType = classFilterByName;
-                   // classes.AddRange(classFilterByName);
+                    // classes.AddRange(classFilterByName);
                 }
                 classes.AddRange(classListForThisFilterationType);
             }
-          
-           else
+
+            else
             {
 
                 if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.TopRated))
@@ -1754,14 +1804,14 @@ namespace LMS.Services
 
         public async Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolClasses(Guid? schoolId, string userId, int pageNumber)
         {
-            var filters = await _userClassCourseFilterRepository.GetAll().Include(x => x.ClassCourseFilter).Where(x => x.SchoolId == schoolId && x.IsActive && x.UserId==userId && x.ClassCourseFilterType == ClassCourseFilterEnum.Class).ToListAsync();
+            var filters = await _userClassCourseFilterRepository.GetAll().Include(x => x.ClassCourseFilter).Where(x => x.SchoolId == schoolId && x.IsActive && x.UserId == userId && x.ClassCourseFilterType == ClassCourseFilterEnum.Class).ToListAsync();
 
             int pageSize = 4;
             var classes = await GetClassesBySchoolId(schoolId, userId, pageNumber, pageSize, filters);
             //var courses = await GetCoursesBySchoolId(schoolId, userId);
             var savedClassCourse = await _savedClassCourseRepository.GetAll().ToListAsync();
             var sharedClassCourse = await _sharedClassCourseRepository.GetAll().ToListAsync();
-
+            var classStudents = await _classStudentRepository.GetAll().ToListAsync();
 
             var model = new List<CombineClassCourseViewModel>();
 
@@ -1797,6 +1847,7 @@ namespace LMS.Services
                 item.SavedClassCourseCount = savedClassCourse.Where(x => x.ClassId == classDetails.ClassId && x.UserId == userId).Count();
                 item.SharedClassCourseCount = sharedClassCourse.Where(x => x.ClassId == classDetails.ClassId).Count();
                 item.Currency = classDetails.Currency;
+                item.IsClassCourseStudent = await _classStudentRepository.GetAll().AnyAsync(x => x.ClassId == classDetails.ClassId);
                 model.Add(item);
             }
 
@@ -1966,6 +2017,7 @@ namespace LMS.Services
                 item.SavedClassCourseCount = savedClassCourse.Where(x => x.CourseId == courseDetails.CourseId && x.UserId == userId).Count();
                 item.SharedClassCourseCount = sharedClassCourse.Where(x => x.CourseId == courseDetails.CourseId).Count();
                 item.Currency = courseDetails.Currency;
+                item.IsClassCourseStudent = await _courseStudentRepository.GetAll().AnyAsync(x => x.CourseId == courseDetails.CourseId);
                 model.Add(item);
             }
 
@@ -2109,9 +2161,9 @@ namespace LMS.Services
             {
                 var schoolUnreadUsers = await _chatHeadRepository.GetAll().Where(x => (x.SchoolId == school.SchoolId || x.ChatTypeId == school.SchoolId)).ToListAsync();
 
-             
 
-               if(schoolUnreadUsers != null)
+
+                if (schoolUnreadUsers != null)
                 {
                     var schoolTotalUnreadMessageCount = schoolUnreadUsers
                      .Where(x => x.SchoolId == school.SchoolId || x.ChatTypeId == school.SchoolId)

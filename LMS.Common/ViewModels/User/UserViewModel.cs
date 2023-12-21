@@ -18,5 +18,7 @@ namespace LMS.Common.ViewModels.User
         public Guid? CityId { get; set; }
         public CityViewModel City { get; set; }
         public bool? IsBan { get; set; }
+        public string? IdentityNumber { get; set; }
+        public string? IBanNumber { get; set; }
     }
 }

@@ -28,6 +28,9 @@ using Country = LMS.Data.Entity.Country;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
+using Iyzipay.Request;
+using Iyzipay.Model;
+using Iyzipay;
 
 namespace LMS.Services
 {
@@ -789,7 +792,7 @@ namespace LMS.Services
         public async Task<List<UserFollowerViewModel>> GetUserFollowers(string userId, int pageNumber, string? searchString)
         {
             int pageSize = 13;
-            var followerList = await _userFollowerRepository.GetAll().Include(x => x.Follower).Include(x=>x.User)
+            var followerList = await _userFollowerRepository.GetAll().Include(x => x.Follower).Include(x => x.User)
                 .Where(x => x.UserId == userId && !x.IsBan && ((string.IsNullOrEmpty(searchString)) || (x.Follower.FirstName.Contains(searchString) || x.Follower.LastName.Contains(searchString) || (x.Follower.FirstName + " " + x.Follower.LastName).ToLower().Contains(searchString.ToLower())))).Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize).ToListAsync();
 
@@ -853,14 +856,9 @@ namespace LMS.Services
                 };
 
                 await FollowUnFollowUser(unFollowUser, followerId);
-
-
                 return true;
             }
-
             return false;
-
-
 
         }
 
@@ -1080,7 +1078,7 @@ namespace LMS.Services
                 if (tokenList.Count == 0)
                 {
                     var school = await _schoolRepository.GetAll().Where(x => x.SchoolId == isUserInSchool.SchoolId).Include(x => x.Specialization).FirstAsync();
-                    if(school != null)
+                    if (school != null)
                     {
                         return new List<string>() { school.Specialization.Name + school.Description };
                     }
@@ -1275,7 +1273,7 @@ namespace LMS.Services
                             if (!school.IsBan && !school.IsDisableByOwner && !school.IsDeleted)
                             {
                                 var isUserBanFromSchool = await _schoolFollowerRepository.GetAll().Where(x => x.IsBan && x.UserId == loginUserId && x.SchoolId == post.ParentId).FirstOrDefaultAsync();
-                                if(isUserBanFromSchool == null)
+                                if (isUserBanFromSchool == null)
                                 {
                                     parentName = school.SchoolName;
                                     parentImageUrl = school.Avatar;
@@ -1289,10 +1287,10 @@ namespace LMS.Services
                         if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
                         {
                             var classes = await _classRepository.GetAll().Where(x => x.ClassId == post.ParentId && !x.IsEnable && !x.IsDisableByOwner && !x.IsDeleted && !x.School.IsBan && !x.School.IsDeleted && !x.School.IsDisableByOwner).Include(x => x.School).FirstOrDefaultAsync();
-                            if(classes != null)
+                            if (classes != null)
                             {
                                 var isUserBanFromClass = await _classStudentRepository.GetAll().Where(x => x.IsStudentBannedFromClass && x.Student.UserId == (loginUserId) && x.ClassId == post.ParentId).FirstOrDefaultAsync();
-                                if(isUserBanFromClass == null)
+                                if (isUserBanFromClass == null)
                                 {
                                     parentName = classes.ClassName;
                                     parentImageUrl = classes.Avatar;
@@ -1305,10 +1303,10 @@ namespace LMS.Services
                         if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
                         {
                             var course = await _courseRepository.GetAll().Where(x => x.CourseId == post.ParentId && !x.IsEnable && !x.IsDisableByOwner && !x.IsDeleted && !x.School.IsBan && !x.School.IsDeleted && !x.School.IsDisableByOwner).Include(x => x.School).FirstOrDefaultAsync();
-                            if(course != null)
+                            if (course != null)
                             {
                                 var isUserBanFromCourse = await _courseStudentRepository.GetAll().Where(x => x.IsStudentBannedFromCourse && x.Student.UserId == (loginUserId) && x.CourseId == post.ParentId).FirstOrDefaultAsync();
-                                if(isUserBanFromCourse == null)
+                                if (isUserBanFromCourse == null)
                                 {
                                     parentName = course.CourseName;
                                     parentImageUrl = course.Avatar;
@@ -1324,7 +1322,7 @@ namespace LMS.Services
                             if (!user.IsBan)
                             {
                                 var isUserBanned = await _userFollowerRepository.GetAll().Where(x => x.IsBan && x.Follower.Id == loginUserId && x.User.Id == post.ParentId.ToString()).FirstOrDefaultAsync();
-                                if(isUserBanned == null)
+                                if (isUserBanned == null)
                                 {
                                     parentName = user.FirstName + " " + user.LastName;
                                     parentImageUrl = user.Avatar;
@@ -1782,7 +1780,7 @@ namespace LMS.Services
             var postAttachment = new PostAttachment();
             foreach (var post in posts)
             {
-                
+
                 string avatar = GetPostParentImage(post.ParentId, post.PostAuthorType);
                 if (post.PostType == 3)
                 {
@@ -1965,7 +1963,7 @@ namespace LMS.Services
                 .ThenInclude(x => x.School)
                 .Where(x => x.Student.UserId == userId).ToListAsync();
 
-            var requiredIds = schoolFollowers.Select(x => new FeedConvertDTO { Id = x.SchoolId, ParentImageUrl = x.School.Avatar, ParentName = x.School.SchoolName, SchoolName = "", IsParentVerified = x.School.IsVarified}).ToList();
+            var requiredIds = schoolFollowers.Select(x => new FeedConvertDTO { Id = x.SchoolId, ParentImageUrl = x.School.Avatar, ParentName = x.School.SchoolName, SchoolName = "", IsParentVerified = x.School.IsVarified }).ToList();
             var testData = userFollowersData.Where(p => p.UserId != string.Empty).Select(x => new FeedConvertDTO { Id = new Guid(x.UserId), ParentImageUrl = x.User.Avatar, ParentName = x.User.FirstName, SchoolName = "", IsParentVerified = x.User.IsVarified }).ToList();
             requiredIds.AddRange(testData);
             requiredIds.AddRange(classStudentsData.Select(c => new FeedConvertDTO { Id = c.ClassId, ParentImageUrl = c.Class.Avatar, ParentName = c.Class.ClassName, SchoolName = c.Class.School.SchoolName, IsParentVerified = false }).ToList());
@@ -2216,44 +2214,93 @@ namespace LMS.Services
         }
         public async Task<bool> IsUserBanned(string userId, string id, PostAuthorTypeEnum from)
         {
-            if(from == PostAuthorTypeEnum.User)
+            if (from == PostAuthorTypeEnum.User)
             {
                 var isUserBanned = await _userFollowerRepository.GetAll().Where(x => x.IsBan && x.Follower.Id == userId && x.User.Id == id).FirstOrDefaultAsync();
-                if(isUserBanned == null)
+                if (isUserBanned == null)
                 {
                     return false;
                 }
                 return true;
 
             }
-            else if(from == PostAuthorTypeEnum.School)
+            else if (from == PostAuthorTypeEnum.School)
             {
                 var isUserBanFromSchool = await _schoolFollowerRepository.GetAll().Where(x => x.IsBan && x.UserId == userId && x.SchoolId == Guid.Parse(id)).FirstOrDefaultAsync();
-                if( isUserBanFromSchool == null)
+                if (isUserBanFromSchool == null)
                 {
                     return false;
                 }
                 return true;
             }
-            else if(from == PostAuthorTypeEnum.Class)
+            else if (from == PostAuthorTypeEnum.Class)
             {
                 var isUserBanFromClass = await _classStudentRepository.GetAll().Where(x => x.IsStudentBannedFromClass && x.Student.UserId == (userId) && x.ClassId == Guid.Parse(id)).FirstOrDefaultAsync();
-                if( isUserBanFromClass == null)
+                if (isUserBanFromClass == null)
                 {
                     return false;
                 }
                 return true;
             }
-            else if(from == PostAuthorTypeEnum.Course)
+            else if (from == PostAuthorTypeEnum.Course)
             {
                 var isUserBanFromCourse = await _courseStudentRepository.GetAll().Where(x => x.IsStudentBannedFromCourse && x.Student.UserId == (userId) && x.CourseId == Guid.Parse(id)).FirstOrDefaultAsync();
-                if( isUserBanFromCourse == null)
+                if (isUserBanFromCourse == null)
                 {
                     return false;
                 }
                 return true;
 
             }
+            return false;
+        }
+
+        public async Task<UserIdentityAndIBanViewModel> GetUserIdentityAndIBan(string userId)
+        {
+            var user = _userRepository.GetById(userId);
+            return _mapper.Map<UserIdentityAndIBanViewModel>(user);
+        }
+
+        public async Task<bool> UpdateUserIBan(string iBanNumber, string userId)
+        {
+            var user = _userRepository.GetById(userId);
+            Options options = new Options
+            {
+                ApiKey = this._config.GetValue<string>("IyzicoSettings:ApiKey"),
+                SecretKey = this._config.GetValue<string>("IyzicoSettings:SecretKey"),
+                BaseUrl = this._config.GetValue<string>("IyzicoSettings:BaseUrl")
+            };
+
+
+            RetrieveSubMerchantRequest request = new RetrieveSubMerchantRequest();
+            request.SubMerchantExternalId = user.IyzicoSubMerchantExternalId;
+            SubMerchant subMerchantInfo = SubMerchant.Retrieve(request, options);
+
+            UpdateSubMerchantRequest updateRequest = new UpdateSubMerchantRequest();
+
+            updateRequest.Locale = Locale.TR.ToString();
+            updateRequest.ConversationId = subMerchantInfo.ConversationId;
+            updateRequest.Address = subMerchantInfo.Address;
+            updateRequest.ContactName = subMerchantInfo.ContactName;
+            updateRequest.ContactSurname = subMerchantInfo.ContactName;
+            updateRequest.Email = subMerchantInfo.Email;
+            updateRequest.GsmNumber = subMerchantInfo.GsmNumber;
+            updateRequest.Name = subMerchantInfo.Name;
+            updateRequest.LegalCompanyTitle = subMerchantInfo.LegalCompanyTitle;
+            updateRequest.IdentityNumber = subMerchantInfo.IdentityNumber;     
+            updateRequest.Currency = subMerchantInfo.Currency;
+            updateRequest.Iban = iBanNumber;
+            updateRequest.SubMerchantKey = subMerchantInfo.SubMerchantKey;
+            SubMerchant subMerchant = SubMerchant.Update(updateRequest, options);
+
+            if (subMerchant.Status == Status.SUCCESS.ToString())
+            {
+                user.IBanNumber = iBanNumber;
+                _userRepository.Update(user);
+                _userRepository.Save();
+                return true;
+            }
+
             return false;
         }
 

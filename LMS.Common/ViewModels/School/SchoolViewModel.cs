@@ -50,6 +50,8 @@ namespace LMS.Common.ViewModels.School
         public string SchoolSlogan { get; set; }
         public string SchoolEmail { get; set; }
         public double? AvailableStorageSpace { get; set; }
+        public string? IdentityNumber { get; set; }
+        public string? IBanNumber { get; set; }
 
 
     }

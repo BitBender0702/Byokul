@@ -44,9 +44,10 @@ namespace LMS.DataAccess.Automapper
             CreateMap<SchoolTransaction, SchoolTransactionViewModel>();
             CreateMap<SchoolClassCourseTransaction, SchoolTransactionViewModel>();
             CreateMap<SchoolClassCourseTransaction, SchoolClassCourseTransactionViewModel>().ReverseMap();
+         
             
-
             CreateMap<ClassCourseRating, ClassCourseRatingViewModel>();
+            CreateMap<User, UserIdentityAndIBanViewModel>();
 
 
         }

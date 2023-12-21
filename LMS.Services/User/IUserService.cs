@@ -1,4 +1,5 @@
-﻿using LMS.Common.Enums;
+﻿using Iyzipay.Model;
+using LMS.Common.Enums;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Permission;
 using LMS.Common.ViewModels.Post;
@@ -50,5 +51,8 @@ namespace LMS.Services
         Task<List<UserFollowerViewModel>> GetUserBannedFollowers(string userId, int pageNumber, string? searchString);
         string GetPostParentImage(Guid parentId, int postAuthorType);
         Task<bool> IsUserBanned(string userId, string id, PostAuthorTypeEnum from);
+        Task<UserIdentityAndIBanViewModel> GetUserIdentityAndIBan(string userId);
+        Task<bool> UpdateUserIBan(string iBanNumber, string userId);
+
     }
 }

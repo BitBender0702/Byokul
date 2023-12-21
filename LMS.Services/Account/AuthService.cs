@@ -122,8 +122,8 @@ namespace LMS.Services.Account
                 claims.Add(new Claim("schoolName", trialSchool.SchoolName.ToString()));
                 claims.Add(new Claim("avatar", trialSchool.Avatar.ToString()));
 
-                var isAnySchoolSubscribed = await _schoolSubscriptionRepository.GetAll().Include(x => x.School).Where(x => x.School.CreatedById == userInfo.Id && x.IsActive).FirstOrDefaultAsync();
-                claims.Add(new Claim("isTrialSchoolPaymentDone", isAnySchoolSubscribed != null ? true.ToString() : false.ToString()));
+                var isTrialSchoolSubscribed = await _schoolSubscriptionRepository.GetAll().Include(x => x.School).Where(x => x.School.SchoolId == trialSchool.SchoolId && x.IsActive).FirstOrDefaultAsync();
+                claims.Add(new Claim("isTrialSchoolPaymentDone", isTrialSchoolSubscribed != null ? true.ToString() : false.ToString()));
             };
 
             claims.Add(new Claim("trialSchoolCreationDate", trialSchool == null ? "" : trialSchool.CreatedOn.ToString()));

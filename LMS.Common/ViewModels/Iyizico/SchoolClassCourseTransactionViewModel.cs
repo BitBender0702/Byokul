@@ -21,14 +21,16 @@ namespace LMS.Common.ViewModels.Iyizico
         public ClassViewModel? Class { get; set; }
         public Guid? CourseId { get; set; }
         public CourseViewModel? Course { get; set; }
-        public string ConversationId { get; set; }
+        public string? ConversationId { get; set; }
         public string? PaymentId { get; set; }
         public string? Message { get; set; }
         public DateTime CreatedOn { get; set; }
-        public int Status { get; set; }
+        public int? Status { get; set; }
         public bool IsActive { get; set; }
         public int Amount { get; set; }
         public bool IsRefund { get; set; }
+        public string? PaymentTransactionId { get; set; }
+        public string? SubMerchantKey { get; set; }
 
 
     }

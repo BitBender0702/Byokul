@@ -104,6 +104,15 @@ namespace LMS.Common.ViewModels.Post
         public static string CourseIdInvalidOrStudentExist = "Invalid courseId or already joined the class";
         public static string Monthly = "Monthly";
         public static string Yearly = "Yearly";
+        public static string School = "school";
+        public static string Class = "class";
+        public static string Course = "course";
+        public static string IBanUpdatedSuccessfully = "IBan number updated successfully";
+        public static string IBanNotUpdated = "IBan number is incorrect";
+        public static string ObjectReferenceError = "Object reference not set to an instance of an object.";
+        public static string FollowerUnbanSuccessfully = "Follower unban successfully";
+
+
         public static string NewPassAndConfirmPassNotmatch = "New Password and confirm password did not match";
         public static string PassResetSuccessfully = "Password reset successfully";
         public static string PassResendSuccessfully = "Password resend successfully";
