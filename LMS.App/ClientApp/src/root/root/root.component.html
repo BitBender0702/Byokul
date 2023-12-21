@@ -52,7 +52,9 @@
       </div>
     </div>
   </div>
-  <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+  <loading-spinner [loadingIcon]="loadingIcon">
+  </loading-spinner>
+  <h5 *ngIf="showPaymentprocessingMessage" class="_paymentProcessMessage text-center w-100">{{"PaymentProcessingMessage" | translate}}</h5>
 </router-outlet>
 <button
   #paymentConfirmationBtn

@@ -412,9 +412,9 @@ export class SchoolProfileComponent
       this.noOfAppliedClassFilters = this.school.noOfAppliedClassFilters;
       this.noOfAppliedCourseFilters = this.school.noOfAppliedCourseFilters;
       this.addEventListnerOnCarousel();
-      this.checkSchoolHasTrial();
+      this.checkSchoolHasTrial(this.school.schoolId);
       
-      isUserSchoolOrNotResponse.next({isUserSchool:this.isOwner});
+      // isUserSchoolOrNotResponse.next({isUserSchool:this.isOwner});
       this.isUserBannedId = response.schoolId
       this.checkIfUserIsBanned();
       if(response.availableStorageSpace == 0){
@@ -747,7 +747,14 @@ export class SchoolProfileComponent
 
     if (!this.paymentResponseSubscription) {
       this.paymentResponseSubscription = paymentResponse.subscribe(response => {
+        debugger
         this.loadingIcon = false;
+        var freeTrialInfo = JSON.parse(localStorage.getItem("freeTrialInfo")??'');
+        if(freeTrialInfo.isTrialSchoolPaymentDone == "" || freeTrialInfo.isTrialSchoolPaymentDone == "False"){
+          freeTrialInfo.isTrialSchoolPaymentDone = "True";
+          localStorage.setItem("freeTrialInfo",JSON.stringify(freeTrialInfo));  
+          isUserSchoolOrNotResponse.next({isUserSchool:this.isOwner,isTrialSchool:false});         
+        }
         if(response.isPaymentSuccess){
           this.school.isSchoolSubscribed = true;
         }
@@ -755,7 +762,9 @@ export class SchoolProfileComponent
           isPaymentSuccess: response.isPaymentSuccess,
           from: Constant.School
         };
-        this.bsModalService.show(PaymentResponseModalComponent, { initialState });
+        if(response.paymentType == Constant.School){
+          this.bsModalService.show(PaymentResponseModalComponent, { initialState });
+        }
       });
     }
 
@@ -797,9 +806,13 @@ export class SchoolProfileComponent
     };
   }
 
-  checkSchoolHasTrial(){
+  checkSchoolHasTrial(schoolId:string){
+    debugger
+    var schoolId = schoolId;
   var freeTrialInfo = JSON.parse(localStorage.getItem("freeTrialInfo")??'');
-    if(Number(freeTrialInfo.userSchoolsCount) == 1){
+  if(schoolId == freeTrialInfo.trialSchoolId){
+      isUserSchoolOrNotResponse.next({isUserSchool:this.isOwner,isTrialSchool:true});
+    // if(Number(freeTrialInfo.userSchoolsCount) == 1){
       var trialSchoolCreationDate = new Date(freeTrialInfo.trialSchoolCreationDate);
       // const [datePart, timePart] = freeTrialInfo.trialSchoolCreationDate.split(' ');
       // const [day, month, year] = datePart.split('-').map(Number);
@@ -812,8 +825,12 @@ export class SchoolProfileComponent
       if(daysDifference < 40){
         this.school.isSchoolSubscribed = true;
       }
-    }
+    // }
   }
+  else{
+    isUserSchoolOrNotResponse.next({isUserSchool:this.isOwner,isTrialSchool:false});
+  }
+}
 
   @HostListener("window:scroll", [])
   onWindowScroll() {
@@ -1138,6 +1155,10 @@ export class SchoolProfileComponent
     this.isSubmitted = true;
     if (!this.editSchoolForm.valid) {
       return;
+    }
+
+    if (!this.uploadImage) {
+      this.fileToUpload.append('avatar', this.schoolAvatar);
     }
 
     this.fileToUpload.append("avatarImage", this.selectedImage);
@@ -2198,6 +2219,7 @@ export class SchoolProfileComponent
   }
 
   removeLogo() {
+    debugger
     if (this.school.avatar != null) {
       this.schoolAvatar = '';
     }

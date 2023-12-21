@@ -105,7 +105,8 @@
                       </h5>
                     </div>
                     <div class="reel-username font_16 white_text">
-                      <div *ngIf="classCourseDetails.classCourseItem?.type == 1"
+                      <div *ngIf="classCourseDetails.classCourseItem?.type == 1" class="cursor_pointer"
+                      (click)="close()"
                       [routerLink]="[
                         '/profile/class',
                         classCourseDetails.classCourseItem?.schoolName,
@@ -122,7 +123,8 @@
                       />
                         {{ classCourseDetails.classCourseItem.name }}
                       </div>
-                      <div *ngIf="classCourseDetails.classCourseItem?.type == 2"
+                      <div *ngIf="classCourseDetails.classCourseItem?.type == 2" class="cursor_pointer"
+                      (click)="close()"
                       [routerLink]="[
                         '/profile/course',
                         classCourseDetails.classCourseItem?.schoolName,
@@ -155,25 +157,25 @@
                         *ngIf="
                           classCourseDetails.classCourseItem.currency == 'USD'
                         "
-                        >${{ classCourseDetails.classCourseItem.price }}</span
+                        >${{ classCourseDetails.classCourseItem.price | number:'1.0-0' }}</span
                       >
                       <span
                         *ngIf="
                           classCourseDetails.classCourseItem.currency == 'TRY'
                         "
-                        >₺{{ classCourseDetails.classCourseItem.price }}</span
+                        >₺{{ classCourseDetails.classCourseItem.price | number:'1.0-0' }}</span
                       >
                       <span
                         *ngIf="
                           classCourseDetails.classCourseItem.currency == 'EUR'
                         "
-                        >€{{ classCourseDetails.classCourseItem.price }}</span
+                        >€{{ classCourseDetails.classCourseItem.price | number:'1.0-0' }}</span
                       >
                       <span
                         *ngIf="
                           classCourseDetails.classCourseItem.currency == 'GBP'
                         "
-                        >£{{ classCourseDetails.classCourseItem.price }}</span
+                        >£{{ classCourseDetails.classCourseItem.price | number:'1.0-0' }}</span
                       > </strong
                     >{{ "OnePayment" | translate }}
                   </span>
@@ -181,7 +183,7 @@
                     *ngIf="
                       !isOwner &&
                       classCourseDetails.classCourseItem.price != null &&
-                      classCourseDetails.classCourseItem.price != 0
+                      classCourseDetails.classCourseItem.price != 0 && !classCourseDetails.classCourseItem.isClassCourseStudent
                     "
                     (click)="
                       openPaymentModal(classCourseDetails.classCourseItem)
@@ -189,9 +191,13 @@
                     type="button"
                     class="btn custom-btn primary_btn earning-btn fw_400 h_44 ps-4 pe-4"
                   >
-                    {{ "Buy" | translate }} {{ classCourseDetails.price }}
+                    {{ "Buy" | translate }} {{ classCourseDetails.price | number:'1.0-0'}}
                     {{ classCourseDetails.currency }}
                   </button>
+                  <span *ngIf="
+                  !isOwner && classCourseDetails.classCourseItem.isClassCourseStudent && classCourseDetails.classCourseItem.price != null" class="payment-profile font_12 text_ltgray ms-2  fw-bold font_16">
+                      {{ "Purchased" | translate }}
+                </span>
                   <div
                     [ngClass]="
                       showCommentsField
@@ -548,6 +554,7 @@
                           />
                         </span>
                         <input
+                        (keyup)="getTextMessage($event)"
                           [(ngModel)]="messageToGroup"
                           type="text"
                           class="form-control rounded-8 font_14 fw_400"

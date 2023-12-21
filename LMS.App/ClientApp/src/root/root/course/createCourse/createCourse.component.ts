@@ -356,6 +356,7 @@ captureTeacherId(event: any) {
 
   isSubscriptionEnded:boolean = false;
   forwardStep() {
+    debugger
     this.isStepCompleted = true;
     if (!this.createCourseForm1.valid) {
       return;
@@ -376,6 +377,11 @@ captureTeacherId(event: any) {
     }
 
     this.course=this.createCourseForm1.value;
+    if(this.course.price == 0){
+      this.createCourseForm1.get('price')?.setErrors({ customError: true });
+      return;
+    }
+
     var freeTrialInfo = JSON.parse(localStorage.getItem("freeTrialInfo")??'');
     const parsedDate = new Date(freeTrialInfo.trialSchoolCreationDate);
     const year = parsedDate.getFullYear();
@@ -573,6 +579,7 @@ captureTeacherId(event: any) {
   getFreeCourse(){
     this.isCoursePaid = false;
     this.createCourseForm1.get('price')?.removeValidators(Validators.required);
+    this.createCourseForm1.get('price')?.setErrors(null);
     this.createCourseForm1.patchValue({
       price: null,
     });

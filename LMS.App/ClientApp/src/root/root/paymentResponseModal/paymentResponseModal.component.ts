@@ -2,7 +2,7 @@ import {Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
 import { Subscription } from 'rxjs';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { notificationResponse } from 'src/root/service/signalr.service';
 import { NotificationViewModel } from 'src/root/interfaces/notification/notificationViewModel';
 import { paymentStatusResponse } from '../payment/payment.component';
@@ -23,11 +23,13 @@ export class PaymentResponseModalComponent extends MultilingualComponent impleme
   paymentStatus: boolean = false;
   notificationViewModel!:NotificationViewModel;
   changeLanguageSubscription!:Subscription;
+  paymenResponseModalRef!: BsModalRef;
   constructor(injector: Injector,public options: ModalOptions,private bsModalService: BsModalService) { 
     super(injector);
   }
 
   ngOnInit(): void {
+    debugger
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
     this.translate.use(this.selectedLanguage?? '');
     this.loadingIcon = false;
@@ -63,6 +65,8 @@ export class PaymentResponseModalComponent extends MultilingualComponent impleme
   }
 
   closeModal(){
-    this.bsModalService.hide(this.bsModalService.config.id);
+    this.bsModalService.hide();
+    // this.paymenResponseModalRef.hide();
+    // this.bsModalService.hide(this.bsModalService.config.id);
   }
 }

@@ -267,6 +267,48 @@
               </div>
 
               <div class="form-group">
+                <label class="font_10">{{ "IdentityNumber" | translate }}*</label>
+                <input
+                  [attr.disabled]="disableIdentityAndIBan? true : null"
+                  placeholder="{{ 'IdentityNumber' | translate }}"
+                  formControlName="identityNumber"
+                  name="identityNumber"
+                  maxlength="11"
+                  class="form-control w-100"
+                />
+                <small
+                  class="p-error"
+                  style="color: orange"
+                  *ngIf="
+                    isStepCompleted &&
+                    createSchoolForm1.controls.identityNumber.errors
+                  "
+                  >{{ "IdentityNumberRequired" | translate }}
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label class="font_10">{{ "IBanNumber" | translate }}*</label>
+                <input
+                  [attr.disabled]="disableIdentityAndIBan? true : null"
+                  placeholder="{{ 'IBanNumber' | translate }}"
+                  formControlName="iBanNumber"
+                  name="iBanNumber"
+                  maxlength="26"
+                  class="form-control w-100"
+                />
+                <small
+                  class="p-error"
+                  style="color: orange"
+                  *ngIf="
+                    isStepCompleted &&
+                    createSchoolForm1.controls.identityNumber.errors
+                  "
+                  >{{ "IBanNumberRequired" | translate }}
+                </small>
+              </div>
+
+              <div class="form-group">
                 <label class="font_10">{{ "SchoolEmail" | translate }}</label>
                 <input
                   formControlName="schoolEmail"

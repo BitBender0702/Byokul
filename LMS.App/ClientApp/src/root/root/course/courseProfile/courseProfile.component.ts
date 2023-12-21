@@ -149,7 +149,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   savedReelSubscription!: Subscription;
   addPostSubscription!: Subscription;
   changeLanguageSubscription!: Subscription;
-  paymentStatusSubscription!: Subscription;
+  // paymentStatusSubscription!: Subscription;
   sharedPostSubscription!: Subscription;
   deletePostSubscription!: Subscription;
   deleteReelSubscription!: Subscription;
@@ -258,6 +258,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this.postLoadingIcon = false;
       this.addCourseView(this.course.courseId);
       this.addEventListnerOnCarousel();
+      this.checkSchoolHasTrial(this.course.schoolId);
       this.course.posts = this.getFilteredAttachments(this.course.posts);
       this.isRatedByUser = response.isRatedByUser;
       this.isBanned = response.isBannedFromClassCourse;
@@ -265,7 +266,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this.isUserBannedId = response.courseId
 
       this.checkIfUserIsBanned();
-      isUserSchoolOrNotResponse.next({isUserSchool:this.isOwner});
+      // isUserSchoolOrNotResponse.next({isUserSchool:this.isOwner,isTrialSchool:true});
 
 
       this.isAllowedForFileStorage = response.isFileStorageAccessible;
@@ -465,19 +466,19 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       })
     }
 
-    if (!this.paymentStatusSubscription) {
-    this.paymentStatusSubscription = paymentStatusResponse.subscribe(response => {
-      if(response.loadingIcon){
-        this.loadingIcon = true;
-        const translatedSummary = this.translateService.instant('Success');
-        const translatedMessage = this.translateService.instant('PaymentProcessingMessage');
-        this.messageService.add({ severity: 'info', summary: translatedSummary, life: 6000, detail: translatedMessage });
-      }
-      else{
-        this.loadingIcon = false;
-      }
-    });
-   }
+  //   if (!this.paymentStatusSubscription) {
+  //   this.paymentStatusSubscription = paymentStatusResponse.subscribe(response => {
+  //     if(response.loadingIcon){
+  //       this.loadingIcon = true;
+  //       const translatedSummary = this.translateService.instant('Success');
+  //       const translatedMessage = this.translateService.instant('PaymentProcessingMessage');
+  //       this.messageService.add({ severity: 'info', summary: translatedSummary, life: 10000, detail: translatedMessage });
+  //     }
+  //     else{
+  //       this.loadingIcon = false;
+  //     }
+  //   });
+  //  }
 
     if (!this.deletePostSubscription) {
       this.deletePostSubscription = deletePostResponse.subscribe(response => {
@@ -549,16 +550,11 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
     if (!this.paymentResponseSubscription) {
       this.paymentResponseSubscription = paymentResponse.subscribe(response => {
-        this.loadingIcon = false;
         if(response.isPaymentSuccess){
           followedCourseResponse.next({courseId:this.course.courseId,courseAvatar:this.course.avatar,courseName:this.course.courseName,schoolName:this.course.school.schoolName})
           this.course.isCourseStudent = true;
+          this.cd.detectChanges();
         }
-        const initialState = {
-          isPaymentSuccess: response.isPaymentSuccess,
-          from: Constant.Course
-        };
-        this.bsModalService.show(PaymentResponseModalComponent, { initialState });
       });
     }
     
@@ -610,9 +606,9 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
   ngOnDestroy(): void {
-    if (this.paymentStatusSubscription) {
-      this.paymentStatusSubscription.unsubscribe();
-    }
+    // if (this.paymentStatusSubscription) {
+    //   this.paymentStatusSubscription.unsubscribe();
+    // }
 
     if (this.userPermissionSubscription) {
       this.userPermissionSubscription.unsubscribe();
@@ -959,6 +955,12 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     if (!this.editCourseForm.valid) {
       return;
     }
+    this.updateCourseDetails = this.editCourseForm.value;
+    if(this.updateCourseDetails.price == 0){
+      this.editCourseForm.get('price')?.setErrors({ customError: true });
+      return;
+    }
+
     this.loadingIcon = true;
 
     if (!this.uploadImage) {
@@ -967,7 +969,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
     this.fileToUpload.append("avatarImage", this.selectedImage);
 
-    this.updateCourseDetails = this.editCourseForm.value;
     this.schoolName = this.editCourseForm.get('schoolName')?.value;
     this.fileToUpload.append('courseId', this.course.courseId);
     this.fileToUpload.append('courseName', this.updateCourseDetails.courseName);
@@ -996,6 +997,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   getFreeCourse() {
     this.isCoursePaid = false;
     this.editCourseForm.get('price')?.removeValidators(Validators.required);
+    this.editCourseForm.get('price')?.setErrors(null);
     this.editCourseForm.patchValue({
       price: null,
     });
@@ -1818,6 +1820,28 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       followedCourseResponse.next({ courseId: this.course.courseId, courseAvatar: this.course.avatar, courseName: this.course.courseName, schoolName: this.course.school.schoolName });
     })
   }
+
+  checkSchoolHasTrial(schoolId:string){
+    debugger
+  var freeTrialInfo = JSON.parse(localStorage.getItem("freeTrialInfo")??'');
+  if(schoolId == freeTrialInfo.trialSchoolId){
+      isUserSchoolOrNotResponse.next({isUserSchool:this.isOwner,isTrialSchool:true});
+    // if(Number(freeTrialInfo.userSchoolsCount) == 1){
+      // var trialSchoolCreationDate = new Date(freeTrialInfo.trialSchoolCreationDate);
+      // // const [datePart, timePart] = freeTrialInfo.trialSchoolCreationDate.split(' ');
+      // // const [day, month, year] = datePart.split('-').map(Number);
+      // // const [hours, minutes, seconds] = timePart.split(':').map(Number);
+      // // var trialSchoolCreationDate = new Date(year, month - 1, day, hours, minutes, seconds);
+
+      // var currentDate = new Date();
+      // const timeDifference = currentDate.getTime() - trialSchoolCreationDate.getTime();
+      // const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    // }
+  }
+  else{
+    isUserSchoolOrNotResponse.next({isUserSchool:this.isOwner,isTrialSchool:false});
+  }
+}
 
 
   

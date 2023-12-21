@@ -174,7 +174,7 @@
     "ClearAll": "Limpiar todo",
     "Apply": "Apply",
     "CurrentBalance": "Current Balance",
-    "MonthIncome": "Month Income",
+    "MonthlyIncome": "Current Monthly Balance",
     "SourcesOfIncome": "Sources of Income",
     "Withdraw": "Withdraw",
     "All": "All",
@@ -479,8 +479,8 @@
   "ClassJoinedSuccessfully": "Class joined successfully",
   "CourseJoinedSuccessfully": "Course joined successfully",
   "Failure": "Failure",
-  "PaymentSuccessMessage": "Conguratulations, you are successfully enrolled to the",
-  "Class": "Class",
+  "CCPaymentSuccessMessage": "Conguratulations, you are successfully enrolled to the",
+  "SchoolPaymentSuccessMessage": "Conguratulations, you are successfully created the",  "Class": "Class",
   "Course": "Course",
   "PaymentFailureMessage": "Your payment is failed, please try again",
   "GoToYour": "Go to your",
@@ -496,7 +496,21 @@
   "CommentedOnYourCourse": "Commented on your course",
   "PleaseSelectSchool": "Please select school",
   "SubscriptionEndedMessageForClass": "Please renew/buy school subscription to create class",
-  "SubscriptionEndedMessageForCourse": "Please renew/buy school subscription to create course"
+  "SubscriptionEndedMessageForCourse": "Please renew/buy school subscription to create course",
+  "IdentityNumber": "Identity Number",
+  "IdentityNumberRequired": "Identity number is required",
+  "IBanNumber": "IBan Number",
+  "IBanNumberRequired": "IBan number is required",
+  "UpdateIBan": "Update IBan",
+  "IBanUpdatedSuccessfully": "IBan number updated successfully",
+  "IBanNotUpdated": "IBan number is incorrect",
+  "TotalIncome": " Total Income",
+  "Purchased": "Purchased",
+  "Received": "Received"
+
+
+
+
 
 
 

@@ -1,0 +1,6 @@
+._paymentProcessMessage {
+    z-index: 10000;
+    position: fixed;
+    top: 57%;
+    font-weight: 700;
+}

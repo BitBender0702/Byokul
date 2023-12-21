@@ -229,7 +229,7 @@
   "ClearAll": "احذفها كلها",
   "Apply": "طبق",
   "CurrentBalance": "الرصيد الحالي",
-  "MonthIncome": "الدخل الشهري",
+  "MonthlyIncome": "Current Monthly Balance",
   "SourcesOfIncome": "مصادر الدخل",
   "Withdraw": "اسحب للخلف",
   "All": "الجميع",
@@ -652,8 +652,8 @@
   "ClassJoinedSuccessfully": "Class joined successfully",
   "CourseJoinedSuccessfully": "Course joined successfully",
   "Failure": "Failure",
-  "PaymentSuccessMessage": "Conguratulations, you are successfully enrolled to the",
-  "Class": "Class",
+  "CCPaymentSuccessMessage": "Conguratulations, you are successfully enrolled to the",
+  "SchoolPaymentSuccessMessage": "Conguratulations, you are successfully created the",  "Class": "Class",
   "Course": "Course",
   "PaymentFailureMessage": "Your payment is failed, please try again",
   "GoToYour": "Go to your",
@@ -669,7 +669,19 @@
   "CommentedOnYourCourse": "Commented on your course",
   "PleaseSelectSchool": "Please select school",
   "SubscriptionEndedMessageForClass": "Please renew/buy school subscription to create class",
-  "SubscriptionEndedMessageForCourse": "Please renew/buy school subscription to create course"
+  "SubscriptionEndedMessageForCourse": "Please renew/buy school subscription to create course",
+  "IdentityNumber": "Identity Number",
+  "IdentityNumberRequired": "Identity number is required",
+  "IBanNumber": "IBan Number",
+  "IBanNumberRequired": "IBan number is required",
+  "UpdateIBan": "Update IBan",
+  "IBanUpdatedSuccessfully": "IBan number updated successfully",
+  "IBanNotUpdated": "IBan number is incorrect",
+  "TotalIncome": " Total Income",
+  "Purchased": "Purchased",
+  "Received": "Received"
+
+
 
 
 

@@ -55,9 +55,8 @@ export const commentDeleteResponse = new Subject<{
 }>();
 
 
-export const closeIyizicoThreeDAuthWindow = new Subject<{
-  isClose: boolean;
-}>();
+export const closeIyizicoThreeDAuthWindow = new Subject();
+
 
 export const postLikeResponse = new Subject<{isLiked: boolean;}>();
 export const saveStreamResponse = new Subject<{isSaved: boolean;}>();
@@ -68,7 +67,7 @@ export const endMeetingResponse = new Subject<{}>();
 export const shareStreamResponse = new Subject<{}>();
 export const notiFyTeacherResponse = new Subject<{userId:string}>();
 export const notificationResponse = new Subject<NotificationViewModel>();
-export const paymentResponse = new Subject<{isPaymentSuccess: boolean;}>();
+export const paymentResponse = new Subject<{isPaymentSuccess: boolean;paymentType: string}>();
 export const close3dsPopup = new Subject<{}>();
 export const progressResponse = new Subject<{
   progressCount: number;
@@ -224,9 +223,8 @@ export class SignalrService {
     });
 
     this.hubConnection?.on('closeIyizicoThreeDAuthWindow', (isClose: boolean) => {
-      closeIyizicoThreeDAuthWindow.next({
-        isClose:true
-      });
+      debugger
+      closeIyizicoThreeDAuthWindow.next({});
     });
 
     this.hubConnection?.on('NotifyCommentThrotllingToReceiver', (noOfComments) => {
@@ -262,8 +260,9 @@ export class SignalrService {
     })
 
     this.hubConnection?.on('paymentResponse',
-    (isPaymentSuccess) => {
-      paymentResponse.next({isPaymentSuccess: isPaymentSuccess});
+    (isPaymentSuccess,paymentType) => {
+      debugger
+      paymentResponse.next({isPaymentSuccess: isPaymentSuccess, paymentType: paymentType});
     });
 
     this.hubConnection?.on('close3dsPopup',

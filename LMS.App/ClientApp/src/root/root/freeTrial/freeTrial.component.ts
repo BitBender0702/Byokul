@@ -6,7 +6,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { Subject, Subscription, filter } from 'rxjs';
 import { PaymentComponent } from '../payment/payment.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
-export const isUserSchoolOrNotResponse =new Subject<{isUserSchool:boolean}>(); 
+export const isUserSchoolOrNotResponse =new Subject<{isUserSchool:boolean;isTrialSchool:boolean}>(); 
 export const hideSubscriptionNotiBand =new Subject(); 
 
 
@@ -42,26 +42,27 @@ ngOnInit(): void {
 
     if (!this.isUserSchoolOrNotSubscription) {
       this.isUserSchoolOrNotSubscription = isUserSchoolOrNotResponse.subscribe(response => {
-        this.showMethod(response.isUserSchool);
+        this.showMethod(response.isUserSchool,response.isTrialSchool);
       });
     }
 
-    if (!this.hideSubscriptionNotiBandSub) {
-      this.hideSubscriptionNotiBandSub = hideSubscriptionNotiBand.subscribe(response => {
-        var freeTrialInfo = JSON.parse(localStorage.getItem("freeTrialInfo")??'');
-        if(freeTrialInfo.isTrialSchoolPaymentDone == "" || freeTrialInfo.isTrialSchoolPaymentDone == "False"){
-          freeTrialInfo.isTrialSchoolPaymentDone = "True";
-        }
-        localStorage.setItem("freeTrialInfo",JSON.stringify(freeTrialInfo));   
-        this.freeTrialInfo.isTrialSchoolPaymentDone = "True";
-      });
-    }
+    // if (!this.hideSubscriptionNotiBandSub) {
+    //   this.hideSubscriptionNotiBandSub = hideSubscriptionNotiBand.subscribe(response => {
+    //     var freeTrialInfo = JSON.parse(localStorage.getItem("freeTrialInfo")??'');
+    //     if(freeTrialInfo.isTrialSchoolPaymentDone == "" || freeTrialInfo.isTrialSchoolPaymentDone == "False"){
+    //       freeTrialInfo.isTrialSchoolPaymentDone = "True";
+    //     }
+    //     localStorage.setItem("freeTrialInfo",JSON.stringify(freeTrialInfo));   
+    //     this.freeTrialInfo.isTrialSchoolPaymentDone = "True";
+    //   });
+    // }
 }
 
 getTrialSchoolCreatedDate(){
+  debugger
     var freeTrialInfo = JSON.parse(localStorage.getItem("freeTrialInfo")??'');
     this.freeTrialInfo = freeTrialInfo;
-    if(Number(this.freeTrialInfo.userSchoolsCount) == 1){
+    // if(Number(this.freeTrialInfo.userSchoolsCount) == 1){
 
       if(freeTrialInfo.trialSchoolCreationDate != null && freeTrialInfo.trialSchoolCreationDate != ""){
 
@@ -70,7 +71,14 @@ getTrialSchoolCreatedDate(){
 // const [day, month, year] = datePart.split('-').map(Number);
 // const [hours, minutes, seconds] = timePart.split(':').map(Number);
 
-const parsedDate = new Date(freeTrialInfo.trialSchoolCreationDate);
+
+//previous use we can
+// const parsedDate = new Date(freeTrialInfo.trialSchoolCreationDate);
+
+// new date convert
+const formattedDateStr = freeTrialInfo.trialSchoolCreationDate.replace(/(\d{2})-(\d{2})-(\d{4}) (\d{2}:\d{2}:\d{2})/, "$2-$1-$3 $4");
+const parsedDate = new Date(formattedDateStr);
+
 
 // Extract individual components
 const year = parsedDate.getFullYear();
@@ -101,7 +109,7 @@ this.trialSchoolCreationDate = new Date(year, month - 1, day, hours, minutes, se
             this.showFreeTrialPopup = true;
             this.freeTrialDaysLeft = 30 - daysDifference;
 
-            if(freeTrialInfo.userSchoolsCount == "1"){
+            // if(freeTrialInfo.userSchoolsCount == "1"){
               var routerUrl = window.location.href;
               if(routerUrl.includes('/profile/')){
                 this.showFreeTrialPopup = true;
@@ -110,10 +118,9 @@ this.trialSchoolCreationDate = new Date(year, month - 1, day, hours, minutes, se
                 this.showFreeTrialPopup = false;
               }
             }
-            else{
-              this.showFreeTrialPopup = true;
-            }
-            }
+            // else{
+            //   this.showFreeTrialPopup = true;
+            // }
             else{
               this.afterFreeTrialPopup = true;
             }
@@ -124,13 +131,14 @@ this.trialSchoolCreationDate = new Date(year, month - 1, day, hours, minutes, se
             if(this.freeTrialDaysLeft <= 3 && !this.afterFreeTrialPopup){
               this.showFreeTrialPopup = true;
             }
-        }
-        else{
-            this.showFreeTrialPopup = false;
-        }
+        // }
+        // else{
+        //     this.showFreeTrialPopup = false;
+        // }
 
         
-    }
+    // }
+          }
       
 
 
@@ -141,18 +149,27 @@ this.isUserSchoolOrNotSubscription.unsubscribe();
     
 }
 
-showMethod(isUserSchool:boolean){
+showMethod(isUserSchool:boolean,isTrialSchool:boolean){
+  debugger
   var freeTrialInfo = JSON.parse(localStorage.getItem("freeTrialInfo")??'');
-  if(Number(this.freeTrialInfo.userSchoolsCount) == 1){
+  // if(Number(this.freeTrialInfo.userSchoolsCount) == 1){
 
   if(freeTrialInfo.trialSchoolCreationDate != null){
 
-    const [datePart, timePart] = freeTrialInfo.trialSchoolCreationDate.split(' ');
-
-const [day, month, year] = datePart.split('-').map(Number);
-const [hours, minutes, seconds] = timePart.split(':').map(Number);
-
-this.trialSchoolCreationDate = new Date(year, month - 1, day, hours, minutes, seconds);
+    const formattedDateStr = freeTrialInfo.trialSchoolCreationDate.replace(/(\d{2})-(\d{2})-(\d{4}) (\d{2}:\d{2}:\d{2})/, "$2-$1-$3 $4");
+    const parsedDate = new Date(formattedDateStr);
+    
+    
+    // Extract individual components
+    const year = parsedDate.getFullYear();
+    const month = parsedDate.getMonth() + 1; // Months are zero-based
+    const day = parsedDate.getDate();
+    const hours = parsedDate.getHours();
+    const minutes = parsedDate.getMinutes();
+    const seconds = parsedDate.getSeconds();
+    
+    // Create a new Date object with the desired format
+    this.trialSchoolCreationDate = new Date(year, month - 1, day, hours, minutes, seconds);
 
     // this.trialSchoolCreationDate = this.datePipe.transform(decodedJwtData.trialSchoolCreationDate, 'MM/dd/yyyy h:mm:ss a');
     // this.trialSchoolCreationDate = new Date(this.trialSchoolCreationDate);
@@ -166,7 +183,7 @@ this.trialSchoolCreationDate = new Date(year, month - 1, day, hours, minutes, se
     // Convert the time difference to days
     const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
-    if(isUserSchool){
+    if(isUserSchool && isTrialSchool){
     if(daysDifference < 30){
         this.showFreeTrialPopup = true;
         this.freeTrialDaysLeft = 30 - daysDifference;
@@ -194,11 +211,17 @@ this.trialSchoolCreationDate = new Date(year, month - 1, day, hours, minutes, se
         }
     }
     else{
+      this.freeTrialDaysLeft = 30 - daysDifference;
+      if(this.freeTrialDaysLeft <= 3){
+        this.showFreeTrialPopup = true;
+      }
+      else{
         this.showFreeTrialPopup = false;
+      }
     }
 
   }
-  }
+  // }
   
   
 }

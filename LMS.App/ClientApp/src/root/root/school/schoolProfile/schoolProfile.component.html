@@ -3201,8 +3201,8 @@
                             *ngIf="item.price != null && item.price != 0"
                             class="payment-profile font_12 text_ltgray ms-2">
                             <strong class="cost_theme font_14">
+                              <span *ngIf="item.currency == 'TRY'">₺{{ item.price | number:'1.0-0'}}</span>
                               <span *ngIf="item.currency == 'USD'">${{ item.price }}</span>
-                              <span *ngIf="item.currency == 'TRY'">₺{{ item.price }}</span>
                               <span *ngIf="item.currency == 'EUR'">€{{ item.price }}</span>
                               <span *ngIf="item.currency == 'GBP'">£{{ item.price }}</span>
                             </strong>
@@ -3567,8 +3567,8 @@
                             *ngIf="item.price != null && item.price != 0"
                             class="payment-profile font_12 text_ltgray ms-2">
                             <strong class="cost_theme font_14">
+                              <span *ngIf="item.currency == 'TRY'">₺{{ item.price | number:'1.0-0'}}</span>
                               <span *ngIf="item.currency == 'USD'">${{ item.price }}</span>
-                              <span *ngIf="item.currency == 'TRY'">₺{{ item.price }}</span>
                               <span *ngIf="item.currency == 'EUR'">€{{ item.price }}</span>
                               <span *ngIf="item.currency == 'GBP'">£{{ item.price }}</span>
                             </strong>{{ "OnePayment" | translate }}</span>
@@ -3880,7 +3880,8 @@
                         <img [lazyLoad]="uploadImage" />
                       </div>
                       <div *ngIf="uploadImage == ''">
-                        <img lazyLoad="{{ schoolAvatar }}" style="scale: 1.2" />
+                        <img *ngIf="schoolAvatar != ''"
+                         lazyLoad="{{ schoolAvatar }}" style="scale: 1.2" />
                       </div>
                     </div>
                   </div>

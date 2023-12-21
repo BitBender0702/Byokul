@@ -301,7 +301,13 @@
                         class="school-name d-flex align-items-center font_16"
                       >
                         <div class="school-img rounded-circle me-3">
-                          <img [src]="item.avatar" />
+                          <img
+                            *ngIf="item.avatar != null && item.avatar != 'null'"
+                            [src]="item.avatar"
+                          />
+                          <img
+                          *ngIf="item.avatar == null || item.avatar == 'null'"
+                          src="../../../../assets/images/classLogo.png"/>
                         </div>
                         <a
                           style="cursor: pointer; word-break: break-all"
@@ -361,7 +367,13 @@
                         class="school-name d-flex align-items-center font_16"
                       >
                         <div class="school-img rounded-circle me-3">
-                          <img [src]="item.avatar" />
+                          <img
+                          *ngIf="item.avatar != null && item.avatar != 'null'"
+                          [src]="item.avatar"
+                        />
+                        <img
+                        *ngIf="item.avatar == null || item.avatar == 'null'"
+                        src="../../../../assets/images/classLogo.png"/>
                         </div>
                         <a
                           style="cursor: pointer; word-break: break-all"

@@ -23,11 +23,12 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharePostComponent } from '../sharePost/sharePost.component';
 import { MessageService } from 'primeng/api';
 import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
-import { Location } from '@angular/common'
+import { Location, LocationStrategy, PlatformLocation } from '@angular/common'
 import { StudentService } from 'src/root/service/student.service';
 import { SchoolClassCourseEnum } from 'src/root/Enums/SchoolClassCourseEnum';
 import { ClassCourseEnum } from 'src/root/Enums/classCourseEnum';
 import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
+declare var $: any;
 
 @Component({
   selector: 'live-stream',
@@ -105,9 +106,17 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
 
 
 
-  constructor(injector: Injector, private renderer: Renderer2, private modalService: NgbModal, private bsModalService: BsModalService,private location: Location,studentService: StudentService,
+  constructor(injector: Injector,private location2: LocationStrategy, private renderer: Renderer2, private modalService: NgbModal, private bsModalService: BsModalService,private location: Location,studentService: StudentService,
     private cd: ChangeDetectorRef, public messageService: MessageService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, signalrService: SignalrService, postService: PostService, chatService: ChatService, userService: UserService, notificationService: NotificationService, bigBlueButtonService: BigBlueButtonService, private router : Router) {
     super(injector);
+    history.pushState(null, "", window.location.href);
+    // check if back or forward button is pressed.
+    this.location2.onPopState(() => {
+      debugger
+      this.isOwner = true;
+        history.pushState(null, "", window.location.href);
+        $("#end-livestream").modal('show');
+    });
     this._signalrService = signalrService;
     this._postService = postService;
     this._chatService = chatService;
@@ -934,6 +943,7 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   }
 
   showEndMeetingDialog(){
+    debugger
     if (!this.isOwner) {
       this.streamEndMessage.nativeElement.click();
       setTimeout(() => {

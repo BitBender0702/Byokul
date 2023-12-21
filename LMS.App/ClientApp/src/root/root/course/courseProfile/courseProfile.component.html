@@ -60,7 +60,7 @@
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44"
           >
-            {{ "Buyfor" | translate }} {{ course.price }} {{ course.currency }}
+           {{ "Buyfor" | translate }} {{ course.price | number:'1.0-0' }}<span>₺</span>
           </button>
           <button
             *ngIf="
@@ -72,7 +72,7 @@
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44"
           >
-            {{ "Join" | translate }} $0
+            {{ "Join" | translate }} <span>₺</span>0
           </button>
         </div>
         <div
@@ -504,6 +504,11 @@
           </div>
         </div>
 
+        <div *ngIf="!course.isCourseStudent && course.serviceType.type == 'Paid' && !isOwner"
+        style="font-weight: 500;color: orange;margin-top: 40px;font-size: 40px;"class="text-center font-34"
+        >
+        {{ "CourseEnrollMessage" | translate }}
+        </div>
         <div
           *ngIf="
             ((course.isCourseStudent && course.serviceType.type == 'Paid') ||
@@ -1830,14 +1835,16 @@
                         <label class="font_10">{{ "Price" | translate }}</label>
                         <div class="d-flex">
                           <input
+                            mask="separator" thousandSeparator=","
                             formControlName="price"
-                            type="number"
+                            type="text"
                             min="1"
                             placeholder="{{ 'Price' | translate }}"
                             name="price"
                             class="form-control w-100"
                           />
                           <select
+                            [attr.disabled]="true"
                             class="form-select rounded-8 w-100"
                             formControlName="currency"
                             aria-label="Default select example"

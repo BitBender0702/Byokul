@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, ContentChild, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { AuthService } from '../service/auth.service';
-import { SignalrService, notiFyTeacherResponse, paymentResponse } from '../service/signalr.service';
+import { SignalrService, close3dsPopup, closeIyizicoThreeDAuthWindow, notiFyTeacherResponse, paymentResponse } from '../service/signalr.service';
 import { Meta } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, NavigationExtras, Params, Router } from '@angular/router';
 import { Constant } from '../interfaces/constant';
@@ -24,7 +24,7 @@ import { addVideoInLibraryResponse } from './schoolVideoLibrary/schoolVideoLibra
 import { SchoolService } from '../service/school.service';
 import { banUnbanUserProgression } from '../admin/registeredUsers/registeredUsers.component';
 import { thumbnailUploadResponse } from './class/createClass/createClass.component';
-import { paymentStatusResponse } from './payment/payment.component';
+import { openIyzico3dsPopup, paymentStatusResponse } from './payment/payment.component';
 import { PaymentResponseModalComponent } from './paymentResponseModal/paymentResponseModal.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 // import { userPermission } from './class/classProfile/classProfile.component';
@@ -61,7 +61,7 @@ export const reelUploadOnBlob = new Subject<{
 @Component({
   selector: 'root-selector',
   templateUrl: './root.component.html',
-  styleUrls: [],
+  styleUrls: ['./root.component.css'],
   providers: [MessageService]
 })
 export class RootComponent extends MultilingualComponent implements OnInit, OnDestroy {
@@ -87,8 +87,12 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   loadBytes:any = 0;
   progressValue: number = 0;
   loadingIcon: boolean = false;
+  showPaymentprocessingMessage: boolean = false;
   paymentStatusSubscription!: Subscription;
   paymentResponseSubscription!: Subscription;
+  openIyzico3dsPopupSubscription!: Subscription;
+  close3dsPopupSubscription!: Subscription;
+  paymentConfirmationWindow!:Window | null;
   @ViewChild('openProgressBar') openProgressBar!: ElementRef;
   @ViewChild('paymentConfirmationBtn') paymentConfirmationBtn!: ElementRef;
 
@@ -149,6 +153,20 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     this.meta.updateTag({ property: 'og:description', content: "description" });
     // this.meta.addTag({ property: 'og:image', content: "../../assets/images/logo.svg" });
     this.meta.updateTag({ property: 'og:url', content: "byokul.com" });
+
+
+    this.openIyzico3dsPopupSubscription = openIyzico3dsPopup.subscribe(async (response) => {
+      debugger
+      this.paymentConfirmationWindow = window.open("","_blank", "width=500,height=300");
+      this.paymentConfirmationWindow?.document.write(response.iyzico3dsHtml);
+    });
+
+    if (!this.close3dsPopupSubscription) {
+      this.close3dsPopupSubscription = closeIyizicoThreeDAuthWindow.subscribe(response => {
+        debugger
+       this.paymentConfirmationWindow?.close();
+      });
+    }
 
     if (!this.uploadClassCourseThumbSubscription) {
       this.uploadClassCourseThumbSubscription = uploadClassOrCourseThumbail.subscribe(async (uploadResponse) => {
@@ -637,9 +655,10 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
       this.paymentStatusSubscription = paymentStatusResponse.subscribe(response => {
         if(response.loadingIcon){
           this.loadingIcon = true;
-          const translatedSummary = this.translateService.instant('Success');
-          const translatedMessage = this.translateService.instant('PaymentProcessingMessage');
-          this.messageService.add({ severity: 'info', summary: translatedSummary, life: 6000, detail: translatedMessage });
+          this.showPaymentprocessingMessage = true;
+          // const translatedSummary = this.translateService.instant('Success');
+          // const translatedMessage = this.translateService.instant('PaymentProcessingMessage');
+          // this.messageService.add({ severity: 'info', summary: translatedSummary, life: 10000, detail: translatedMessage });
         }
         else{
           this.loadingIcon = false;
@@ -649,10 +668,12 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
 
      if (!this.paymentResponseSubscription) {
       this.paymentResponseSubscription = paymentResponse.subscribe(response => {
+        debugger
         this.loadingIcon = false;
+        this.showPaymentprocessingMessage = false;
         const initialState = {
           isPaymentSuccess: response.isPaymentSuccess,
-          from: Constant.School
+          from: response.paymentType == Constant.School ? Constant.School : response.paymentType == Constant.Class ? Constant.Class : response.paymentType == Constant.Course ? Constant.Course : ""
         };
         this.bsModalService.show(PaymentResponseModalComponent, { initialState });
       });
@@ -791,6 +812,12 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     }
     if (this.paymentResponseSubscription) {
       this.paymentResponseSubscription.unsubscribe();
+    }
+    if (this.openIyzico3dsPopupSubscription) {
+      this.openIyzico3dsPopupSubscription.unsubscribe();
+    }
+    if (this.close3dsPopupSubscription) {
+      this.close3dsPopupSubscription.unsubscribe();
     }
   }
 

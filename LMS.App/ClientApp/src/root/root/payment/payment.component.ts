@@ -10,6 +10,8 @@ import { IyizicoService } from 'src/root/service/iyizico.service';
 import { PaymentService } from 'src/root/service/payment.service';
 import { close3dsPopup, closeIyizicoThreeDAuthWindow } from 'src/root/service/signalr.service';
 export const paymentStatusResponse =new Subject<{ loadingIcon: boolean}>(); 
+export const openIyzico3dsPopup =new Subject<{ iyzico3dsHtml: string}>(); 
+
 
 @Component({
     selector: 'payment',
@@ -51,7 +53,7 @@ export const paymentStatusResponse =new Subject<{ loadingIcon: boolean}>();
     @Input() school:any;
     @Output() childEvent = new EventEmitter<any>();
 
-    constructor(public messageService:MessageService,private translateService: TranslateService,private http: HttpClient,private fb: FormBuilder,private bsModalService: BsModalService,public options: ModalOptions,paymentService:PaymentService, iyizicoService:IyizicoService, private cd: ChangeDetectorRef) {
+    constructor(public messageService:MessageService,private bsModalRef: BsModalRef,private translateService: TranslateService,private http: HttpClient,private fb: FormBuilder,private bsModalService: BsModalService,public options: ModalOptions,paymentService:PaymentService, iyizicoService:IyizicoService, private cd: ChangeDetectorRef) {
       this._paymentService = paymentService;
       this._iyizicoService = iyizicoService;
     }
@@ -85,6 +87,7 @@ export const paymentStatusResponse =new Subject<{ loadingIcon: boolean}>();
       }
       else{
         this.closeIyizicoWindowSubscription = closeIyizicoThreeDAuthWindow.subscribe((response:any) => {
+          debugger
           this.paymentConfirmationWindow?.close();
         });
       }
@@ -217,6 +220,7 @@ export const paymentStatusResponse =new Subject<{ loadingIcon: boolean}>();
 
      this.loadingIcon = true;
      this._paymentService.buyClassCourse(this.paymentViewModel).subscribe((response: any) => {
+      debugger
       this.closeModal();
       // this.loadingIcon = false;
       paymentStatusResponse.next({loadingIcon: true});
@@ -225,9 +229,21 @@ export const paymentStatusResponse =new Subject<{ loadingIcon: boolean}>();
       this.paymentConfirmationHtml = response;
       
       
+      openIyzico3dsPopup.next({iyzico3dsHtml:response});
       this.paymentConfirmationWindow = window.open("","_blank", "width=500,height=300");
       this.paymentConfirmationWindow?.document.write(response);
 
+      document.getElementById('iyzico-3ds-form')?.addEventListener("click", () => {
+        debugger
+        console.log("submit button event received");
+      });
+
+      // this.paymentConfirmationWindow?.document.getElementById("iyzico-3ds-form")?.addEventListener("click", () => {
+      //   debugger
+      //   // Handle the submit button click event
+      //   // this.onSubmitButtonClick();
+      //   console.log("submit button event received");
+      // });
       // const parser = new HtmlParser();
       // this.paymentConfirmationHtml = parser.parse(this.paymentConfirmationHtml,'text/html');
       // paymentConfirmDialoge.next({response});
@@ -238,8 +254,10 @@ export const paymentStatusResponse =new Subject<{ loadingIcon: boolean}>();
     }
 
     closeModal(){
+      debugger
       // this.attachmentModalRef.hide();
-      this.bsModalService.hide();
+      this.bsModalRef.hide();
+      // this.bsModalService.hide(this.bsModalService.config.id);
     }
 
     formatCardNumber(event:any) {
@@ -287,7 +305,7 @@ export const paymentStatusResponse =new Subject<{ loadingIcon: boolean}>();
       }
 
       close(){
-        this.bsModalService.hide();
+        this.bsModalService.hide(this.bsModalService.config.id);
       }
 
       storeUserCard(){
@@ -332,6 +350,7 @@ export const paymentStatusResponse =new Subject<{ loadingIcon: boolean}>();
       }
 
       closeRemoveCardModal(){
+        debugger
         this.attachmentModalRef.hide();
       }
 }

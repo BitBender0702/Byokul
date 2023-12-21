@@ -29,8 +29,16 @@ export class PaymentService{
       return this.http.post(`${this.apiUrl}/iyizico/ownedSchoolTransactionDetails`,transactionParamViewModel, {headers: this.headers});
     }
 
+    transactionDashboardDetails():Observable<any>{
+      return this.http.get(`${this.apiUrl}/iyizico/getTransactionDashboardDetails`, {headers: this.headers});
+    }
+
     withdrawDetails(transactionParamViewModel: TransactionParamViewModel):Observable<any>{
       return this.http.post(`${this.apiUrl}/stripe/withdrawDetails`,transactionParamViewModel, {headers: this.headers});
+    }
+
+    submerchantTransactionDetails(transactionParamViewModel: TransactionParamViewModel):Observable<any>{
+      return this.http.post(`${this.apiUrl}/iyizico/getSubmerchantTransactionDetails`,transactionParamViewModel, {headers: this.headers});
     }
 
     classCourseTransactionDetails(transactionParamViewModel: TransactionParamViewModel):Observable<any>{

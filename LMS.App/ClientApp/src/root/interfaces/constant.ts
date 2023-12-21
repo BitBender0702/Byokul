@@ -39,4 +39,5 @@ export class Constant {
     public static Saved = "saved";
     public static Liked = "liked";
     public static Shared = "shared";
+    
 }

@@ -28,6 +28,8 @@ export class SchoolService{
     }
 
     getDefaultLogo():Observable<any>{
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         return this.http.get(`${this.apiUrl}/school/defaultLogoList`,{headers: this.headers});
     }
 
@@ -39,6 +41,10 @@ export class SchoolService{
 
     getSpecializationList():Observable<any>{
         return this.http.get(`${this.apiUrl}/school/specializationList`,{headers: this.headers});
+    }
+
+    getUserIdentityAndIBan(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/users/getUserIdentityAndIBan`,{headers: this.headers});
     }
 
     getLanguageList():Observable<any>{

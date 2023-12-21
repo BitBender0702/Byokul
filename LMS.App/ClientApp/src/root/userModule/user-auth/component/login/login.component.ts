@@ -255,6 +255,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit, OnD
     }
 
     getUserRoles(token:string): any{
+      debugger
       let jwtData = token.split('.')[1]
       let decodedJwtJsonData = window.atob(jwtData)
       let decodedJwtData = JSON.parse(decodedJwtJsonData)

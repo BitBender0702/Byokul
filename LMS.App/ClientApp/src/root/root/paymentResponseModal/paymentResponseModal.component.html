@@ -10,7 +10,9 @@
               aria-label="Close"><img src="../../../../assets/images/cross.svg" /></button>
           </div>
           <div class="modal-body">
-            <h2 *ngIf="isPaymentSuccess" class="font_21">{{"PaymentSuccessMessage"| translate}}
+            <h2 *ngIf="isPaymentSuccess" class="font_21">
+                <span *ngIf="from != 'school'">{{"CCPaymentSuccessMessage"| translate}} </span>
+                <span *ngIf="from == 'school'">{{"SchoolPaymentSuccessMessage"| translate}} </span>
                 <span *ngIf="from == 'class'">{{"Class"| translate}}</span>
                 <span *ngIf="from == 'course'">{{"Course"| translate}}</span>
                 <span *ngIf="from == 'school'">{{"School"| translate}}</span>

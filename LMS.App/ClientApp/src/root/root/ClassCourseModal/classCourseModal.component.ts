@@ -11,7 +11,7 @@ import { ChatService } from 'src/root/service/chatService';
 import { PostService } from 'src/root/service/post.service';
 import { ReelsService } from 'src/root/service/reels.service';
 import { SchoolService } from 'src/root/service/school.service';
-import { commentDeleteResponse, commentLikeResponse, commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
+import { commentDeleteResponse, commentLikeResponse, commentResponse, paymentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
 import { SharePostComponent } from '../sharePost/sharePost.component';
 import { ClassCourseFilterTypeEnum } from 'src/root/Enums/classCourseFilterTypeEnum';
@@ -68,9 +68,11 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     private _chatService;
     pageNumber:number = 1;
     gender!:string;
+    invalidMessage!: boolean;
     commentLikeUnlike!:CommentLikeUnlike;
     commentResponseSubscription!:Subscription;
-    commentDeletdResponseSubscription!: Subscription
+    commentDeletdResponseSubscription!: Subscription;
+    paymentResponseSubscription!: Subscription;
     courseCertificateForm!:FormGroup;
     courseCertificateInfo:any;
     @ViewChild('openCourseOwnCertificate') openCourseOwnCertificate!: ElementRef;
@@ -87,6 +89,7 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
       }
 
      ngOnInit(): void {
+      debugger
          this.classCourseDetails = this.options.initialState;
          this.getLoginUserId();
          this.gender = localStorage.getItem("gender")??'';
@@ -130,6 +133,16 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
           this.classCourseDetails.classCourseItem.comments.splice(indexOfComment, 1)
         })
       }
+
+      if (!this.paymentResponseSubscription) {
+        this.paymentResponseSubscription = paymentResponse.subscribe(response => {
+          debugger
+         if(response.isPaymentSuccess){
+          this.classCourseDetails.classCourseItem.isClassCourseStudent = true;
+         }
+        });
+      }
+      
      }
 
      deleteComment(item:any){     
@@ -160,6 +173,9 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
       if (this.commentDeletdResponseSubscription) {
         this.commentDeletdResponseSubscription.unsubscribe();
       }
+      if (this.paymentResponseSubscription) {
+        this.paymentResponseSubscription.unsubscribe();
+      }
     }
 
 
@@ -168,6 +184,7 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
       }
 
       close(): void {
+        debugger
         this.bsModalService.hide();
       }
 
@@ -272,6 +289,9 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
   }
 
   sendToGroup(){
+    if (this.messageToGroup == '') {
+      return;
+    } 
     var comment: any[] = this.classCourseDetails.classCourseItem.comments;
     this.InitializeCommentViewModel();
     this.commentViewModel.userId = this.sender.id;
@@ -381,10 +401,25 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
   }
 
   openPaymentModal(classCourseItem:any) {
-    var classDetails = { "id": classCourseItem.id, "name": classCourseItem.name, "avatar": classCourseItem.avatar, "type": classCourseItem.type, "amount": classCourseItem.price, "currency": classCourseItem.currency }
+    var classDetails = { "id": classCourseItem.id, "name": classCourseItem.name, "avatar": classCourseItem.avatar, "type": classCourseItem.type + 1, "amount": classCourseItem.price, "currency": classCourseItem.currency }
     const initialState = {
       paymentDetails: classDetails
     };
     this.bsModalService.show(PaymentComponent, { initialState });
+  }
+
+  getTextMessage(event: any) {
+    if (this.messageToGroup == '') {
+      this.invalidMessage = true;
+    } else {
+      this.invalidMessage = false;
+      if (
+        event.code == 'Enter' ||
+        event.keyCode === 13 ||
+        event.keyCode === 108
+      ) {
+        this.sendToGroup();
+      }
+    }
   }
 }

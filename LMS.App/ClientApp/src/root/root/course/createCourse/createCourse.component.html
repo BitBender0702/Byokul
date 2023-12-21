@@ -202,8 +202,9 @@
                   <label class="font_10">{{ "Price" | translate }}</label>
                   <div class="d-flex">
                   <input
+                    mask="separator" thousandSeparator=","
                     formControlName="price"
-                    type="number"
+                    type="text"
                     min="1"
                     placeholder="{{ 'Price' | translate }}"
                     name="price"

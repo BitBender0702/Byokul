@@ -229,4 +229,9 @@ export class UserService{
         return this.http.post(`${this.apiUrl}/users/isUserBanned`,null, {params:queryParams,headers: this.headers});
     }
 
+    updateUserIBan(iBanNumber:string):Observable<any>{
+        debugger
+        return this.http.get(`${this.apiUrl}/users/updateUserIBan` + '?iBanNumber=' + iBanNumber,{headers: this.headers});
+    }
+
 }
